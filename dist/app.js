@@ -42,4 +42,76 @@ wrap.addEventListener('wheel', (event) => { event.preventDefault(); event.stopIm
 wrap.addEventListener('dblclick', (event) => { event.preventDefault(); const target = unproject(point(event).x, point(event).y); const startYaw=s.yaw, startPitch=s.pitch, endYaw=Math.atan2(target[1], target[0]), endPitch=Math.asin(target[2]); const turn=Math.atan2(Math.sin(endYaw-startYaw), Math.cos(endYaw-startYaw)); const began=performance.now(), duration=380; const animate=(now) => { const p=Math.min(1,(now-began)/duration), eased=1-Math.pow(1-p,3); s.yaw=startYaw+turn*eased; s.pitch=startPitch+(endPitch-startPitch)*eased; render(); if(p<1)requestAnimationFrame(animate); }; requestAnimationFrame(animate); });
 debug('Debug enabled', `xFactor=${NAVIGATION_X_FACTOR}, yFactor=${NAVIGATION_Y_FACTOR}`);
 debug('FOV limits', `min=${MIN_FOV_DEGREES}°, max=${MAX_FOV_DEGREES}°`);
-debug('Route layer', 'SPICE/PLACES positions are not imported; synthetic route is disabled.');
+debug('Route layer', 'Loading the PDS PLACES localized rover route…');
+
+// Horizontal angular coverage is calculated from the actual left and right
+// rays of each visible product, then unioned on the 0–360° circle.
+function panoramaCoverage() {
+  const intervals=[];
+  for (const image of s.images) {
+    const b=bounds(image,image.element), mid=b.top+b.h/2, left=ray(image,b.l,mid), right=ray(image,b.l+b.w,mid);
+    if (!left || !right) continue;
+    let a=Math.atan2(left[1],left[0]), z=Math.atan2(right[1],right[0]), d=Math.atan2(Math.sin(z-a),Math.cos(z-a));
+    if (Math.abs(d)>Math.PI*.95) continue;
+    let start=a, end=a+d; if (d<0) [start,end]=[end,start];
+    start=(start+2*Math.PI)%(2*Math.PI); end=(end+2*Math.PI)%(2*Math.PI);
+    if (end<start) intervals.push([start,2*Math.PI],[0,end]); else intervals.push([start,end]);
+  }
+  intervals.sort((a,b)=>a[0]-b[0]); let total=0, end=-Infinity;
+  for (const [start,stop] of intervals) { if (stop>end) { total+=stop-Math.max(start,end); end=stop; } }
+  return Math.min(360,Math.max(0,Math.round(total/D)));
+}
+const paintPanorama=render;
+render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; drawRouteHud(); };
+
+// Square S/F products are shown whole in the information panel; other
+// subframes retain the compact crop-oriented preview.
+const renderPanel=panel;
+panel=(image)=>{ renderPanel(image); if (!image) return; const full=/EDR_[SF]\d+/i.test(imageIdentity(image)), preview=$('#panelImage'); preview.style.maxHeight=full?'none':'180px'; preview.style.aspectRatio=full?'1 / 1':'auto'; preview.style.objectFit=full?'contain':'cover'; };
+
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else if (wrap.requestFullscreen) { try { await wrap.requestFullscreen({navigationUI:'hide'}); } catch { await wrap.requestFullscreen(); } }
+    else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+  } catch (error) { debug('Fullscreen unavailable', error.name || 'unknown browser restriction'); }
+}
+$('#fullscreenButton').onclick=toggleFullscreen;
+$('#fullscreenButton').addEventListener('pointerdown',(event)=>event.stopPropagation());
+document.addEventListener('fullscreenchange',()=>{ $('#fullscreenButton').textContent=document.fullscreenElement?'⛶':'⛶'; });
+
+// PDS PLACES is the localization team's public, corrected position table.
+const ROUTE_CSV='https://planetarydata.jpl.nasa.gov/img/data/msl/msl_places/data_localizations/localized_pos.csv';
+const route={points:[],labels:[],box:null,loading:false};
+async function loadRoute() {
+  if (route.loading || route.points.length) return;
+  route.loading=true;
+  try {
+    const response=await fetch(ROUTE_CSV); if (!response.ok) throw Error(`HTTP ${response.status}`);
+    const [header,...rows]=(await response.text()).trim().split(/\r?\n/), keys=header.split(',');
+    const index=Object.fromEntries(keys.map((key,n)=>[key,n]));
+    const bySol=new Map;
+    for (const row of rows) { const field=row.split(','); if (field[index.frame]!=='ROVER') continue; const sol=+field[index.sol], east=+field[index.easting], north=+field[index.northing]; if (sol>=0&&Number.isFinite(east)&&Number.isFinite(north)) bySol.set(sol,{sol,east,north,elevation:+field[index.elevation],site:+field[index.site],drive:+field[index.drive]}); }
+    route.points=[...bySol.values()].sort((a,b)=>a.sol-b.sol);
+    debug('Route layer', `loaded ${route.points.length} localized Sol positions from PDS PLACES`);
+  } catch (error) { debug('Route layer unavailable', error.message); }
+  finally { route.loading=false; render(); }
+}
+function routeSelect(sol) { const select=$('#solSelect'); if (!select.querySelector(`option[value="${sol}"]`)) return; select.value=sol; $('#loadButton').click(); }
+function drawRouteHud() {
+  if (s.rover!=='curiosity' || !route.points.length) return;
+  const x=26,y=26,w=Math.min(380,cv.width*.28),h=Math.min(230,cv.height*.27), pad=18, current=+$('#solSelect').value;
+  const east=route.points.map(p=>p.east), north=route.points.map(p=>p.north), minE=Math.min(...east), maxE=Math.max(...east), minN=Math.min(...north), maxN=Math.max(...north);
+  const map=(p)=>({x:x+pad+(p.east-minE)/(maxE-minE||1)*(w-pad*2),y:y+h-pad-(p.north-minN)/(maxN-minN||1)*(h-pad*2)});
+  route.box={x,y,w,h,map}; route.labels=[];
+  cx.save(); cx.fillStyle='rgba(3,8,17,.76)'; cx.strokeStyle='rgba(145,243,255,.42)'; cx.lineWidth=1; cx.fillRect(x,y,w,h); cx.strokeRect(x,y,w,h);
+  cx.fillStyle='#cceefa'; cx.font='600 18px system-ui'; cx.fillText('ROVER ROUTE · PDS PLACES',x+12,y+23);
+  cx.beginPath(); route.points.forEach((p,n)=>{const q=map(p); n?cx.lineTo(q.x,q.y):cx.moveTo(q.x,q.y)}); cx.strokeStyle='rgba(145,243,255,.72)'; cx.lineWidth=2; cx.stroke();
+  const selected=route.points.reduce((best,p)=>Math.abs(p.sol-current)<Math.abs(best.sol-current)?p:best,route.points[0]);
+  const candidates=route.points.filter(p=>p.sol===selected.sol || (Math.abs(p.sol-current)<120&&p.sol%10===0) || p.sol%500===0);
+  let lastLabel=null;
+  for (const p of candidates) { const q=map(p); if (lastLabel&&Math.hypot(q.x-lastLabel.x,q.y-lastLabel.y)<28&&p.sol!==selected.sol) continue; lastLabel=q; const text=`${p.sol}`, tw=cx.measureText(text).width+10; cx.fillStyle=p.sol===selected.sol?'#91f3ff':'rgba(5,18,29,.88)'; cx.strokeStyle='rgba(145,243,255,.8)'; cx.fillRect(q.x-tw/2,q.y-23,tw,17); cx.strokeRect(q.x-tw/2,q.y-23,tw,17); cx.fillStyle=p.sol===selected.sol?'#04101a':'#dff8ff'; cx.font='600 13px system-ui'; cx.fillText(text,q.x-tw/2+5,q.y-10); route.labels.push({sol:p.sol,x:q.x-tw/2,y:q.y-23,w:tw,h:17}); }
+  const marker=map(selected); cx.fillStyle='#ffbf69'; cx.beginPath(); cx.arc(marker.x,marker.y,6,0,Math.PI*2); cx.fill(); cx.restore();
+}
+wrap.addEventListener('pointerup',(event)=>{ if (s.drag) return; const p=point(event), label=route.labels.find(item=>p.x>=item.x&&p.x<=item.x+item.w&&p.y>=item.y&&p.y<=item.y+item.h); if (!label) return; event.preventDefault(); event.stopImmediatePropagation(); wrap.releasePointerCapture?.(event.pointerId); routeSelect(label.sol); },{capture:true});
+loadRoute();
