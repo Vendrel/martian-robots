@@ -1,136 +1,24 @@
-const $ = (selector) => document.querySelector(selector);
-const dictionary = window.localeDictionary;
-
-const roverCatalog = {
-  curiosity: { name: 'Curiosity', short: 'MSL · Curiosity', source: 'nasa-msl', sols: [4544, 4543, 4542] },
-  perseverance: { name: 'Perseverance', short: 'Mars 2020 · Perseverance', source: 'nasa-m2020', sols: [] },
-  spirit: { name: 'Spirit', short: 'MER-A · Spirit', source: 'pds-mer', sols: [] },
-  opportunity: { name: 'Opportunity', short: 'MER-B · Opportunity', source: 'pds-mer', sols: [] },
-};
-
-const geometrySample = [
-  { imageid: 'NLB_800890839EDR_F1160576NCAM00354M_', instrument: 'NAV_LEFT_B', sol: 4544, site: 116, drive: 576, date_taken: '2025-05-19T02:46:14.000Z', camera_model_type: 'CAHVOR', camera_position: '(0.823373,0.796051,-1.84555)', camera_vector: '(-0.590989,0.339228,0.731885)', camera_model_component_list: '(0.823373,0.796051,-1.84555);(-0.59358,0.345816,0.726675);(-917.709,-882.761,367.649);(470.356,-274.807,1206.71)', attitude: '(0.486334,0.00493039,0.0196115,-0.873539)', extended: { mast_az: '150.11', mast_el: '-47.02' }, https_url: 'https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04544/opgs/edr/ncam/NLB_800890839EDR_F1160576NCAM00354M_.JPG' },
-  { imageid: 'NLB_800890885EDR_F1160576CCAM04543M_', instrument: 'NAV_LEFT_B', sol: 4544, site: 116, drive: 576, date_taken: '2025-05-19T02:46:59.000Z', camera_model_type: 'CAHVOR', camera_position: '(1.01824,0.66274,-1.84565)', camera_vector: '(-0.005995,0.68287,0.730515)', camera_model_component_list: '(1.01824,0.66274,-1.84565);(-0.001607,0.68842,0.725299);(-1225.54,347.088,366.335);(-0.293737,-542.331,1207.8)', attitude: '(0.486334,0.00493039,0.0196115,-0.873539)', extended: { mast_az: '90.47', mast_el: '-46.91' }, https_url: 'https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04544/opgs/edr/ncam/NLB_800890885EDR_F1160576CCAM04543M_.JPG' },
-  { imageid: 'NRB_800889651EDR_F1160576NCAM00354M_', instrument: 'NAV_RIGHT_B', sol: 4544, site: 116, drive: 576, date_taken: '2025-05-19T02:26:29.000Z', camera_model_type: 'CAHVOR', camera_position: '(0.832, -0.795, -1.84)', camera_vector: '(0.63,0.34,0.69)', camera_model_component_list: '(0.832,-0.795,-1.84);(0.63,0.34,0.69);(1010,570,370);(-280,520,1210)', attitude: '(0.486334,0.00493039,0.0196115,-0.873539)', extended: { mast_az: '28.2', mast_el: '-42.5' }, https_url: 'https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04544/opgs/edr/ncam/NLB_800890839EDR_F1160576NCAM00354M_.JPG' },
-];
-
-const state = { rover: 'curiosity', images: [], offset: 0, pointer: null, active: null, altTarget: null, dragging: false, dragStart: 0, startOffset: 0, usedFallback: false };
-const canvas = $('#panoramaCanvas');
-const ctx = canvas.getContext('2d');
-const wrap = $('#panoramaWrap');
-
-function translate() {
-  document.querySelectorAll('[data-i18n]').forEach((node) => { const value = dictionary[node.dataset.i18n]; if (value) node.innerHTML = value; });
-}
-function setStatus(key, vars = {}) { $('#statusText').textContent = (dictionary[key] || key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? ''); }
-function formatDate(value) { return value ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(value)) : '—'; }
-function parseVector(text) { const values = String(text || '').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig); return values ? values.map(Number) : [0, 1, 0]; }
-function geometryOf(image) {
-  const vector = parseVector(image.camera_vector || image.camera_model_component_list?.split(';')[1]);
-  const [x, y, z] = vector;
-  const azimuth = Math.atan2(y, x) * 180 / Math.PI;
-  const elevation = Math.asin(z / Math.max(Math.hypot(x, y, z), .001)) * 180 / Math.PI;
-  return { azimuth, elevation };
-}
-function encodeMSLQuery(sol) {
-  return `https://mars.nasa.gov/api/v1/raw_image_items?order=sol%20desc%2Cinstrument_sort%20asc%2Csample_type_sort%20asc%2Cdate_taken%20desc&per_page=100&page=0&condition_1=msl%3Amission&condition_2=${sol}%3Asol%3Agte&condition_3=${sol}%3Asol%3Alte&search=&extended=`;
-}
-async function fetchCuriosity(sol) {
-  const response = await fetch(encodeMSLQuery(sol));
-  if (!response.ok) throw new Error('NASA feed unavailable');
-  const data = await response.json();
-  return data.items || [];
-}
-function populateRovers() {
-  $('#roverSelect').innerHTML = Object.entries(roverCatalog).map(([id, r]) => `<option value="${id}">${r.name}</option>`).join('');
-  $('#roverSelect').value = state.rover;
-}
-function populateSols(sols, selected) {
-  const unique = [...new Set(sols)].sort((a, b) => b - a);
-  $('#solSelect').innerHTML = unique.map((sol) => `<option value="${sol}">Sol ${sol}</option>`).join('');
-  $('#solSelect').value = String(selected || unique[0] || '');
-}
-async function resolveLatestCuriosity() {
-  try {
-    const response = await fetch('https://mars.nasa.gov/api/v1/raw_image_items?order=sol%20desc&per_page=10&page=0&condition_1=msl%3Amission&search=&extended=');
-    const data = await response.json();
-    const latest = data.items?.[0]?.sol;
-    if (latest) { roverCatalog.curiosity.sols = [latest, latest - 1, latest - 2, ...roverCatalog.curiosity.sols]; populateSols(roverCatalog.curiosity.sols, latest); }
-  } catch { /* The local sample remains usable offline. */ }
-}
-function loadImage(image) {
-  return new Promise((resolve) => { const element = new Image(); element.onload = () => resolve({ ...image, element }); element.onerror = () => resolve({ ...image, element: null }); element.src = image.https_url || image.image_files?.medium || image.image_files?.full_res; });
-}
-async function loadPanorama() {
-  const rover = roverCatalog[state.rover];
-  const sol = Number($('#solSelect').value);
-  $('#loadingLayer').hidden = false; setStatus('loadingStatus'); state.usedFallback = false; closePanel();
-  try {
-    if (rover.source !== 'nasa-msl') throw new Error('adapter-pending');
-    const images = await fetchCuriosity(sol);
-    if (!images.length) throw new Error('empty');
-    state.images = await Promise.all(images.map(loadImage));
-    $('#earthDate').textContent = formatDate(state.images[0]?.date_taken);
-    setStatus('loadedStatus', { count: state.images.length });
-  } catch (error) {
-    state.images = await Promise.all(geometrySample.map(loadImage)); state.usedFallback = true;
-    $('#earthDate').textContent = formatDate(geometrySample[0].date_taken);
-    setStatus(rover.source === 'nasa-msl' ? 'fallbackStatus' : 'comingSoon');
-  } finally {
-    $('#loadingLayer').hidden = true; $('#imageCount').textContent = `${state.images.length} images`; updateCoverage(); render();
-  }
-}
-function updateCoverage() {
-  const angles = state.images.map((image) => geometryOf(image).azimuth).sort((a, b) => a - b);
-  const coverage = angles.length < 2 ? 0 : Math.min(360, Math.round(Math.abs(angles.at(-1) - angles[0]) + 55));
-  $('#coverageValue').textContent = `${coverage}° / 360°`;
-}
-function wrappedX(x) { const w = canvas.width; return ((x % w) + w) % w; }
-function drawSky() {
-  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height); sky.addColorStop(0, '#162a47'); sky.addColorStop(.50, '#9e6245'); sky.addColorStop(.505, '#5c3a31'); sky.addColorStop(1, '#141823'); ctx.fillStyle = sky; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = 'rgba(235,245,255,.3)'; ctx.lineWidth = 2; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.moveTo(0, canvas.height / 2); ctx.lineTo(canvas.width, canvas.height / 2); ctx.stroke(); ctx.setLineDash([]);
-  for (let x = 0; x <= canvas.width; x += canvas.width / 12) { ctx.strokeStyle = 'rgba(220,244,255,.12)'; ctx.beginPath(); ctx.moveTo(x, canvas.height / 2 - 6); ctx.lineTo(x, canvas.height / 2 + 6); ctx.stroke(); }
-}
-function imagePlacement(image, index) {
-  const { azimuth, elevation } = geometryOf(image); const scale = image.scale_factor || 1;
-  const imageHeight = Math.min(canvas.height * .72, 420 * scale); const imageWidth = imageHeight * 1.25;
-  const base = ((azimuth + 180) / 360) * canvas.width + state.offset;
-  return { x: wrappedX(base) - imageWidth / 2, y: canvas.height * .5 - (elevation / 90) * canvas.height * .4 - imageHeight / 2, w: imageWidth, h: imageHeight, index };
-}
-function isHit(point, placement) { return point && point.x >= placement.x && point.x <= placement.x + placement.w && point.y >= placement.y && point.y <= placement.y + placement.h; }
-function drawFrame(item, placement, highlight = false) {
-  const { element } = item; if (!element) return;
-  ctx.save(); ctx.globalAlpha = highlight ? 1 : .92; ctx.shadowColor = highlight ? '#64edff' : 'rgba(0,0,0,.55)'; ctx.shadowBlur = highlight ? 28 : 12; ctx.drawImage(element, placement.x, placement.y, placement.w, placement.h);
-  ctx.strokeStyle = highlight ? '#8cf3ff' : 'rgba(220,245,255,.37)'; ctx.lineWidth = highlight ? 4 : 2; ctx.strokeRect(placement.x, placement.y, placement.w, placement.h); ctx.restore();
-}
-function render() {
-  drawSky(); const placements = state.images.map(imagePlacement); const hovered = placements.filter((p) => isHit(state.pointer, p));
-  state.altTarget = state.pointer?.altKey && hovered.length > 1 ? hovered[0] : null;
-  const drawOrder = state.images.map((item, index) => ({ item, placement: placements[index] }));
-  if (state.altTarget) { const i = drawOrder.findIndex((d) => d.placement.index === state.altTarget.index); drawOrder.push(drawOrder.splice(i, 1)[0]); }
-  drawOrder.forEach(({ item, placement }) => drawFrame(item, placement, state.altTarget?.index === placement.index));
-  if (state.pointer && !state.dragging) wrap.title = state.altTarget ? 'Alt: image beneath brought forward' : hovered.length ? 'Click for image information' : '';
-}
-function canvasPoint(event) { const rect = canvas.getBoundingClientRect(); return { x: (event.clientX - rect.left) * canvas.width / rect.width, y: (event.clientY - rect.top) * canvas.height / rect.height, altKey: event.altKey }; }
-function imageAt(point) { const matches = state.images.map(imagePlacement).filter((p) => isHit(point, p)); if (!matches.length) return null; return state.images[(point.altKey && matches.length > 1 ? matches[0] : matches.at(-1)).index]; }
-function openPanel(image) {
-  if (!image) return closePanel(); state.active = image; const m = dictionary.metadata; const geometry = geometryOf(image); const values = [[m.rover, roverCatalog[state.rover].name], [m.camera, image.instrument || image.camera?.instrument], [m.sol, image.sol], [m.earthDate, formatDate(image.date_taken || image.date_taken_utc)], [m.captured, image.date_taken || image.date_taken_utc || image.date_taken_mars], [m.siteDrive, `${image.site ?? '—'} / ${image.drive ?? '—'}`], [m.cameraModel, image.camera_model_type || image.camera?.camera_model_type || '—'], [m.cameraAxis, image.camera_vector || image.camera?.camera_vector || `${geometry.azimuth.toFixed(2)}° / ${geometry.elevation.toFixed(2)}°`], [m.cameraPosition, image.camera_position || image.camera?.camera_position || '—'], [m.mastAngles, `${image.extended?.mast_az ?? image.extended?.mastAz ?? '—'}° / ${image.extended?.mast_el ?? image.extended?.mastEl ?? '—'}°`]];
-  $('#imageTitle').textContent = image.imageid || 'Mars image'; $('#panelImage').src = image.https_url || image.image_files?.medium || image.image_files?.full_res; $('#metadataList').innerHTML = values.map(([key, value]) => `<div><dt>${key}</dt><dd>${value}</dd></div>`).join(''); $('#sourceLink').href = image.https_url || image.image_files?.full_res || '#'; $('#imagePanel').hidden = false;
-}
-function closePanel() { state.active = null; $('#imagePanel').hidden = true; }
-
-function attachEvents() {
-  $('#themeToggle').addEventListener('click', () => { const dark = document.documentElement.dataset.theme !== 'dark'; document.documentElement.dataset.theme = dark ? 'dark' : 'light'; $('#themeToggle').textContent = dark ? '☾' : '☼'; localStorage.setItem('mars360-theme', document.documentElement.dataset.theme); });
-  $('#roverSelect').addEventListener('change', (event) => { state.rover = event.target.value; populateSols(roverCatalog[state.rover].sols, roverCatalog[state.rover].sols[0]); $('#earthDate').textContent = '—'; });
-  $('#loadButton').addEventListener('click', loadPanorama); $('#closePanel').addEventListener('click', closePanel);
-  wrap.addEventListener('pointerdown', (event) => { state.dragging = false; state.dragStart = event.clientX; state.startOffset = state.offset; wrap.setPointerCapture(event.pointerId); });
-  wrap.addEventListener('pointermove', (event) => { state.pointer = canvasPoint(event); if (wrap.hasPointerCapture(event.pointerId)) { const delta = event.clientX - state.dragStart; if (Math.abs(delta) > 3) state.dragging = true; state.offset = state.startOffset + delta * canvas.width / wrap.clientWidth; } render(); });
-  wrap.addEventListener('pointerup', (event) => { if (!state.dragging) openPanel(imageAt(canvasPoint(event))); wrap.releasePointerCapture?.(event.pointerId); state.dragging = false; render(); });
-  wrap.addEventListener('pointerleave', () => { if (!state.dragging) { state.pointer = null; render(); } });
-  window.addEventListener('keydown', (event) => { if (event.key === 'Alt' && state.pointer) { state.pointer.altKey = true; render(); } }); window.addEventListener('keyup', (event) => { if (event.key === 'Alt' && state.pointer) { state.pointer.altKey = false; render(); } });
-}
-function init() {
-  document.documentElement.dataset.theme = localStorage.getItem('mars360-theme') || 'dark'; $('#themeToggle').textContent = document.documentElement.dataset.theme === 'dark' ? '☾' : '☼';
-  translate(); populateRovers(); populateSols(roverCatalog.curiosity.sols, roverCatalog.curiosity.sols[0]); $('#languageSelect').innerHTML = `<option value="en">${dictionary.name}</option>`; attachEvents(); resolveLatestCuriosity().finally(loadPanorama);
-}
-init();
+const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
+const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
+const fallback=[{imageid:'NLB_800890885EDR_F1160576CCAM04543M_',instrument:'NAV_LEFT_B',sol:4544,site:116,drive:576,date_taken:'2025-05-19T02:46:59Z',camera_model_type:'CAHVOR',camera_model_component_list:'(1.01824,0.66274,-1.84565);(-0.001607,0.68842,0.725299);(-1225.54,347.088,366.335);(-0.293737,-542.331,1207.8)',camera_vector:'(-0.005995,0.68287,0.730515)',extended:{mast_az:'90.47',mast_el:'-46.91'},https_url:'https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04544/opgs/edr/ncam/NLB_800890885EDR_F1160576CCAM04543M_.JPG'}];
+const s={rover:'curiosity',images:[],yaw:0,pitch:0,fov:112*D,pointer:null,drag:false,x:0,y:0,sy:0,sp:0,ready:0};
+const vec=x=>{let a=String(x||'').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig);return a&&a.map(Number)},dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=a=>{let n=Math.hypot(...a)||1;return a.map(x=>x/n)};
+function model(i){let p=String(i.camera_model_component_list||i.camera?.camera_model_component_list||'').split(';').map(vec),A=p[1]||vec(i.camera_vector||i.camera?.camera_vector);return A?{A:norm(A),H:p[2],V:p[3],C:p[0],type:i.camera_model_type||i.camera?.camera_model_type||'vector'}:null}
+function url(i){return i.https_url||i.url||i.image_files?.full_res||i.image_files?.medium} function date(x){return x?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x)):'—'}function stat(k,v={}){$('#statusText').textContent=(t[k]||k).replace(/\{(\w+)\}/g,(_,q)=>v[q]??'')}
+function bounds(i,img){let b=vec(i.subframe_rect||i.extended?.subframeRect)||[1,1,img?.naturalWidth||1024,img?.naturalHeight||1024];return{l:b[0],top:b[1],w:b[2],h:b[3]}}
+function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));return dot(r,m.A)<0?r.map(x=>-x):r}
+function basis(){let f=[Math.cos(s.pitch)*Math.cos(s.yaw),Math.cos(s.pitch)*Math.sin(s.yaw),Math.sin(s.pitch)],r=[-Math.sin(s.yaw),Math.cos(s.yaw),0];return{f,r,u:norm(cross(r,f))}}
+function project(a){let b=basis(),z=dot(a,b.f);if(z<=-.08)return null;let k=2/(1+z),sc=cv.height/(4*Math.tan(s.fov/4));return{x:cv.width/2+dot(a,b.r)*k*sc,y:cv.height/2-dot(a,b.u)*k*sc}}
+function unproject(x,y){let sc=cv.height/(4*Math.tan(s.fov/4)),qx=(x-cv.width/2)/sc,qy=-(y-cv.height/2)/sc,q=qx*qx+qy*qy,L=[2*qx/(1+q/4),2*qy/(1+q/4),(1-q/4)/(1+q/4)],b=basis();return norm([b.r[0]*L[0]+b.u[0]*L[1]+b.f[0]*L[2],b.r[1]*L[0]+b.u[1]*L[1]+b.f[1]*L[2],b.r[2]*L[0]+b.u[2]*L[1]+b.f[2]*L[2]])}
+function tri(im,a,b,c,A,B,C){let d=a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y);if(!d)return;let z=(q,r,u)=>[(q*(b.y-c.y)+r*(c.y-a.y)+u*(a.y-b.y))/d,(q*(c.x-b.x)+r*(a.x-c.x)+u*(b.x-a.x))/d,(q*(b.x*c.y-c.x*b.y)+r*(c.x*a.y-a.x*c.y)+u*(a.x*b.y-b.x*a.y))/d],X=z(A.x,B.x,C.x),Y=z(A.y,B.y,C.y);cx.save();cx.beginPath();cx.moveTo(A.x,A.y);cx.lineTo(B.x,B.y);cx.lineTo(C.x,C.y);cx.closePath();cx.clip();cx.setTransform(X[0],Y[0],X[1],Y[1],X[2],Y[2]);cx.drawImage(im,0,0);cx.restore()}
+function warp(i,hi){let im=i.element;if(!im?.naturalWidth)return;let b=bounds(i,im),n=5,c=[];for(let y=0;y<=n;y++){c[y]=[];for(let x=0;x<=n;x++){let R=ray(i,b.l+x/n*b.w,b.top+y/n*b.h);c[y][x]={p:{x:x/n*im.naturalWidth,y:y/n*im.naturalHeight},d:R&&project(R)}}}for(let y=0;y<n;y++)for(let x=0;x<n;x++){let a=c[y][x],b=c[y][x+1],d=c[y+1][x],e=c[y+1][x+1];if(a.d&&b.d&&d.d)tri(im,a.p,b.p,d.p,a.d,b.d,d.d);if(b.d&&e.d&&d.d)tri(im,b.p,e.p,d.p,b.d,e.d,d.d)}if(hi){let q=project(i.model.A);if(q){cx.strokeStyle='#91f3ff';cx.lineWidth=3;cx.beginPath();cx.arc(q.x,q.y,13,0,7);cx.stroke()}}}
+function hit(p){let R=unproject(p.x,p.y),a=s.images.filter(i=>{let m=i.model;if(!m?.H||!m?.V)return m&&Math.acos(Math.min(1,dot(R,m.A)))<25*D;let q=dot(m.A,R);if(q<=0)return false;let x=dot(m.H,R)/q,y=dot(m.V,R)/q,b=bounds(i,i.element);return x>=b.l&&x<=b.l+b.w&&y>=b.top&&y<=b.top+b.h});return a.length?(p.altKey&&a.length>1?a[0]:a.at(-1)):null}
+function render(){let g=cx.createLinearGradient(0,0,0,cv.height);g.addColorStop(0,'#101e36');g.addColorStop(.48,'#9c624b');g.addColorStop(.51,'#5d3b31');g.addColorStop(1,'#161721');cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height);let h=s.pointer?.altKey&&hit(s.pointer),a=[...s.images];if(h)a.push(a.splice(a.indexOf(h),1)[0]);a.forEach(i=>warp(i,i===h))}
+function point(e){let r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height,altKey:e.altKey}}
+function api(sol,page){return`https://mars.nasa.gov/api/v1/raw_image_items?order=sol%20asc%2Cdate_taken%20asc&per_page=100&page=${page}&condition_1=msl%3Amission&condition_2=${sol}%3Asol%3Agte&condition_3=${sol}%3Asol%3Alte&search=&extended=`}async function every(sol){let all=[],p=0,more=true;while(more){let r=await fetch(api(sol,p)),d=await r.json();if(!r.ok)throw Error();all.push(...(d.items||[]));more=!!d.more;if(++p>200)throw Error()}return all}
+function connect(i){let im=new Image;i.element=im;im.onload=()=>{s.ready++;$('#imageCount').textContent=(t.imageProgress||'').replace('{loaded}',s.ready).replace('{total}',s.images.length);render()};im.onerror=()=>i.failed=true;im.src=url(i)}
+function sols(max,sel=max){let el=$('#solSelect');el.innerHTML='';for(let q=max;q>=0;q--){let o=document.createElement('option');o.value=q;o.textContent=`Sol ${q}`;o.selected=q===sel;el.append(o)}}
+async function latest(){try{let r=await fetch('https://mars.nasa.gov/api/v1/raw_image_items?order=sol%20desc&per_page=1&page=0&condition_1=msl%3Amission&search=&extended='),d=await r.json(),q=d.items?.[0]?.sol;if(q){rovers.curiosity.latest=q;sols(q)}}catch{}}
+async function load(){let R=rovers[s.rover],sol=+$(' #solSelect'.trim()).value;$(' #loadingLayer'.trim()).hidden=false;stat('loadingStatus');s.images=[];s.ready=0;try{if(R.source!=='msl')throw Error();let all=await every(sol),good=all.filter(i=>model(i));if(!good.length)throw Error();s.images=good.sort((a,b)=>new Date(a.date_taken)-new Date(b.date_taken)).map(i=>({...i,model:model(i)}));$('#earthDate').textContent=date(s.images[0]?.date_taken);stat('loadedStatus',{count:s.images.length,total:all.length})}catch{s.images=fallback.map(i=>({...i,model:model(i)}));$('#earthDate').textContent=date(fallback[0].date_taken);stat(R.source==='msl'?'fallbackStatus':'comingSoon')}finally{s.images.forEach(connect);$('#imageCount').textContent=(t.imageProgress||'').replace('{loaded}',0).replace('{total}',s.images.length);$('#loadingLayer').hidden=true;render()}}
+function panel(i){if(!i){$('#imagePanel').hidden=true;return}let m=t.metadata,A=i.model?.A?.map(x=>x.toFixed(6)).join(', '),rows=[[m.rover,rovers[s.rover].name],[m.camera,i.instrument||i.camera?.instrument],[m.sol,i.sol],[m.earthDate,date(i.date_taken||i.date_taken_utc)],[m.captured,i.date_taken||i.date_taken_utc],[m.siteDrive,`${i.site??'—'} / ${i.drive??'—'}`],[m.cameraModel,i.model?.type],[m.cameraAxis,A],[m.cameraPosition,i.camera_position||i.camera?.camera_position||'—'],[m.mastAngles,`${i.extended?.mast_az??i.extended?.mastAz??'—'}° / ${i.extended?.mast_el??i.extended?.mastEl??'—'}°`]];$('#imageTitle').textContent=i.imageid;$('#panelImage').src=url(i);$('#metadataList').innerHTML=rows.map(x=>`<div><dt>${x[0]}</dt><dd>${x[1]||'—'}</dd></div>`).join('');$('#sourceLink').href=url(i);$('#imagePanel').hidden=false}
+function init(){document.documentElement.dataset.theme=localStorage.getItem('mars360-theme')||'dark';$('#themeToggle').textContent=document.documentElement.dataset.theme==='dark'?'☾':'☼';document.querySelectorAll('[data-i18n]').forEach(n=>t[n.dataset.i18n]&&(n.innerHTML=t[n.dataset.i18n]));$('#languageSelect').innerHTML=`<option>${t.name}</option>`;$('#roverSelect').innerHTML=Object.entries(rovers).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');sols(rovers.curiosity.latest);$('#roverSelect').onchange=e=>{s.rover=e.target.value;sols(rovers[s.rover].latest)};$('#loadButton').onclick=load;$('#closePanel').onclick=()=>panel(null);$('#themeToggle').onclick=()=>{let n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;$('#themeToggle').textContent=n==='dark'?'☾':'☼';localStorage.setItem('mars360-theme',n)};$('#fullscreenButton').onclick=()=>document.fullscreenElement?document.exitFullscreen():wrap.requestFullscreen();wrap.onpointerdown=e=>{e.preventDefault();s.drag=false;s.x=e.clientX;s.y=e.clientY;s.sy=s.yaw;s.sp=s.pitch;wrap.setPointerCapture(e.pointerId)};wrap.onpointermove=e=>{s.pointer=point(e);if(wrap.hasPointerCapture(e.pointerId)){let x=e.clientX-s.x,y=e.clientY-s.y;s.drag=Math.abs(x)+Math.abs(y)>3;s.yaw=s.sy-x/wrap.clientWidth*s.fov;s.pitch=Math.max(-89*D,Math.min(89*D,s.sp+y/wrap.clientHeight*s.fov))}render()};wrap.onpointerup=e=>{if(!s.drag)panel(hit(point(e)));wrap.releasePointerCapture?.(e.pointerId);s.drag=false;render()};wrap.onpointerleave=()=>{if(!s.drag){s.pointer=null;render()}};wrap.addEventListener('wheel',e=>{e.preventDefault();s.fov=Math.max(25*D,Math.min(175*D,s.fov*(e.deltaY<0?.88:1.14)));s.pointer=point(e);render()},{passive:false});window.onkeydown=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=true;render()}};window.onkeyup=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=false;render()}};latest().finally(load)}init();
