@@ -3,6 +3,11 @@ const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
 const MIN_FOV_DEGREES = 15;
 const MAX_FOV_DEGREES = 75;
+const ROUTE_HEADING_OFFSET_DEGREES = 0;
+const ROUTE_SOL_WINDOW = 100;
+const ROUTE_LABEL_MIN_PX = 13;
+const ROUTE_LABEL_MAX_PX = 22;
+let EDR_M_VERTICAL_OFFSET_DEGREES = 0;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
 const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
@@ -12,7 +17,7 @@ const vec=x=>{let a=String(x||'').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig);return a&
 function model(i){let p=String(i.camera_model_component_list||i.camera?.camera_model_component_list||'').split(';').map(vec),A=p[1]||vec(i.camera_vector||i.camera?.camera_vector);return A?{A:norm(A),H:p[2],V:p[3],C:p[0],type:i.camera_model_type||i.camera?.camera_model_type||'vector'}:null}
 function url(i){return i.https_url||i.url||i.image_files?.full_res||i.image_files?.medium} function date(x){return x?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x)):'—'}function stat(k,v={}){$('#statusText').textContent=(t[k]||k).replace(/\{(\w+)\}/g,(_,q)=>v[q]??'')}
 function bounds(i,img){let b=vec(i.subframe_rect||i.extended?.subframeRect)||[1,1,img?.naturalWidth||1024,img?.naturalHeight||1024];return{l:b[0],top:b[1],w:b[2],h:b[3]}}
-function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));return dot(r,m.A)<0?r.map(x=>-x):r}
+function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));if(dot(r,m.A)<0)r=r.map(x=>-x);if(/EDR_M\d+/i.test(imageIdentity(i))&&EDR_M_VERTICAL_OFFSET_DEGREES){let axis=norm(cross(m.V,m.A)),angle=EDR_M_VERTICAL_OFFSET_DEGREES*D,co=Math.cos(angle),si=Math.sin(angle),c=cross(axis,r),d=dot(axis,r);r=norm(r.map((v,n)=>v*co+c[n]*si+axis[n]*d*(1-co)))}return r}
 function basis(){let f=[Math.cos(s.pitch)*Math.cos(s.yaw),Math.cos(s.pitch)*Math.sin(s.yaw),Math.sin(s.pitch)],r=[-Math.sin(s.yaw),Math.cos(s.yaw),0];return{f,r,u:norm(cross(r,f))}}
 function project(a){let b=basis(),z=dot(a,b.f);if(z<=-.08)return null;let k=2/(1+z),sc=cv.height/(4*Math.tan(s.fov/4));return{x:cv.width/2+dot(a,b.r)*k*sc,y:cv.height/2-dot(a,b.u)*k*sc}}
 function unproject(x,y){let sc=cv.height/(4*Math.tan(s.fov/4)),qx=(x-cv.width/2)/sc,qy=-(y-cv.height/2)/sc,q=qx*qx+qy*qy,L=[qx/(1+q/4),qy/(1+q/4),(1-q/4)/(1+q/4)],b=basis();return norm([b.r[0]*L[0]+b.u[0]*L[1]+b.f[0]*L[2],b.r[1]*L[0]+b.u[1]*L[1]+b.f[1]*L[2],b.r[2]*L[0]+b.u[2]*L[1]+b.f[2]*L[2]])}
@@ -27,7 +32,7 @@ function sols(max,sel=max){let el=$('#solSelect');el.innerHTML='';for(let q=max;
 async function latest(){try{let r=await fetch('https://mars.nasa.gov/api/v1/raw_image_items?order=sol%20desc&per_page=1&page=0&condition_1=msl%3Amission&search=&extended='),d=await r.json(),q=d.items?.[0]?.sol;if(q){rovers.curiosity.latest=q;sols(q)}}catch{}}
 async function load(){let R=rovers[s.rover],sol=+$(' #solSelect'.trim()).value;stat('loadingStatus');s.images=[];s.ready=0;try{if(R.source!=='msl')throw Error();let all=await every(sol),good=all.filter(i=>model(i)&&!/(?:^|_)EDR_T/.test(i.imageid||''));if(!good.length)throw Error();s.images=good.sort((a,b)=>new Date(a.date_taken)-new Date(b.date_taken)).map(i=>({...i,model:model(i)}));$('#earthDate').textContent=date(s.images[0]?.date_taken);stat('loadedStatus',{count:s.images.length,total:all.length})}catch{s.images=fallback.map(i=>({...i,model:model(i)}));$('#earthDate').textContent=date(fallback[0].date_taken);stat(R.source==='msl'?'fallbackStatus':'comingSoon')}finally{s.images.forEach(connect);$('#imageCount').textContent=(t.imageProgress||'').replace('{loaded}',0).replace('{total}',s.images.length);render()}}
 function panel(i){if(!i){$('#imagePanel').hidden=true;return}let m=t.metadata,A=i.model?.A?.map(x=>x.toFixed(6)).join(', '),rows=[[m.rover,rovers[s.rover].name],[m.camera,i.instrument||i.camera?.instrument],[m.sol,i.sol],[m.earthDate,date(i.date_taken||i.date_taken_utc)],[m.captured,i.date_taken||i.date_taken_utc],[m.siteDrive,`${i.site??'—'} / ${i.drive??'—'}`],[m.cameraModel,i.model?.type],[m.cameraAxis,A],[m.cameraPosition,i.camera_position||i.camera?.camera_position||'—'],[m.mastAngles,`${i.extended?.mast_az??i.extended?.mastAz??'—'}° / ${i.extended?.mast_el??i.extended?.mastEl??'—'}°`]];$('#imageTitle').textContent=i.imageid;$('#panelImage').src=url(i);$('#metadataList').innerHTML=rows.map(x=>`<div><dt>${x[0]}</dt><dd>${x[1]||'—'}</dd></div>`).join('');$('#sourceLink').href=url(i);$('#imagePanel').hidden=false}
-function init(){document.documentElement.dataset.theme=localStorage.getItem('mars360-theme')||'dark';$('#themeToggle').textContent=document.documentElement.dataset.theme==='dark'?'☾':'☼';document.querySelectorAll('[data-i18n]').forEach(n=>t[n.dataset.i18n]&&(n.innerHTML=t[n.dataset.i18n]));$('#languageSelect').innerHTML=`<option>${t.name}</option>`;$('#roverSelect').innerHTML=Object.entries(rovers).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');sols(rovers.curiosity.latest);$('#roverSelect').onchange=e=>{s.rover=e.target.value;sols(rovers[s.rover].latest)};$('#loadButton').onclick=load;$('#closePanel').onclick=()=>panel(null);$('#themeToggle').onclick=()=>{let n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;$('#themeToggle').textContent=n==='dark'?'☾':'☼';localStorage.setItem('mars360-theme',n)};$('#fullscreenButton').onclick=()=>document.fullscreenElement?document.exitFullscreen():wrap.requestFullscreen();wrap.onpointerdown=e=>{e.preventDefault();s.drag=false;s.x=e.clientX;s.y=e.clientY;s.sy=s.yaw;s.sp=s.pitch;wrap.setPointerCapture(e.pointerId)};wrap.onpointermove=e=>{s.pointer=point(e);if(wrap.hasPointerCapture(e.pointerId)){let x=e.clientX-s.x,y=e.clientY-s.y;s.drag=Math.abs(x)+Math.abs(y)>3;s.yaw=s.sy-x/wrap.clientWidth*s.fov;s.pitch=Math.max(-89*D,Math.min(89*D,s.sp+y/wrap.clientHeight*s.fov))}render()};wrap.onpointerup=e=>{if(!s.drag)panel(hit(point(e)));wrap.releasePointerCapture?.(e.pointerId);s.drag=false;render()};wrap.onpointerleave=()=>{if(!s.drag){s.pointer=null;render()}};wrap.addEventListener('wheel',e=>{e.preventDefault();s.fov=Math.max(25*D,Math.min(175*D,s.fov*(e.deltaY<0?.88:1.14)));s.pointer=point(e);render()},{passive:false});window.onkeydown=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=true;render()}};window.onkeyup=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=false;render()}};latest().finally(load)}
+function init(){document.documentElement.dataset.theme=localStorage.getItem('mars360-theme')||'dark';$('#themeToggle').textContent=document.documentElement.dataset.theme==='dark'?'☾':'☼';document.querySelectorAll('[data-i18n]').forEach(n=>t[n.dataset.i18n]&&(n.innerHTML=t[n.dataset.i18n]));$('#languageSelect').innerHTML=`<option>${t.name}</option>`;$('#roverSelect').innerHTML=Object.entries(rovers).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');sols(rovers.curiosity.latest);$('#roverSelect').onchange=e=>{s.rover=e.target.value;sols(rovers[s.rover].latest)};$('#loadButton').onclick=load;$('#closePanel').onclick=()=>panel(null);$('#themeToggle').onclick=()=>{let n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;$('#themeToggle').textContent=n==='dark'?'☾':'☼';localStorage.setItem('mars360-theme',n);scheduleShareUrl()};$('#fullscreenButton').onclick=()=>document.fullscreenElement?document.exitFullscreen():wrap.requestFullscreen();wrap.onpointerdown=e=>{e.preventDefault();s.drag=false;s.x=e.clientX;s.y=e.clientY;s.sy=s.yaw;s.sp=s.pitch;wrap.setPointerCapture(e.pointerId)};wrap.onpointermove=e=>{s.pointer=point(e);if(wrap.hasPointerCapture(e.pointerId)){let x=e.clientX-s.x,y=e.clientY-s.y;s.drag=Math.abs(x)+Math.abs(y)>3;s.yaw=s.sy-x/wrap.clientWidth*s.fov;s.pitch=Math.max(-89*D,Math.min(89*D,s.sp+y/wrap.clientHeight*s.fov))}render()};wrap.onpointerup=e=>{if(!s.drag)panel(hit(point(e)));wrap.releasePointerCapture?.(e.pointerId);s.drag=false;render()};wrap.onpointerleave=()=>{if(!s.drag){s.pointer=null;render()}};wrap.addEventListener('wheel',e=>{e.preventDefault();s.fov=Math.max(MIN_FOV_DEGREES*D,Math.min(MAX_FOV_DEGREES*D,s.fov*(e.deltaY<0?.88:1.14)));s.pointer=point(e);render()},{passive:false});window.onkeydown=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=true;render()}};window.onkeyup=e=>{if(e.key==='Alt'&&s.pointer){s.pointer.altKey=false;render()}};latest().finally(load)}
 init();
 
 // NASA's "T" EDR products are transfer thumbnails. The identity may be in a
@@ -62,7 +67,7 @@ function panoramaCoverage() {
   return Math.min(360,Math.max(0,Math.round(total/D)));
 }
 const paintPanorama=render;
-render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; drawRouteHud(); };
+render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; drawRouteOverlay(); scheduleShareUrl(); };
 
 // Square S/F products are shown whole in the information panel; other
 // subframes retain the compact crop-oriented preview.
@@ -91,7 +96,7 @@ async function loadRoute() {
     const [header,...rows]=(await response.text()).trim().split(/\r?\n/), keys=header.split(',');
     const index=Object.fromEntries(keys.map((key,n)=>[key,n]));
     const bySol=new Map;
-    for (const row of rows) { const field=row.split(','); if (field[index.frame]!=='ROVER') continue; const sol=+field[index.sol], east=+field[index.easting], north=+field[index.northing]; if (sol>=0&&Number.isFinite(east)&&Number.isFinite(north)) bySol.set(sol,{sol,east,north,elevation:+field[index.elevation],site:+field[index.site],drive:+field[index.drive]}); }
+    for (const row of rows) { const field=row.split(','); if (field[index.frame]!=='ROVER') continue; const sol=+field[index.sol], east=+field[index.easting], north=+field[index.northing]; if (sol>=0&&Number.isFinite(east)&&Number.isFinite(north)) bySol.set(sol,{sol,east,north,elevation:+field[index.elevation],yaw:+field[index.yaw],site:+field[index.site],drive:+field[index.drive]}); }
     route.points=[...bySol.values()].sort((a,b)=>a.sol-b.sol);
     debug('Route layer', `loaded ${route.points.length} localized Sol positions from PDS PLACES`);
   } catch (error) { debug('Route layer unavailable', error.message); }
@@ -115,3 +120,40 @@ function drawRouteHud() {
 }
 wrap.addEventListener('pointerup',(event)=>{ if (s.drag) return; const p=point(event), label=route.labels.find(item=>p.x>=item.x&&p.x<=item.x+item.w&&p.y>=item.y&&p.y<=item.y+item.h); if (!label) return; event.preventDefault(); event.stopImmediatePropagation(); wrap.releasePointerCapture?.(event.pointerId); routeSelect(label.sol); },{capture:true});
 loadRoute();
+
+function currentRoutePoint() {
+  const sol=+$('#solSelect').value;
+  return route.points.reduce((best,point)=>Math.abs(point.sol-sol)<Math.abs(best.sol-sol)?point:best,route.points[0]);
+}
+function routeVector(point,origin) {
+  // PLACES uses map easting/northing/elevation; CAHV vectors use rover axes
+  // (+X forward, +Y right, +Z down). Heading offset is exposed for calibration.
+  const heading=(origin.yaw+ROUTE_HEADING_OFFSET_DEGREES)*D, east=point.east-origin.east, north=point.north-origin.north, up=point.elevation-origin.elevation;
+  return [east*Math.sin(heading)+north*Math.cos(heading),east*Math.cos(heading)-north*Math.sin(heading),-up];
+}
+function drawRouteOverlay() {
+  if (s.rover!=='curiosity'||!route.points.length||!s.images.length) return;
+  const origin=currentRoutePoint(), sol=+$('#solSelect').value, camera=s.images[0].model?.C||[0,0,0];
+  const visible=route.points.filter(point=>Math.abs(point.sol-sol)<=ROUTE_SOL_WINDOW);
+  const screen=visible.map(point=>{const local=routeVector(point,origin), relative=local.map((value,n)=>value-camera[n]);return {...point,screen:project(norm(relative))}});
+  route.labels=[];
+  const segments=[]; let active=[];
+  for(const point of screen){if(point.screen)active.push(point);else if(active.length){segments.push(active);active=[]}} if(active.length)segments.push(active);
+  cx.save(); cx.lineJoin='round'; cx.lineCap='round';
+  for(const segment of segments){if(segment.length<2)continue;cx.beginPath();segment.forEach((point,n)=>n?cx.lineTo(point.screen.x,point.screen.y):cx.moveTo(point.screen.x,point.screen.y));cx.strokeStyle='rgba(0,0,0,.72)';cx.lineWidth=8;cx.stroke();cx.strokeStyle='rgba(255,255,255,.94)';cx.lineWidth=3;cx.stroke()}
+  const originIndex=route.points.indexOf(origin), labels=[];
+  for(let delta=-5;delta<=5;delta++){const point=route.points[originIndex+delta];if(point&&Math.abs(point.sol-sol)<=ROUTE_SOL_WINDOW)labels.push(point)}
+  for(const point of labels){const projected=screen.find(candidate=>candidate.sol===point.sol)?.screen;if(!projected)continue;const distance=Math.abs(point.sol-sol), ratio=1-distance/ROUTE_SOL_WINDOW, size=Math.round(ROUTE_LABEL_MIN_PX+(ROUTE_LABEL_MAX_PX-ROUTE_LABEL_MIN_PX)*Math.max(0,ratio));const text=`Sol ${point.sol}`, font=`700 ${size}px system-ui`;cx.font=font;const width=cx.measureText(text).width+12,height=size+9,x=projected.x-width/2,y=projected.y-height-11;cx.fillStyle='rgba(0,0,0,.64)';cx.strokeStyle='rgba(255,255,255,.9)';cx.lineWidth=1;cx.fillRect(x,y,width,height);cx.strokeRect(x,y,width,height);cx.fillStyle='#fff';cx.fillText(text,x+6,y+size+1);route.labels.push({sol:point.sol,x,y,w:width,h:height});}
+  const selected=screen.find(point=>point.sol===origin.sol);if(selected?.screen){cx.fillStyle='#fff';cx.strokeStyle='#000';cx.lineWidth=3;cx.beginPath();cx.arc(selected.screen.x,selected.screen.y,6,0,Math.PI*2);cx.fill();cx.stroke()}cx.restore();
+}
+
+window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;if(event.key!=='ArrowUp'&&event.key!=='ArrowDown')return;event.preventDefault();EDR_M_VERTICAL_OFFSET_DEGREES+=event.key==='ArrowUp'?1:-1;debug('EDR_M vertical offset', `${EDR_M_VERTICAL_OFFSET_DEGREES}°`);render();});
+
+let shareTimer=null,pendingSharedImage=null,restoringShare=false;
+function shareParams(){const params=new URLSearchParams();params.set('rover',s.rover);params.set('sol',$('#solSelect').value);params.set('yaw',(s.yaw/D).toFixed(3));params.set('pitch',(s.pitch/D).toFixed(3));params.set('fov',(s.fov/D).toFixed(3));params.set('theme',document.documentElement.dataset.theme);if(!$('#imagePanel').hidden)params.set('image',$('#imageTitle').textContent);return params;}
+function scheduleShareUrl(){if(restoringShare)return;clearTimeout(shareTimer);shareTimer=setTimeout(()=>history.replaceState(null,'',`#${shareParams()}`),1000);}
+const sharedPanel=panel;
+panel=(image)=>{sharedPanel(image);scheduleShareUrl();};
+function restoreShareUrl(){const params=new URLSearchParams(location.hash.slice(1));if(!params.size)return;restoringShare=true;const rover=params.get('rover');if(rovers[rover]){s.rover=rover;$('#roverSelect').value=rover;sols(rovers[rover].latest)}const sol=params.get('sol');if(sol&&$('#solSelect').querySelector(`option[value="${sol}"]`))$('#solSelect').value=sol;for(const [key,field]of [['yaw','yaw'],['pitch','pitch'],['fov','fov']]){const value=Number(params.get(key));if(Number.isFinite(value))s[field]=value*D}const theme=params.get('theme');if(theme==='dark'||theme==='light'){document.documentElement.dataset.theme=theme;$('#themeToggle').textContent=theme==='dark'?'☾':'☼'}pendingSharedImage=params.get('image');$('#loadButton').click();let attempts=0;const reveal=setInterval(()=>{const image=s.images.find(item=>item.imageid===pendingSharedImage);if(image){panel(image);pendingSharedImage=null;clearInterval(reveal);restoringShare=false;scheduleShareUrl()}else if(!pendingSharedImage||++attempts>250){pendingSharedImage=null;clearInterval(reveal);restoringShare=false;scheduleShareUrl()}},100);}
+window.addEventListener('hashchange',restoreShareUrl);
+restoreShareUrl();
