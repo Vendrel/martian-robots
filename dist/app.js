@@ -7,8 +7,9 @@ let ROUTE_HEADING_OFFSET_DEGREES = 0;
 const ROUTE_SOL_WINDOW = 100;
 const ROUTE_LABEL_MIN_PX = 13;
 const ROUTE_LABEL_MAX_PX = 22;
-let EDR_M_VERTICAL_OFFSET_DEGREES = 27;
-let EDR_S_VERTICAL_OFFSET_DEGREES = EDR_M_VERTICAL_OFFSET_DEGREES;
+// Applies to every product whose actual pixel dimensions are not square.
+// Kept separate from the route heading calibration because it corrects camera geometry.
+let NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES = 27;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
 const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
@@ -18,7 +19,7 @@ const vec=x=>{let a=String(x||'').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig);return a&
 function model(i){let p=String(i.camera_model_component_list||i.camera?.camera_model_component_list||'').split(';').map(vec),A=p[1]||vec(i.camera_vector||i.camera?.camera_vector);return A?{A:norm(A),H:p[2],V:p[3],C:p[0],type:i.camera_model_type||i.camera?.camera_model_type||'vector'}:null}
 function url(i){return i.https_url||i.url||i.image_files?.full_res||i.image_files?.medium} function date(x){return x?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x)):'—'}function stat(k,v={}){$('#statusText').textContent=(t[k]||k).replace(/\{(\w+)\}/g,(_,q)=>v[q]??'')}
 function bounds(i,img){let b=vec(i.subframe_rect||i.extended?.subframeRect)||[1,1,img?.naturalWidth||1024,img?.naturalHeight||1024];return{l:b[0],top:b[1],w:b[2],h:b[3]}}
-function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));if(dot(r,m.A)<0)r=r.map(x=>-x);let id=imageIdentity(i),offset=/EDR_M\d+/i.test(id)?EDR_M_VERTICAL_OFFSET_DEGREES:/EDR_S\d+/i.test(id)?EDR_S_VERTICAL_OFFSET_DEGREES:0;if(offset){let axis=norm(cross(m.V,m.A)),angle=offset*D,co=Math.cos(angle),si=Math.sin(angle),c=cross(axis,r),d=dot(axis,r);r=norm(r.map((v,n)=>v*co+c[n]*si+axis[n]*d*(1-co)))}return r}
+function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));if(dot(r,m.A)<0)r=r.map(x=>-x);let b=bounds(i,i.element),offset=b.w!==b.h?NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES:0;if(offset){let axis=norm(cross(m.V,m.A)),angle=offset*D,co=Math.cos(angle),si=Math.sin(angle),c=cross(axis,r),d=dot(axis,r);r=norm(r.map((v,n)=>v*co+c[n]*si+axis[n]*d*(1-co)))}return r}
 function basis(){let f=[Math.cos(s.pitch)*Math.cos(s.yaw),Math.cos(s.pitch)*Math.sin(s.yaw),Math.sin(s.pitch)],r=[-Math.sin(s.yaw),Math.cos(s.yaw),0];return{f,r,u:norm(cross(r,f))}}
 function project(a){let b=basis(),z=dot(a,b.f);if(z<=-.08)return null;let k=2/(1+z),sc=cv.height/(4*Math.tan(s.fov/4));return{x:cv.width/2+dot(a,b.r)*k*sc,y:cv.height/2-dot(a,b.u)*k*sc}}
 function unproject(x,y){let sc=cv.height/(4*Math.tan(s.fov/4)),qx=(x-cv.width/2)/sc,qy=-(y-cv.height/2)/sc,q=qx*qx+qy*qy,L=[qx/(1+q/4),qy/(1+q/4),(1-q/4)/(1+q/4)],b=basis();return norm([b.r[0]*L[0]+b.u[0]*L[1]+b.f[0]*L[2],b.r[1]*L[0]+b.u[1]*L[1]+b.f[1]*L[2],b.r[2]*L[0]+b.u[2]*L[1]+b.f[2]*L[2]])}
@@ -148,7 +149,7 @@ function drawRouteOverlay() {
   const selected=screen.find(point=>point.sol===origin.sol);if(selected?.screen){cx.fillStyle='#fff';cx.strokeStyle='#000';cx.lineWidth=3;cx.beginPath();cx.arc(selected.screen.x,selected.screen.y,6,0,Math.PI*2);cx.fill();cx.stroke()}cx.restore();
 }
 
-window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;const key=event.key.toLowerCase();if(key==='arrowup'||key==='arrowdown'){event.preventDefault();EDR_M_VERTICAL_OFFSET_DEGREES+=key==='arrowup'?1:-1;EDR_S_VERTICAL_OFFSET_DEGREES=EDR_M_VERTICAL_OFFSET_DEGREES;debug('EDR_M / EDR_S vertical offset', `${EDR_M_VERTICAL_OFFSET_DEGREES}°`);render()}else if(key==='q'||key==='w'){event.preventDefault();ROUTE_HEADING_OFFSET_DEGREES+=key==='w'?1:-1;debug('Route heading offset', `${ROUTE_HEADING_OFFSET_DEGREES}°`);render();}});
+window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;const key=event.key.toLowerCase();if(key==='arrowup'||key==='arrowdown'){event.preventDefault();NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES+=key==='arrowup'?1:-1;debug('Non-square product vertical offset', `${NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES}°`);render()}else if(key==='q'||key==='w'){event.preventDefault();ROUTE_HEADING_OFFSET_DEGREES+=key==='w'?1:-1;debug('Route heading offset', `${ROUTE_HEADING_OFFSET_DEGREES}°`);render();}});
 
 let shareTimer=null,pendingSharedImage=null,restoringShare=false;
 function shareParams(){const params=new URLSearchParams();params.set('rover',s.rover);params.set('sol',$('#solSelect').value);params.set('yaw',(s.yaw/D).toFixed(3));params.set('pitch',(s.pitch/D).toFixed(3));params.set('fov',(s.fov/D).toFixed(3));params.set('theme',document.documentElement.dataset.theme);if(!$('#imagePanel').hidden)params.set('image',$('#imageTitle').textContent);return params;}
