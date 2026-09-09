@@ -1,13 +1,13 @@
 // Navigation polarity: use 1 normally or -1 to invert an axis.
 const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
-const MIN_FOV_DEGREES = 25;
-const MAX_FOV_DEGREES = 175;
+const MIN_FOV_DEGREES = 15;
+const MAX_FOV_DEGREES = 120;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
 const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
 const fallback=[{imageid:'NLB_800890885EDR_F1160576CCAM04543M_',instrument:'NAV_LEFT_B',sol:4544,site:116,drive:576,date_taken:'2025-05-19T02:46:59Z',camera_model_type:'CAHVOR',camera_model_component_list:'(1.01824,0.66274,-1.84565);(-0.001607,0.68842,0.725299);(-1225.54,347.088,366.335);(-0.293737,-542.331,1207.8)',camera_vector:'(-0.005995,0.68287,0.730515)',extended:{mast_az:'90.47',mast_el:'-46.91'},https_url:'https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04544/opgs/edr/ncam/NLB_800890885EDR_F1160576CCAM04543M_.JPG'}];
-const s={rover:'curiosity',images:[],yaw:0,pitch:0,fov:112*D,pointer:null,drag:false,x:0,y:0,sy:0,sp:0,ready:0};
+const s={rover:'curiosity',images:[],yaw:0,pitch:0,fov:MAX_FOV_DEGREES*D,pointer:null,drag:false,x:0,y:0,sy:0,sp:0,ready:0};
 const vec=x=>{let a=String(x||'').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig);return a&&a.map(Number)},dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=a=>{let n=Math.hypot(...a)||1;return a.map(x=>x/n)};
 function model(i){let p=String(i.camera_model_component_list||i.camera?.camera_model_component_list||'').split(';').map(vec),A=p[1]||vec(i.camera_vector||i.camera?.camera_vector);return A?{A:norm(A),H:p[2],V:p[3],C:p[0],type:i.camera_model_type||i.camera?.camera_model_type||'vector'}:null}
 function url(i){return i.https_url||i.url||i.image_files?.full_res||i.image_files?.medium} function date(x){return x?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x)):'—'}function stat(k,v={}){$('#statusText').textContent=(t[k]||k).replace(/\{(\w+)\}/g,(_,q)=>v[q]??'')}
