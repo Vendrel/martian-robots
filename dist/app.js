@@ -3,6 +3,7 @@ const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
 const MIN_FOV_DEGREES = 15;
 const MAX_FOV_DEGREES = 75;
+const DOWNLOAD_DELAY_MS = 200;
 // Applies to every product whose actual pixel dimensions are not square.
 let NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES = 0;
 let SHOW_DEBUG_LOG = false;
@@ -117,3 +118,14 @@ $('#previousSolButton').addEventListener('click',()=>stepSol(-1));
 $('#nextSolButton').addEventListener('click',()=>stepSol(1));
 $('#roverSelect').onchange=(event)=>{s.rover=event.target.value;sols(rovers[s.rover].latest);scheduleShareUrl();};
 syncSolControls();
+
+// Export is intentionally a JSON work manifest: it retains the original API
+// records and the parsed CAHV vectors beside the downloaded image files.
+const sleep=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
+function downloadName(image,index){const path=new URL(url(image),location.href).pathname.split('/').pop();return path||`${String(index+1).padStart(3,'0')}-${image.imageid||'mars-image'}.jpg`;}
+function saveBlob(blob,name){const href=URL.createObjectURL(blob),link=document.createElement('a');link.href=href;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),2000);}
+function saveUrl(image,index){const link=document.createElement('a');link.href=url(image);link.download=downloadName(image,index);link.rel='noreferrer';document.body.append(link);link.click();link.remove();}
+async function saveImage(image,index){try{const response=await fetch(url(image),{cache:'force-cache'});if(!response.ok)throw Error(`HTTP ${response.status}`);saveBlob(await response.blob(),downloadName(image,index));}catch{saveUrl(image,index);}}
+function exportManifest(){const strip=({element,...image})=>image;return {format:'mars-rover-360-export/v1',exportedAt:new Date().toISOString(),rover:s.rover,sol:+$('#solSelect').value,view:{yawDegrees:s.yaw/D,pitchDegrees:s.pitch/D,fovDegrees:s.fov/D},images:s.images.map((image,index)=>({...strip(image),downloadFile:downloadName(image,index),cameraGeometry:image.model?{type:image.model.type,C:image.model.C,A:image.model.A,H:image.model.H,V:image.model.V,subframe:bounds(image,image.element)}:null}))};}
+async function downloadAll(){const button=$('#downloadAllButton'),images=[...s.images];if(!images.length||button.disabled)return;button.disabled=true;const original=t.downloadAll||'Download all';try{saveBlob(new Blob([JSON.stringify(exportManifest(),null,2)],{type:'application/json'}),`mars-rover-360-${s.rover}-sol-${$('#solSelect').value}-manifest.json`);await sleep(DOWNLOAD_DELAY_MS);for(let index=0;index<images.length;index++){button.textContent=(t.downloading||'Downloading {current}/{total}…').replace('{current}',index+1).replace('{total}',images.length);await saveImage(images[index],index);if(index<images.length-1)await sleep(DOWNLOAD_DELAY_MS);}}finally{button.disabled=false;button.textContent=original;}}
+$('#downloadAllButton').addEventListener('click',downloadAll);
