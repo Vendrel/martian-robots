@@ -3,12 +3,7 @@ const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
 const MIN_FOV_DEGREES = 15;
 const MAX_FOV_DEGREES = 75;
-let ROUTE_HEADING_OFFSET_DEGREES = 25;
-const ROUTE_SOL_WINDOW = 100;
-const ROUTE_LABEL_MIN_PX = 13;
-const ROUTE_LABEL_MAX_PX = 22;
 // Applies to every product whose actual pixel dimensions are not square.
-// Kept separate from the route heading calibration because it corrects camera geometry.
 let NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES = 0;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
@@ -49,7 +44,6 @@ wrap.addEventListener('wheel', (event) => { event.preventDefault(); event.stopIm
 wrap.addEventListener('dblclick', (event) => { event.preventDefault(); const target = unproject(point(event).x, point(event).y); const startYaw=s.yaw, startPitch=s.pitch, endYaw=Math.atan2(target[1], target[0]), endPitch=Math.asin(target[2]); const turn=Math.atan2(Math.sin(endYaw-startYaw), Math.cos(endYaw-startYaw)); const began=performance.now(), duration=380; const animate=(now) => { const p=Math.min(1,(now-began)/duration), eased=1-Math.pow(1-p,3); s.yaw=startYaw+turn*eased; s.pitch=startPitch+(endPitch-startPitch)*eased; render(); if(p<1)requestAnimationFrame(animate); }; requestAnimationFrame(animate); });
 debug('Debug enabled', `xFactor=${NAVIGATION_X_FACTOR}, yFactor=${NAVIGATION_Y_FACTOR}`);
 debug('FOV limits', `min=${MIN_FOV_DEGREES}°, max=${MAX_FOV_DEGREES}°`);
-debug('Route layer', 'Loading the PDS PLACES localized rover route…');
 
 // Horizontal angular coverage is calculated from the actual left and right
 // rays of each visible product, then unioned on the 0–360° circle.
@@ -69,7 +63,7 @@ function panoramaCoverage() {
   return Math.min(360,Math.max(0,Math.round(total/D)));
 }
 const paintPanorama=render;
-render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; drawRouteOverlay(); scheduleShareUrl(); };
+render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; scheduleShareUrl(); };
 
 // Keep the native aspect ratio in the information panel.  Only full-frame F
 // products may expand beyond the compact preview height.
@@ -87,69 +81,7 @@ $('#fullscreenButton').onclick=toggleFullscreen;
 $('#fullscreenButton').addEventListener('pointerdown',(event)=>event.stopPropagation());
 document.addEventListener('fullscreenchange',()=>{ $('#fullscreenButton').textContent=document.fullscreenElement?'⛶':'⛶'; });
 
-// PDS PLACES is the localization team's public, corrected position table.
-const ROUTE_CSV='https://planetarydata.jpl.nasa.gov/img/data/msl/msl_places/data_localizations/localized_pos.csv';
-const route={points:[],labels:[],box:null,loading:false};
-async function loadRoute() {
-  if (route.loading || route.points.length) return;
-  route.loading=true;
-  try {
-    const response=await fetch(ROUTE_CSV); if (!response.ok) throw Error(`HTTP ${response.status}`);
-    const [header,...rows]=(await response.text()).trim().split(/\r?\n/), keys=header.split(',');
-    const index=Object.fromEntries(keys.map((key,n)=>[key,n]));
-    const bySol=new Map;
-    for (const row of rows) { const field=row.split(','); if (field[index.frame]!=='ROVER') continue; const sol=+field[index.sol], east=+field[index.easting], north=+field[index.northing]; if (sol>=0&&Number.isFinite(east)&&Number.isFinite(north)) bySol.set(sol,{sol,east,north,elevation:+field[index.elevation],yaw:+field[index.yaw],site:+field[index.site],drive:+field[index.drive]}); }
-    route.points=[...bySol.values()].sort((a,b)=>a.sol-b.sol);
-    debug('Route layer', `loaded ${route.points.length} localized Sol positions from PDS PLACES`);
-  } catch (error) { debug('Route layer unavailable', error.message); }
-  finally { route.loading=false; render(); }
-}
-function routeSelect(sol) { const select=$('#solSelect'); if (!select.querySelector(`option[value="${sol}"]`)) return; select.value=sol; select.dispatchEvent(new Event('change')); $('#loadButton').click(); }
-function drawRouteHud() {
-  if (s.rover!=='curiosity' || !route.points.length) return;
-  const x=26,y=26,w=Math.min(380,cv.width*.28),h=Math.min(230,cv.height*.27), pad=18, current=+$('#solSelect').value;
-  const east=route.points.map(p=>p.east), north=route.points.map(p=>p.north), minE=Math.min(...east), maxE=Math.max(...east), minN=Math.min(...north), maxN=Math.max(...north);
-  const map=(p)=>({x:x+pad+(p.east-minE)/(maxE-minE||1)*(w-pad*2),y:y+h-pad-(p.north-minN)/(maxN-minN||1)*(h-pad*2)});
-  route.box={x,y,w,h,map}; route.labels=[];
-  cx.save(); cx.fillStyle='rgba(3,8,17,.76)'; cx.strokeStyle='rgba(145,243,255,.42)'; cx.lineWidth=1; cx.fillRect(x,y,w,h); cx.strokeRect(x,y,w,h);
-  cx.fillStyle='#cceefa'; cx.font='600 18px system-ui'; cx.fillText('ROVER ROUTE · PDS PLACES',x+12,y+23);
-  cx.beginPath(); route.points.forEach((p,n)=>{const q=map(p); n?cx.lineTo(q.x,q.y):cx.moveTo(q.x,q.y)}); cx.strokeStyle='rgba(145,243,255,.72)'; cx.lineWidth=2; cx.stroke();
-  const selected=route.points.reduce((best,p)=>Math.abs(p.sol-current)<Math.abs(best.sol-current)?p:best,route.points[0]);
-  const candidates=route.points.filter(p=>p.sol===selected.sol || (Math.abs(p.sol-current)<120&&p.sol%10===0) || p.sol%500===0);
-  let lastLabel=null;
-  for (const p of candidates) { const q=map(p); if (lastLabel&&Math.hypot(q.x-lastLabel.x,q.y-lastLabel.y)<28&&p.sol!==selected.sol) continue; lastLabel=q; const text=`${p.sol}`, tw=cx.measureText(text).width+10; cx.fillStyle=p.sol===selected.sol?'#91f3ff':'rgba(5,18,29,.88)'; cx.strokeStyle='rgba(145,243,255,.8)'; cx.fillRect(q.x-tw/2,q.y-23,tw,17); cx.strokeRect(q.x-tw/2,q.y-23,tw,17); cx.fillStyle=p.sol===selected.sol?'#04101a':'#dff8ff'; cx.font='600 13px system-ui'; cx.fillText(text,q.x-tw/2+5,q.y-10); route.labels.push({sol:p.sol,x:q.x-tw/2,y:q.y-23,w:tw,h:17}); }
-  const marker=map(selected); cx.fillStyle='#ffbf69'; cx.beginPath(); cx.arc(marker.x,marker.y,6,0,Math.PI*2); cx.fill(); cx.restore();
-}
-wrap.addEventListener('pointerup',(event)=>{ if (s.drag) return; const p=point(event), label=route.labels.find(item=>p.x>=item.x&&p.x<=item.x+item.w&&p.y>=item.y&&p.y<=item.y+item.h); if (!label) return; event.preventDefault(); event.stopImmediatePropagation(); wrap.releasePointerCapture?.(event.pointerId); routeSelect(label.sol); },{capture:true});
-loadRoute();
-
-function currentRoutePoint() {
-  const sol=+$('#solSelect').value;
-  return route.points.reduce((best,point)=>Math.abs(point.sol-sol)<Math.abs(best.sol-sol)?point:best,route.points[0]);
-}
-function routeVector(point,origin) {
-  // PLACES uses map easting/northing/elevation; CAHV vectors use rover axes
-  // (+X forward, +Y right, +Z down). Heading offset is exposed for calibration.
-  const heading=(origin.yaw+ROUTE_HEADING_OFFSET_DEGREES)*D, east=point.east-origin.east, north=point.north-origin.north, up=point.elevation-origin.elevation;
-  return [east*Math.sin(heading)+north*Math.cos(heading),east*Math.cos(heading)-north*Math.sin(heading),-up];
-}
-function drawRouteOverlay() {
-  if (s.rover!=='curiosity'||!route.points.length||!s.images.length) return;
-  const origin=currentRoutePoint(), sol=+$('#solSelect').value, camera=s.images[0].model?.C||[0,0,0];
-  const visible=route.points.filter(point=>Math.abs(point.sol-sol)<=ROUTE_SOL_WINDOW);
-  const screen=visible.map(point=>{const local=routeVector(point,origin), relative=local.map((value,n)=>value-camera[n]);return {...point,screen:project(norm(relative))}});
-  route.labels=[];
-  const segments=[]; let active=[];
-  for(const point of screen){if(point.screen)active.push(point);else if(active.length){segments.push(active);active=[]}} if(active.length)segments.push(active);
-  cx.save(); cx.lineJoin='round'; cx.lineCap='round';
-  for(const segment of segments){if(segment.length<2)continue;cx.beginPath();segment.forEach((point,n)=>n?cx.lineTo(point.screen.x,point.screen.y):cx.moveTo(point.screen.x,point.screen.y));cx.strokeStyle='rgba(0,0,0,.72)';cx.lineWidth=8;cx.stroke();cx.strokeStyle='rgba(255,255,255,.94)';cx.lineWidth=3;cx.stroke()}
-  const originIndex=route.points.indexOf(origin), labels=[];
-  for(let delta=-5;delta<=5;delta++){const point=route.points[originIndex+delta];if(point&&Math.abs(point.sol-sol)<=ROUTE_SOL_WINDOW)labels.push(point)}
-  for(const point of labels){const projected=screen.find(candidate=>candidate.sol===point.sol)?.screen;if(!projected)continue;const distance=Math.abs(point.sol-sol), ratio=1-distance/ROUTE_SOL_WINDOW, size=Math.round(ROUTE_LABEL_MIN_PX+(ROUTE_LABEL_MAX_PX-ROUTE_LABEL_MIN_PX)*Math.max(0,ratio));const text=`Sol ${point.sol}`, font=`700 ${size}px system-ui`;cx.font=font;const width=cx.measureText(text).width+12,height=size+9,x=projected.x-width/2,y=projected.y-height-11;cx.fillStyle='rgba(0,0,0,.64)';cx.strokeStyle='rgba(255,255,255,.9)';cx.lineWidth=1;cx.fillRect(x,y,width,height);cx.strokeRect(x,y,width,height);cx.fillStyle='#fff';cx.fillText(text,x+6,y+size+1);route.labels.push({sol:point.sol,x,y,w:width,h:height});}
-  const selected=screen.find(point=>point.sol===origin.sol);if(selected?.screen){cx.fillStyle='#fff';cx.strokeStyle='#000';cx.lineWidth=3;cx.beginPath();cx.arc(selected.screen.x,selected.screen.y,6,0,Math.PI*2);cx.fill();cx.stroke()}cx.restore();
-}
-
-window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;const key=event.key.toLowerCase();if(key==='arrowup'||key==='arrowdown'){event.preventDefault();NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES+=key==='arrowup'?1:-1;debug('Non-square product vertical offset', `${NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES}°`);render()}else if(key==='q'||key==='w'){event.preventDefault();ROUTE_HEADING_OFFSET_DEGREES+=key==='w'?1:-1;debug('Route heading offset', `${ROUTE_HEADING_OFFSET_DEGREES}°`);render();}});
+window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;const key=event.key.toLowerCase();if(key!=='arrowup'&&key!=='arrowdown')return;event.preventDefault();NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES+=key==='arrowup'?1:-1;debug('Non-square product vertical offset', `${NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES}°`);render();});
 
 let shareTimer=null,pendingSharedImage=null,restoringShare=false;
 function shareParams(){const params=new URLSearchParams();params.set('rover',s.rover);params.set('sol',$('#solSelect').value);params.set('yaw',(s.yaw/D).toFixed(3));params.set('pitch',(s.pitch/D).toFixed(3));params.set('fov',(s.fov/D).toFixed(3));params.set('theme',document.documentElement.dataset.theme);if(!$('#imagePanel').hidden)params.set('image',$('#imageTitle').textContent);return params;}
