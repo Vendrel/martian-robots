@@ -3,13 +3,13 @@ const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
 const MIN_FOV_DEGREES = 15;
 const MAX_FOV_DEGREES = 75;
-let ROUTE_HEADING_OFFSET_DEGREES = 0;
+let ROUTE_HEADING_OFFSET_DEGREES = 25;
 const ROUTE_SOL_WINDOW = 100;
 const ROUTE_LABEL_MIN_PX = 13;
 const ROUTE_LABEL_MAX_PX = 22;
 // Applies to every product whose actual pixel dimensions are not square.
 // Kept separate from the route heading calibration because it corrects camera geometry.
-let NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES = 27;
+let NON_SQUARE_PRODUCT_VERTICAL_OFFSET_DEGREES = 0;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
 const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
