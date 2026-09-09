@@ -3,11 +3,12 @@ const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
 const MIN_FOV_DEGREES = 15;
 const MAX_FOV_DEGREES = 75;
-const ROUTE_HEADING_OFFSET_DEGREES = 0;
+let ROUTE_HEADING_OFFSET_DEGREES = 0;
 const ROUTE_SOL_WINDOW = 100;
 const ROUTE_LABEL_MIN_PX = 13;
 const ROUTE_LABEL_MAX_PX = 22;
-let EDR_M_VERTICAL_OFFSET_DEGREES = 0;
+let EDR_M_VERTICAL_OFFSET_DEGREES = 27;
+let EDR_S_VERTICAL_OFFSET_DEGREES = EDR_M_VERTICAL_OFFSET_DEGREES;
 const SHOW_DEBUG_LOG = true;
 const $=s=>document.querySelector(s),t=window.localeDictionary,D=Math.PI/180,cv=$('#panoramaCanvas'),cx=cv.getContext('2d'),wrap=$('#panoramaWrap');
 const rovers={curiosity:{name:'Curiosity',source:'msl',latest:5009},perseverance:{name:'Perseverance',source:'later',latest:1974},spirit:{name:'Spirit',source:'later',latest:2208},opportunity:{name:'Opportunity',source:'later',latest:5111}};
@@ -17,7 +18,7 @@ const vec=x=>{let a=String(x||'').match(/-?\d*\.?\d+(?:e[+-]?\d+)?/ig);return a&
 function model(i){let p=String(i.camera_model_component_list||i.camera?.camera_model_component_list||'').split(';').map(vec),A=p[1]||vec(i.camera_vector||i.camera?.camera_vector);return A?{A:norm(A),H:p[2],V:p[3],C:p[0],type:i.camera_model_type||i.camera?.camera_model_type||'vector'}:null}
 function url(i){return i.https_url||i.url||i.image_files?.full_res||i.image_files?.medium} function date(x){return x?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x)):'—'}function stat(k,v={}){$('#statusText').textContent=(t[k]||k).replace(/\{(\w+)\}/g,(_,q)=>v[q]??'')}
 function bounds(i,img){let b=vec(i.subframe_rect||i.extended?.subframeRect)||[1,1,img?.naturalWidth||1024,img?.naturalHeight||1024];return{l:b[0],top:b[1],w:b[2],h:b[3]}}
-function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));if(dot(r,m.A)<0)r=r.map(x=>-x);if(/EDR_M\d+/i.test(imageIdentity(i))&&EDR_M_VERTICAL_OFFSET_DEGREES){let axis=norm(cross(m.V,m.A)),angle=EDR_M_VERTICAL_OFFSET_DEGREES*D,co=Math.cos(angle),si=Math.sin(angle),c=cross(axis,r),d=dot(axis,r);r=norm(r.map((v,n)=>v*co+c[n]*si+axis[n]*d*(1-co)))}return r}
+function ray(i,x,y){let m=i.model;if(!m)return null;if(!m.H||!m.V)return m.A;let r=norm(cross(m.H.map((z,j)=>z-x*m.A[j]),m.V.map((z,j)=>z-y*m.A[j])));if(dot(r,m.A)<0)r=r.map(x=>-x);let id=imageIdentity(i),offset=/EDR_M\d+/i.test(id)?EDR_M_VERTICAL_OFFSET_DEGREES:/EDR_S\d+/i.test(id)?EDR_S_VERTICAL_OFFSET_DEGREES:0;if(offset){let axis=norm(cross(m.V,m.A)),angle=offset*D,co=Math.cos(angle),si=Math.sin(angle),c=cross(axis,r),d=dot(axis,r);r=norm(r.map((v,n)=>v*co+c[n]*si+axis[n]*d*(1-co)))}return r}
 function basis(){let f=[Math.cos(s.pitch)*Math.cos(s.yaw),Math.cos(s.pitch)*Math.sin(s.yaw),Math.sin(s.pitch)],r=[-Math.sin(s.yaw),Math.cos(s.yaw),0];return{f,r,u:norm(cross(r,f))}}
 function project(a){let b=basis(),z=dot(a,b.f);if(z<=-.08)return null;let k=2/(1+z),sc=cv.height/(4*Math.tan(s.fov/4));return{x:cv.width/2+dot(a,b.r)*k*sc,y:cv.height/2-dot(a,b.u)*k*sc}}
 function unproject(x,y){let sc=cv.height/(4*Math.tan(s.fov/4)),qx=(x-cv.width/2)/sc,qy=-(y-cv.height/2)/sc,q=qx*qx+qy*qy,L=[qx/(1+q/4),qy/(1+q/4),(1-q/4)/(1+q/4)],b=basis();return norm([b.r[0]*L[0]+b.u[0]*L[1]+b.f[0]*L[2],b.r[1]*L[0]+b.u[1]*L[1]+b.f[1]*L[2],b.r[2]*L[0]+b.u[2]*L[1]+b.f[2]*L[2]])}
@@ -69,10 +70,10 @@ function panoramaCoverage() {
 const paintPanorama=render;
 render=()=>{ paintPanorama(); $('#coverageValue').textContent=`${panoramaCoverage()}° / 360°`; drawRouteOverlay(); scheduleShareUrl(); };
 
-// Square S/F products are shown whole in the information panel; other
-// subframes retain the compact crop-oriented preview.
+// Keep the native aspect ratio in the information panel.  Only full-frame F
+// products may expand beyond the compact preview height.
 const renderPanel=panel;
-panel=(image)=>{ renderPanel(image); if (!image) return; const full=/EDR_[SF]\d+/i.test(imageIdentity(image)), preview=$('#panelImage'); preview.style.maxHeight=full?'none':'180px'; preview.style.aspectRatio=full?'1 / 1':'auto'; preview.style.objectFit=full?'contain':'cover'; };
+panel=(image)=>{ renderPanel(image); if (!image) return; const full=/EDR_F\d+/i.test(imageIdentity(image)), preview=$('#panelImage'); preview.style.maxHeight=full?'none':'220px'; preview.style.aspectRatio='auto'; preview.style.objectFit='contain'; };
 
 async function toggleFullscreen() {
   try {
@@ -102,7 +103,7 @@ async function loadRoute() {
   } catch (error) { debug('Route layer unavailable', error.message); }
   finally { route.loading=false; render(); }
 }
-function routeSelect(sol) { const select=$('#solSelect'); if (!select.querySelector(`option[value="${sol}"]`)) return; select.value=sol; $('#loadButton').click(); }
+function routeSelect(sol) { const select=$('#solSelect'); if (!select.querySelector(`option[value="${sol}"]`)) return; select.value=sol; select.dispatchEvent(new Event('change')); $('#loadButton').click(); }
 function drawRouteHud() {
   if (s.rover!=='curiosity' || !route.points.length) return;
   const x=26,y=26,w=Math.min(380,cv.width*.28),h=Math.min(230,cv.height*.27), pad=18, current=+$('#solSelect').value;
@@ -147,7 +148,7 @@ function drawRouteOverlay() {
   const selected=screen.find(point=>point.sol===origin.sol);if(selected?.screen){cx.fillStyle='#fff';cx.strokeStyle='#000';cx.lineWidth=3;cx.beginPath();cx.arc(selected.screen.x,selected.screen.y,6,0,Math.PI*2);cx.fill();cx.stroke()}cx.restore();
 }
 
-window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;if(event.key!=='ArrowUp'&&event.key!=='ArrowDown')return;event.preventDefault();EDR_M_VERTICAL_OFFSET_DEGREES+=event.key==='ArrowUp'?1:-1;debug('EDR_M vertical offset', `${EDR_M_VERTICAL_OFFSET_DEGREES}°`);render();});
+window.addEventListener('keydown',(event)=>{if(!SHOW_DEBUG_LOG)return;const key=event.key.toLowerCase();if(key==='arrowup'||key==='arrowdown'){event.preventDefault();EDR_M_VERTICAL_OFFSET_DEGREES+=key==='arrowup'?1:-1;EDR_S_VERTICAL_OFFSET_DEGREES=EDR_M_VERTICAL_OFFSET_DEGREES;debug('EDR_M / EDR_S vertical offset', `${EDR_M_VERTICAL_OFFSET_DEGREES}°`);render()}else if(key==='q'||key==='w'){event.preventDefault();ROUTE_HEADING_OFFSET_DEGREES+=key==='w'?1:-1;debug('Route heading offset', `${ROUTE_HEADING_OFFSET_DEGREES}°`);render();}});
 
 let shareTimer=null,pendingSharedImage=null,restoringShare=false;
 function shareParams(){const params=new URLSearchParams();params.set('rover',s.rover);params.set('sol',$('#solSelect').value);params.set('yaw',(s.yaw/D).toFixed(3));params.set('pitch',(s.pitch/D).toFixed(3));params.set('fov',(s.fov/D).toFixed(3));params.set('theme',document.documentElement.dataset.theme);if(!$('#imagePanel').hidden)params.set('image',$('#imageTitle').textContent);return params;}
@@ -157,3 +158,25 @@ panel=(image)=>{sharedPanel(image);scheduleShareUrl();};
 function restoreShareUrl(){const params=new URLSearchParams(location.hash.slice(1));if(!params.size)return;restoringShare=true;const rover=params.get('rover');if(rovers[rover]){s.rover=rover;$('#roverSelect').value=rover;sols(rovers[rover].latest)}const sol=params.get('sol');if(sol&&$('#solSelect').querySelector(`option[value="${sol}"]`))$('#solSelect').value=sol;for(const [key,field]of [['yaw','yaw'],['pitch','pitch'],['fov','fov']]){const value=Number(params.get(key));if(Number.isFinite(value))s[field]=value*D}const theme=params.get('theme');if(theme==='dark'||theme==='light'){document.documentElement.dataset.theme=theme;$('#themeToggle').textContent=theme==='dark'?'☾':'☼'}pendingSharedImage=params.get('image');$('#loadButton').click();let attempts=0;const reveal=setInterval(()=>{const image=s.images.find(item=>item.imageid===pendingSharedImage);if(image){panel(image);pendingSharedImage=null;clearInterval(reveal);restoringShare=false;scheduleShareUrl()}else if(!pendingSharedImage||++attempts>250){pendingSharedImage=null;clearInterval(reveal);restoringShare=false;scheduleShareUrl()}},100);}
 window.addEventListener('hashchange',restoreShareUrl);
 restoreShareUrl();
+
+// Keep the three Sol controls as one state.  The number field accepts only
+// positive integers; it quietly snaps to the nearest selectable Sol when a
+// value falls outside the mission range.
+const populateSols=sols;
+document.querySelectorAll('[data-i18n-tooltip]').forEach(element=>{element.dataset.tooltip=t[element.dataset.i18nTooltip]||element.dataset.tooltip;});
+sols=(max,selected=max)=>{populateSols(max,selected);syncSolControls();};
+function availableSols(){return [...$('#solSelect').options].map(option=>+option.value).sort((a,b)=>a-b)}
+function nearestSol(value){const values=availableSols();return values.reduce((best,sol)=>Math.abs(sol-value)<Math.abs(best-value)?sol:best,values[0]||0)}
+function flashSolCorrection(){const control=$('.sol-direct-control');control.classList.remove('corrected');void control.offsetWidth;control.classList.add('corrected');}
+function syncSolControls(){const select=$('#solSelect'),input=$('#solInput');if(!select||!input)return;const value=+select.value,values=availableSols(),min=values[0]||0,max=values.at(-1)||0;input.value=value;input.setAttribute('aria-valuemin',min);input.setAttribute('aria-valuemax',max);input.setAttribute('aria-valuenow',value);$('#previousSolButton').disabled=value<=min;$('#nextSolButton').disabled=value>=max;}
+function selectSol(value,{loadPanorama=true,corrected=false}={}){const next=nearestSol(value),select=$('#solSelect');if(!Number.isFinite(next))return;const changed=+select.value!==next;select.value=next;syncSolControls();if(corrected)flashSolCorrection();if(changed&&loadPanorama)$('#loadButton').click();else if(!changed)scheduleShareUrl();}
+function stepSol(direction){const values=availableSols(),current=+$('#solSelect').value,index=values.indexOf(current);selectSol(values[Math.max(0,Math.min(values.length-1,index+direction))]);}
+function commitSolInput(){const input=$('#solInput'),raw=input.value;if(!/^\d+$/.test(raw)||+raw<1){syncSolControls();flashSolCorrection();return;}const requested=+raw,actual=nearestSol(requested);selectSol(actual,{corrected:actual!==requested});}
+$('#solSelect').addEventListener('change',()=>{syncSolControls();scheduleShareUrl();});
+$('#solInput').addEventListener('input',(event)=>{const clean=event.target.value.replace(/\D/g,'');if(clean!==event.target.value){event.target.value=clean;flashSolCorrection();}});
+$('#solInput').addEventListener('change',commitSolInput);
+$('#solInput').addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();commitSolInput();event.target.blur();}});
+$('#previousSolButton').addEventListener('click',()=>stepSol(-1));
+$('#nextSolButton').addEventListener('click',()=>stepSol(1));
+$('#roverSelect').onchange=(event)=>{s.rover=event.target.value;sols(rovers[s.rover].latest);scheduleShareUrl();};
+syncSolControls();
