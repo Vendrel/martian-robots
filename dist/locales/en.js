@@ -1,0 +1,19 @@
+window.localeDictionary = {
+  code: 'en',
+  name: 'English',
+  controlEyebrow: 'MISSION EXPLORER',
+  title: 'Look around where the rovers looked.',
+  roverLabel: 'Rover', solLabel: 'Sol', earthDateLabel: 'Earth date',
+  loadButton: 'Load panorama', readyStatus: 'Ready to map image geometry',
+  loading: 'Retrieving image geometry…', horizon: 'ROVER FORWARD', dragHint: 'Drag to explore',
+  coverageLabel: 'Coverage', altHint: 'Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.',
+  imagePanelEyebrow: 'IMAGE INFO PANEL', openSource: 'Open original image ↗',
+  legendGeometry: 'Each frame is positioned from its available camera axis and elevation data.',
+  legendLayer: 'Later images render above earlier captures.',
+  noImages: 'No images were returned for this Sol.',
+  fallbackStatus: 'Showing a local geometry sample — live feed is unavailable.',
+  loadedStatus: 'Mapped {count} images using their available camera geometry.',
+  loadingStatus: 'Retrieving NASA public image records…',
+  comingSoon: 'Mission adapter ready — image feed coming next.',
+  metadata: { rover: 'Rover', camera: 'Camera', sol: 'Sol', earthDate: 'Earth date', captured: 'Captured', siteDrive: 'Site / drive', cameraModel: 'Camera model', cameraAxis: 'Camera axis', cameraPosition: 'Camera position', mastAngles: 'Mast az / el', source: 'Source' }
+};
