@@ -6,6 +6,7 @@
 	--muted: #64718a;
 	--line: #ccd5e1;
 	--accent: #0d6a9a;
+	--accent-ink: #f8fbff;
 	--glow: rgba(0, 128, 190, .15);
 	--shadow: 0 16px 42px rgba(32, 48, 73, .12);
 }
@@ -173,6 +174,7 @@
 	--muted: #91a9bd;
 	--line: #263956;
 	--accent: #53e7ff;
+	--accent-ink: #03111a;
 	--glow: rgba(38, 221, 255, .22);
 	--shadow: 0 0 0 1px rgba(86, 225, 255, .11), 0 0 16px rgba(20, 202, 255, .1), 0 20px 55px rgba(0, 0, 0, .48);
 }
@@ -328,7 +330,7 @@ select,
 	border: 1px solid var(--accent);
 	border-radius: 8px;
 	background: var(--accent);
-	color: #03111a;
+	color: var(--accent-ink);
 	padding: 0 15px;
 	font-weight: 800;
 	display: flex;
@@ -354,6 +356,11 @@ select,
 	box-shadow: var(--shadow);
 	overflow: hidden
 }
+
+.panorama-card { position: relative }
+
+.selection-wait-overlay { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: color-mix(in srgb, var(--surface) 62%, transparent); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); text-align: center }
+.selection-wait-overlay p { margin: 0; color: var(--ink); font: 700 .95rem/1.4 system-ui; text-shadow: 0 1px 12px var(--surface) }
 
 .viewer-topline,
 .viewer-footer {
@@ -422,7 +429,8 @@ canvas {
 	background: rgba(4, 8, 15, .55);
 	color: #e7f9ff;
 	font-size: 1.2rem;
-	cursor: pointer
+	cursor: pointer;
+	padding-top: 4px;
 }
 
 .panorama-wrap:fullscreen {
