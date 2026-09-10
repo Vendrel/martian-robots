@@ -8,7 +8,7 @@ window.localeDictionaries.en = {
   loadButton: 'Load panorama', readyStatus: 'Ready to map image geometry',
   loading: 'Retrieving image geometry…', selectionLoading: 'Applying the shared image selection…', horizon: 'ROVER FORWARD', dragHint: 'Drag to explore', fullscreen: 'Toggle fullscreen',
   coverageLabel: 'Coverage', altHint: 'Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.',
-  imagePanelEyebrow: 'IMAGE INFO PANEL', selectionPanelTitle: 'IMAGE SELECTION', openSource: 'Open original image ↗', downloadAll: 'Download all', downloadSelected: 'Download selected', showThem: 'Show Them', selectedImageGallery: 'Selected images', imagesSelected: '{count} IMAGES SELECTED', selectionHint: 'Shift-Click: Circular Selection of Images · Esc: Cancel Selection', downloading: 'Downloading {current}/{total}…', imageUrlListCopied: 'Image URL List Copied to Clipboard', clipboardUnavailable: 'Image URL List Unavailable',
+  imagePanelEyebrow: 'IMAGE INFO PANEL', selectionPanelTitle: 'IMAGE SELECTION', openSource: 'Open original image ↗', downloadAll: 'Download all', downloadSelected: 'Download selected', showThem: 'Show Them', selectedImageGallery: 'Selected images', imagesSelected: '{count} IMAGES SELECTED', selectionHint: 'Shift-Drag: Circular Selection of Images · Esc: Cancel Selection', downloading: 'Downloading {current}/{total}…', imageUrlListCopied: 'Image URL List Copied to Clipboard', clipboardUnavailable: 'Image URL List Unavailable',
   legendGeometry: 'Each frame is positioned from its available camera axis and elevation data.',
   legendLayer: 'Later images render above earlier captures.',
   noImages: 'No geometry-ready images were returned for this Sol.',
