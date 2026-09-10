@@ -46,6 +46,16 @@
 	cursor: wait
 }
 
+.selection-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px }
+.selection-actions .download-all-button { margin: 0 }
+.show-gallery-button { display: none; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); color: var(--text); font: 700 .78rem system-ui; cursor: pointer }
+.image-panel.selectionMode .show-gallery-button { display: block }
+.show-gallery-button:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 14px var(--glow) }
+
+#image-gallery { margin: 18px 0 28px; padding: 12px; max-height: 72vh; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted) }
+#image-gallery h2 { margin: 0 0 13px; color: var(--text); font-size: .95rem }
+#image-gallery img { display: block; width: auto; max-width: none; height: auto; margin: 0 0 16px; border: 0; box-shadow: none }
+
 .sol-direct-control {
 	display: grid;
 	gap: 7px;
