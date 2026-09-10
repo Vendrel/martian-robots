@@ -48,14 +48,11 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" aria-label="Interactive Mars panorama"></canvas>
-            <div class="viewer-actions">
-              <button class="viewer-action-button" id="selectionButton" type="button" aria-label="Select images" title="Select images">⦿</button>
-              <button class="viewer-action-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
-            </div>
+            <button class="fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
             <div class="drag-hint" id="dragHint"><span>↔</span><span data-i18n="dragHint">Drag to explore</span></div>
           </div>
           <div class="viewer-footer">
-            <span data-i18n="altHint">Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.</span>
+            <span><span data-i18n="altHint">Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.</span><span class="selection-hint" data-i18n="selectionHint">Shift-Click: Circular Selection of Images · Esc: Cancel Selection</span></span>
             <span id="imageCount">0 images</span>
           </div>
         </div>
@@ -75,6 +72,6 @@
       </section>
     </main>
     <script src="./locales/en.js"></script>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?202609101229"></script>
   </body>
 </html>
