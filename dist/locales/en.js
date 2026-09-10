@@ -7,7 +7,7 @@ window.localeDictionary = {
   loadButton: 'Load panorama', readyStatus: 'Ready to map image geometry',
   loading: 'Retrieving image geometry…', horizon: 'ROVER FORWARD', dragHint: 'Drag to explore', fullscreen: 'Toggle fullscreen',
   coverageLabel: 'Coverage', altHint: 'Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.',
-  imagePanelEyebrow: 'IMAGE INFO PANEL', openSource: 'Open original image ↗', downloadAll: 'Download all', downloading: 'Downloading {current}/{total}…', imageUrlListCopied: 'Image URL List Copied to Clipboard', clipboardUnavailable: 'Image URL List Unavailable',
+  imagePanelEyebrow: 'IMAGE INFO PANEL', openSource: 'Open original image ↗', downloadAll: 'Download all', downloadSelected: 'Download selected', imagesSelected: '{count} IMAGES SELECTED', selectionToggle: 'Select images', downloading: 'Downloading {current}/{total}…', imageUrlListCopied: 'Image URL List Copied to Clipboard', clipboardUnavailable: 'Image URL List Unavailable',
   legendGeometry: 'Each frame is positioned from its available camera axis and elevation data.',
   legendLayer: 'Later images render above earlier captures.',
   noImages: 'No images were returned for this Sol.',

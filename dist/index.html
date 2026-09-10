@@ -48,7 +48,10 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" aria-label="Interactive Mars panorama"></canvas>
-            <button class="fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
+            <div class="viewer-actions">
+              <button class="viewer-action-button" id="selectionButton" type="button" aria-label="Select images" title="Select images">⦿</button>
+              <button class="viewer-action-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
+            </div>
             <div class="drag-hint" id="dragHint"><span>↔</span><span data-i18n="dragHint">Drag to explore</span></div>
           </div>
           <div class="viewer-footer">
