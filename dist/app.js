@@ -144,6 +144,11 @@ function clearSelection(){s.selection=null;s.selectionDraft=null;s.selectionMode
 const normalPanel=panel;
 panel=(image)=>{if(s.selection){if(!image){$('#imagePanel').hidden=true;return;}showSelectionPanel();scheduleShareUrl();return;}$('#panelImage').hidden=false;$('#metadataList').hidden=false;$('#sourceLink').hidden=false;normalPanel(image);};
 selectionButton.addEventListener('click',(event)=>{event.stopPropagation();if(s.selection||s.selectionMode)clearSelection();else{s.selectionMode=true;selectionButton.classList.add('is-active');render();}});
-wrap.addEventListener('pointerdown',(event)=>{if(!s.selectionMode||event.button!==0||event.target.closest('.viewer-actions'))return;event.preventDefault();event.stopImmediatePropagation();s.selectionDraft={center:unproject(point(event).x,point(event).y),edge:unproject(point(event).x,point(event).y)};wrap.setPointerCapture?.(event.pointerId);render();},{capture:true});
-wrap.addEventListener('pointermove',(event)=>{if(!s.selectionDraft)return;event.preventDefault();event.stopImmediatePropagation();s.selectionDraft.edge=unproject(point(event).x,point(event).y);render();},{capture:true});
-wrap.addEventListener('pointerup',(event)=>{if(!s.selectionDraft)return;event.preventDefault();event.stopImmediatePropagation();const cap=selectionCap();s.selection={center:cap.center,edge:cap.edge,ids:selectedImageIds(cap)};s.selectionDraft=null;wrap.releasePointerCapture?.(event.pointerId);showSelectionPanel();render();},{capture:true});
+function viewerActionTarget(event){return event.target instanceof Element&&!!event.target.closest('.viewer-actions');}
+function beginSelection(event){const current=point(event);s.selectionDraft={center:unproject(current.x,current.y),edge:unproject(current.x,current.y)};wrap.setPointerCapture?.(event.pointerId);render();}
+function updateSelection(event){const current=point(event);s.selectionDraft.edge=unproject(current.x,current.y);render();}
+function finishSelection(event){const cap=selectionCap();s.selection={center:cap.center,edge:cap.edge,ids:selectedImageIds(cap)};s.selectionDraft=null;wrap.releasePointerCapture?.(event.pointerId);showSelectionPanel();render();}
+const navigatePointerDown=wrap.onpointerdown,navigatePointerMove=wrap.onpointermove,navigatePointerUp=wrap.onpointerup;
+wrap.onpointerdown=(event)=>{if(s.selectionMode&&!viewerActionTarget(event)&&event.button===0){event.preventDefault();beginSelection(event);return;}navigatePointerDown(event);};
+wrap.onpointermove=(event)=>{if(s.selectionDraft){event.preventDefault();updateSelection(event);return;}navigatePointerMove(event);};
+wrap.onpointerup=(event)=>{if(s.selectionDraft){event.preventDefault();finishSelection(event);return;}navigatePointerUp(event);};
