@@ -1,4 +1,5 @@
-window.localeDictionary = {
+window.localeDictionaries ||= {};
+window.localeDictionaries.en = {
   code: 'en',
   name: 'English',
   controlEyebrow: 'MISSION EXPLORER',

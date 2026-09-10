@@ -44,12 +44,8 @@
         <div class="panorama-card">
           <div class="viewer-topline">
             <div><span class="live-dot"></span><span id="statusText" data-i18n="readyStatus">Ready to map image geometry</span></div>
-            <fieldset class="perseverance-image-filters" id="perseveranceImageFilters" hidden>
-              <legend>Perseverance layers</legend>
-              <label><input type="checkbox" data-perseverance-filter="nlg" checked /><span>NLG</span></label>
-              <label><input type="checkbox" data-perseverance-filter="nlf" checked /><span>NLF</span></label>
-              <label><input type="checkbox" data-perseverance-filter="drill" checked /><span>Drilling</span></label>
-              <label><input type="checkbox" data-perseverance-filter="micro" checked /><span>Microscopic</span></label>
+            <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
+              <legend>Image layers</legend>
             </fieldset>
             <div class="coverage"><span data-i18n="coverageLabel">Coverage</span><strong id="coverageValue">0° / 360°</strong></div>
           </div>
@@ -69,7 +65,7 @@
           <img id="panelImage" alt="Selected Mars rover image" />
           <dl id="metadataList"></dl>
           <a id="sourceLink" target="_blank" rel="noreferrer" data-i18n="openSource">Open original image ↗</a>
-          <div class="selection-actions"><button id="showGalleryButton" class="show-gallery-button" type="button" data-i18n="showThem">Show Them</button><button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button></div>
+          <div class="selection-actions"><button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button></div>
         </aside>
       </section>
 
@@ -81,6 +77,7 @@
       </section>
     </main>
     <script src="./locales/en.js"></script>
+    <script src="./locales/hu.js"></script>
     <script type="module" src="./app.js?202609101229"></script>
   </body>
 </html>
