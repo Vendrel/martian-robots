@@ -135,6 +135,7 @@ $('#downloadAllButton').addEventListener('click',downloadAll);
 
 const selectionButton=$('#selectionButton');
 selectionButton.title=selectionButton.getAttribute('aria-label')=t.selectionToggle||'Select images';
+selectionButton.addEventListener('pointerdown',(event)=>event.stopPropagation());
 function selectionCap(){const cap=s.selectionDraft||s.selection;if(!cap)return null;const cosine=Math.max(-1,Math.min(1,dot(cap.center,cap.edge||cap.center)));return {...cap,radius:Math.acos(cosine)};}
 function capRay(center,radius,angle){const reference=Math.abs(center[2])<.9?[0,0,1]:[1,0,0],u=norm(cross(reference,center)),v=norm(cross(center,u)),co=Math.cos(radius),si=Math.sin(radius);return norm(center.map((value,index)=>value*co+(u[index]*Math.cos(angle)+v[index]*Math.sin(angle))*si));}
 function drawSelectionOverlay(){const cap=selectionCap();if(!cap)return;cx.save();cx.strokeStyle='rgba(82,238,255,.96)';cx.lineWidth=4;cx.shadowColor='rgba(0,225,255,.72)';cx.shadowBlur=12;cx.beginPath();let open=false;for(let index=0;index<=96;index++){const projected=project(capRay(cap.center,cap.radius,index/96*Math.PI*2));if(projected){if(open)cx.lineTo(projected.x,projected.y);else{cx.moveTo(projected.x,projected.y);open=true;}}else open=false;}cx.stroke();const center=project(cap.center);if(center){cx.fillStyle='#53e7ff';cx.beginPath();cx.arc(center.x,center.y,4,0,Math.PI*2);cx.fill();}cx.restore();}
