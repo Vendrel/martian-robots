@@ -275,9 +275,9 @@ body {
 }
 
 .brand-mark {
-	color: var(--accent);
-	font-size: 2rem;
-	text-shadow: 0 0 15px var(--accent)
+	width: 38px;
+	height: auto;
+	display: block
 }
 
 .header-tools {
