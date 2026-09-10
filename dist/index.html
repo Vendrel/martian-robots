@@ -44,6 +44,13 @@
         <div class="panorama-card">
           <div class="viewer-topline">
             <div><span class="live-dot"></span><span id="statusText" data-i18n="readyStatus">Ready to map image geometry</span></div>
+            <fieldset class="perseverance-image-filters" id="perseveranceImageFilters" hidden>
+              <legend>Perseverance layers</legend>
+              <label><input type="checkbox" data-perseverance-filter="nlg" checked /><span>NLG</span></label>
+              <label><input type="checkbox" data-perseverance-filter="nlf" checked /><span>NLF</span></label>
+              <label><input type="checkbox" data-perseverance-filter="drill" checked /><span>Drilling</span></label>
+              <label><input type="checkbox" data-perseverance-filter="micro" checked /><span>Microscopic</span></label>
+            </fieldset>
             <div class="coverage"><span data-i18n="coverageLabel">Coverage</span><strong id="coverageValue">0° / 360°</strong></div>
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
