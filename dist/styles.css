@@ -158,13 +158,25 @@
 .crossview-include { position: absolute; opacity: 0; pointer-events: none }
 .crossview-include-text { display: flex; flex: 1; align-items: center; justify-content: center; min-height: 36px; padding: 0 7px; border: 1px solid transparent; border-radius: 999px; color: var(--muted); font: 700 .94rem/1 system-ui; letter-spacing: 0 }
 .crossview-include:checked + .crossview-include-text { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 17%, transparent); color: var(--accent) }
+.crossview-frame-mark { position: relative; display: block; width: 34px; height: 12px }
+.crossview-frame { position: absolute; top: 1px; width: 10px; height: 10px; border: 1px solid var(--accent); border-radius: 2px; background: color-mix(in srgb, var(--accent) 24%, transparent); box-shadow: 0 0 6px var(--glow) }
+.crossview-frame-left { left: 0 }
+.crossview-frame-middle { left: 12px }
+.crossview-frame-right { left: 24px }
+.crossview-include-label:hover .crossview-frame-middle, .crossview-include-label:focus-within .crossview-frame-middle { animation: crossview-frame-exit .42s ease forwards }
+.crossview-include-label:hover .crossview-frame-left, .crossview-include-label:focus-within .crossview-frame-left { animation: crossview-frame-left .42s ease forwards }
+.crossview-include-label:hover .crossview-frame-right, .crossview-include-label:focus-within .crossview-frame-right { animation: crossview-frame-right .42s ease forwards }
+@keyframes crossview-frame-exit { to { transform: translateY(-11px); opacity: 0 } }
+@keyframes crossview-frame-left { to { transform: translateX(7px) } }
+@keyframes crossview-frame-right { to { transform: translateX(-7px) } }
 .crossview-reset { flex: 2 1 0; min-width: 0 }
 .crossview-include-label::after { content: attr(data-tooltip); position: absolute; z-index: 9; bottom: calc(100% + 8px); left: 0; width: max-content; max-width: 220px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
 .crossview-include-label:hover::after, .crossview-include-label:focus-within::after { opacity: 1; transform: translateY(0) }
-.crossview-animation-action { position: relative }
+.crossview-animation-action { position: relative; display: block }
 .crossview-animation-action::after { content: attr(data-tooltip); position: absolute; z-index: 9; right: 0; bottom: calc(100% + 8px); width: max-content; max-width: 230px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; text-align: left; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
-.crossview-animation-action:disabled:hover::after, .crossview-animation-action:disabled:focus-visible::after { opacity: 1; transform: translateY(0) }
+.crossview-animation-action.is-disabled:hover::after, .crossview-animation-action.is-disabled:focus-within::after { opacity: 1; transform: translateY(0) }
 .crossview-side .crossview-download, .crossview-side .crossview-gif, .crossview-side .crossview-apng { width: 100% }
+.crossview-animation-message { margin: -2px 0 0; color: #b34938; font-size: .74rem; line-height: 1.35; text-align: center }
 
 @media(max-width:760px) {
 	.crossview { padding: 14px }
