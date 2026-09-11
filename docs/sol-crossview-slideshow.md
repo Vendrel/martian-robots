@@ -489,3 +489,9 @@ Sol-okat kéri le a Curiosity vagy Perseverance meglévő NASA-adapterén;
 panelek és a pipák állapotát. Nem futtatja újra a klaszterezést, tehát a
 megosztott eredmény stabil marad akkor is, ha az API egy későbbi válasza más
 sorrendű. Hiányzó archív rekordnál részleges visszaállítás jelzi az eltérést.
+
+A pipa törlése azonnal eltávolítja a képet a látható csúszkából, a lejátszás
+és az MP4 ugyanebből az aktív részhalmazból készül. Az eredeti teljes lista
+változatlan marad a memóriában és az `aktívBitek` mezőben, ezért a Reset
+Slideshow veszteség nélkül visszaállíthatja. Az URL-frissítés 500 ms-os
+debounce után történik.
