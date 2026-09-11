@@ -194,6 +194,9 @@
 .crossview-zoom-control input { width: 100%; accent-color: var(--accent) }
 .crossview-zoom-control output { color: var(--ink); font-size: .75rem; letter-spacing: 0; text-align: center }
 .crossview-selection { display: flex; align-items: stretch; gap: 8px }
+.crossview-sort-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px }
+.crossview-sort-controls button { min-height: 32px; padding: 6px; border: 1px solid var(--line); border-radius: 7px; background: transparent; color: var(--muted); font: 700 .66rem/1.15 system-ui; cursor: pointer }
+.crossview-sort-controls button:hover, .crossview-sort-controls button:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
 .crossview-include-label { position: relative; display: flex; flex: 1 1 0; min-width: 0; cursor: pointer; user-select: none; -webkit-user-select: none }
 .crossview-include { position: absolute; opacity: 0; pointer-events: none }
 .crossview-include-text { display: flex; flex: 1; align-items: center; justify-content: center; min-height: 36px; padding: 0 7px; border: 1px solid transparent; border-radius: 999px; color: var(--muted); font: 700 .94rem/1 system-ui; letter-spacing: 0 }
