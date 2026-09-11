@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?202609120130" />
   </head>
   <body>
     <main class="app-shell">
@@ -43,7 +43,16 @@
         <div class="header-tools">
           <label class="presentation-mouse-toggle" data-i18n-tooltip="presentationMouseTooltip" data-tooltip="Enable presentation mouse finder">
             <input id="presentationMouseToggle" type="checkbox" autocomplete="off" data-i18n-aria-label="presentationMouseToggle" aria-label="Enable presentation mouse finder" />
-            <span aria-hidden="true">⌖</span>
+            <div class="presentation-mouse-toggle-preview reticle" aria-hidden="true">
+              <div class="thin-ring ring-a"></div>
+              <div class="thin-ring ring-b"></div>
+              <div class="layer layer-1"><div class="arc" style="--start: 5deg; --arc: 58deg; --thickness: 3px"></div></div>
+              <div class="layer layer-2 reverse"><div class="arc" style="--start: 32deg; --arc: 92deg; --thickness: 2px"></div></div>
+              <div class="ticks"></div>
+              <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
+              <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
+              <div class="scan"></div>
+            </div>
           </label>
           <label class="language-select" aria-label="Interface language">
             <span>◎</span><select id="languageSelect"></select>
