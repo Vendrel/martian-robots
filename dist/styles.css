@@ -188,7 +188,6 @@
 .crossview-play:disabled, .crossview-step:disabled { cursor: not-allowed; opacity: .42 }
 .crossview-icon { display: block; width: 20px; height: 20px; fill: currentColor }
 .crossview-step .crossview-icon { width: 18px; height: 18px }
-.crossview-step-previous .crossview-icon { transform: scaleX(-1) }
 .crossview-range { width: 100%; accent-color: var(--accent) }
 .crossview-counter { color: var(--muted); font-size: .74rem; text-align: center }
 .crossview-zoom-control { display: grid; gap: 5px; margin: 9px 0; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-align: center; text-transform: uppercase }
