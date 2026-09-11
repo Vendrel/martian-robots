@@ -2,7 +2,7 @@
 // waits while the pointer is still, then fades out without ever capturing input.
 // Covered cases: first activation before movement, viewport edges, pointer exit,
 // window blur, hidden tabs, touch pointers, and rapid stop/start movement.
-const PRESENTATION_MOUSE_FADE_IN_MS = 300;
+const PRESENTATION_MOUSE_FADE_IN_MS = 500;
 const PRESENTATION_MOUSE_IDLE_DELAY_MS = 900;
 const PRESENTATION_MOUSE_FADE_OUT_MS = 3000;
 const PRESENTATION_MOUSE_EDGE_GUARD_PX = 100;
