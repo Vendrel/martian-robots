@@ -153,7 +153,7 @@
 .crossview-play { display: flex; align-items: center; justify-content: center; align-self: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--accent); border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 1.08rem; line-height: 1; cursor: pointer; box-shadow: 0 0 16px var(--glow) }
 .crossview-range { width: 100%; accent-color: var(--accent) }
 .crossview-counter { color: var(--muted); font-size: .74rem; text-align: center }
-.crossview-zoom-control { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-transform: uppercase }
+.crossview-zoom-control { display: grid; gap: 5px; margin: 9px 0; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-align: center; text-transform: uppercase }
 .crossview-zoom-control input { width: 100%; accent-color: var(--accent) }
 .crossview-zoom-control output { color: var(--ink); font-size: .75rem; letter-spacing: 0; text-align: center }
 .crossview-selection { display: flex; align-items: stretch; gap: 8px }
