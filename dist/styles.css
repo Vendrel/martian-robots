@@ -132,7 +132,9 @@
 .crossview-controls legend { width: 100%; padding: 0; color: var(--muted); font: 700 .66rem/1 system-ui; letter-spacing: .09em; text-transform: uppercase }
 .crossview-controls label { display: grid; gap: 6px; color: var(--muted); font: 700 .67rem/1 system-ui; letter-spacing: .06em; text-transform: uppercase }
 .crossview-controls input { width: 118px; accent-color: var(--accent) }
-.crossview-controls .crossview-window-input { width: 104px }
+.crossview-controls .crossview-window-input { width: 60px }
+.crossview-controls .crossview-window-input input { box-sizing: border-box; width: 60px; height: 41px; padding: 10px 7px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: 500 .9rem inherit; letter-spacing: 0; text-transform: none }
+.crossview-controls .crossview-window-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); outline: 0 }
 .crossview-controls output { color: var(--ink); font-size: .75rem; letter-spacing: 0 }
 .crossview-action, .crossview-download, .crossview-reset { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
 .crossview-action { background: var(--accent); color: var(--accent-ink) }
