@@ -133,26 +133,29 @@
 .crossview-controls label { display: grid; gap: 6px; color: var(--muted); font: 700 .67rem/1 system-ui; letter-spacing: .06em; text-transform: uppercase }
 .crossview-controls input { width: 118px; accent-color: var(--accent) }
 .crossview-controls output { color: var(--ink); font-size: .75rem; letter-spacing: 0 }
-.crossview-action, .crossview-download, .crossview-gif, .crossview-apng, .crossview-reset { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
+.crossview-action, .crossview-download, .crossview-reset { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
 .crossview-action { background: var(--accent); color: var(--accent-ink) }
-.crossview-action:hover:not(:disabled), .crossview-download:hover:not(:disabled), .crossview-gif:hover:not(:disabled), .crossview-apng:hover:not(:disabled), .crossview-reset:hover:not(:disabled) { box-shadow: 0 0 18px var(--glow) }
-.crossview-action:disabled, .crossview-download:disabled, .crossview-gif:disabled, .crossview-apng:disabled, .crossview-reset:disabled { opacity: .48; cursor: not-allowed }
+.crossview-action:hover:not(:disabled), .crossview-download:hover:not(:disabled), .crossview-reset:hover:not(:disabled) { box-shadow: 0 0 18px var(--glow) }
+.crossview-action:disabled, .crossview-download:disabled, .crossview-reset:disabled { opacity: .48; cursor: not-allowed }
 .crossview-status { min-height: 1.35em; margin: 13px 2px 0; color: var(--muted); font-size: .8rem }
 .crossview-status.error { color: #b34938 }
 .crossview-groups { display: grid; gap: 18px; margin-top: 16px }
 .crossview-group { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--bg) 52%, var(--surface)) }
-.crossview-group-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 9px; grid-column: 1 / -1 }
+.crossview-group-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 9px; grid-column: 1 / -1 }
 .crossview-group-head h3 { margin: 0; font-size: .94rem }
-.crossview-badge { padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line)); border-radius: 999px; color: var(--accent); font: 700 .63rem/1 system-ui; letter-spacing: .045em; text-transform: uppercase }
+.crossview-badge { margin-left: auto; padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line)); border-radius: 999px; color: var(--accent); font: 700 .63rem/1 system-ui; letter-spacing: .045em; text-transform: uppercase }
 .crossview-note { margin: 0; color: var(--muted); font-size: .75rem; line-height: 1.35; grid-column: 1 / -1 }
-.crossview-stage { position: relative; min-height: 250px; overflow: hidden; border-radius: 10px; background: #111923; display: grid; place-items: center }
-.crossview-stage img { display: block; width: 100%; height: 100%; max-height: 430px; object-fit: contain; background: #10151d }
+.crossview-stage { position: relative; min-height: 250px; overflow: auto; border-radius: 10px; background: #111923; display: grid; place-items: center }
+.crossview-stage img { display: block; max-width: none; max-height: none; object-fit: contain; background: #10151d }
 .crossview-placeholder { padding: 20px; color: #d8e5ed; text-align: center; font-size: .82rem }
-.crossview-caption { position: absolute; right: 0; bottom: 0; left: 0; padding: 22px 12px 10px; color: #eefaff; font-size: .73rem; background: linear-gradient(transparent, rgba(0,0,0,.76)); text-shadow: 0 1px 3px #000 }
+.crossview-caption { color: var(--muted); font-size: .73rem; text-align: right }
 .crossview-side { display: flex; flex-direction: column; align-items: stretch; gap: 9px }
 .crossview-play { display: flex; align-items: center; justify-content: center; align-self: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--accent); border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 1.08rem; line-height: 1; cursor: pointer; box-shadow: 0 0 16px var(--glow) }
 .crossview-range { width: 100%; accent-color: var(--accent) }
 .crossview-counter { color: var(--muted); font-size: .74rem; text-align: center }
+.crossview-zoom-control { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-transform: uppercase }
+.crossview-zoom-control input { width: 100%; accent-color: var(--accent) }
+.crossview-zoom-control output { color: var(--ink); font-size: .75rem; letter-spacing: 0; text-align: center }
 .crossview-selection { display: flex; align-items: stretch; gap: 8px }
 .crossview-include-label { position: relative; display: flex; flex: 1 1 0; min-width: 0; cursor: pointer; user-select: none; -webkit-user-select: none }
 .crossview-include { position: absolute; opacity: 0; pointer-events: none }
@@ -172,11 +175,8 @@
 .crossview-reset { flex: 2 1 0; min-width: 0 }
 .crossview-include-label::after { content: attr(data-tooltip); position: absolute; z-index: 9; bottom: calc(100% + 8px); left: 0; width: max-content; max-width: 220px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
 .crossview-include-label:hover::after, .crossview-include-label:focus-within::after { opacity: 1; transform: translateY(0) }
-.crossview-animation-action { position: relative; display: block }
-.crossview-animation-action::after { content: attr(data-tooltip); position: absolute; z-index: 9; right: 0; bottom: calc(100% + 8px); width: max-content; max-width: 230px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; text-align: left; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
-.crossview-animation-action.is-disabled:hover::after, .crossview-animation-action.is-disabled:focus-within::after { opacity: 1; transform: translateY(0) }
-.crossview-side .crossview-download, .crossview-side .crossview-gif, .crossview-side .crossview-apng { width: 100% }
-.crossview-animation-message { margin: -2px 0 0; color: #b34938; font-size: .74rem; line-height: 1.35; text-align: center }
+.crossview-side .crossview-download { width: 100% }
+.crossview-animation-note { margin: 0; color: var(--muted); font-size: .74rem; line-height: 1.4; text-align: center }
 
 @media(max-width:760px) {
 	.crossview { padding: 14px }
@@ -189,7 +189,7 @@
 	.crossview-range { min-width: 0 }
 	.crossview-counter { text-align: left }
 	.crossview-selection { grid-column: 1 / -1 }
-	.crossview-side .crossview-download, .crossview-side .crossview-gif, .crossview-side .crossview-apng { grid-column: span 1 }
+	.crossview-side .crossview-download { grid-column: span 1 }
 }
 
 .download-notice { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(4, 10, 16, .55); backdrop-filter: blur(5px) }
