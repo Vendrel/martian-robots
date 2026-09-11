@@ -91,10 +91,14 @@
           <img id="panelImage" alt="Selected Mars rover image" />
           <dl id="metadataList"></dl>
           <a id="sourceLink" target="_blank" rel="noreferrer" data-i18n="openSource">Open original image ↗</a>
-          <div class="selection-actions"><button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button></div>
+          <div class="selection-actions">
+            <button id="collectCrossviewButton" class="download-all-button" type="button" data-i18n="collectCrossview">Collect Crossview Slideshow</button>
+            <button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button>
+          </div>
         </aside>
       </section>
 
+      <section id="crossviewPanel" class="crossview" hidden aria-live="polite"></section>
       <section id="image-gallery" hidden aria-live="polite"></section>
 
       <section class="legend-row">
@@ -104,6 +108,6 @@
     </main>
     <script src="./locales/en.js"></script>
     <script src="./locales/hu.js"></script>
-    <script type="module" src="./app.js?202609101229"></script>
+<script type="module" src="./app.js?202609112115"></script>
   </body>
 </html>
