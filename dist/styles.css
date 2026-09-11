@@ -179,7 +179,16 @@
 .crossview-placeholder { padding: 20px; color: #d8e5ed; text-align: center; font-size: .82rem }
 .crossview-caption { color: var(--muted); flex: 0 1 auto; font-size: .73rem; overflow-wrap: anywhere; text-align: right }
 .crossview-side { display: flex; flex-direction: column; align-items: stretch; gap: 9px }
-.crossview-play { display: flex; align-items: center; justify-content: center; align-self: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--accent); border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 1.08rem; line-height: 1; cursor: pointer; box-shadow: 0 0 16px var(--glow) }
+.crossview-play-controls { display: flex; align-items: center; justify-content: center; gap: 8px }
+.crossview-play, .crossview-step { display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; cursor: pointer }
+.crossview-play { width: 48px; height: 48px; border: 1px solid var(--accent); border-radius: 50%; background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 16px var(--glow) }
+.crossview-step { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent) }
+.crossview-step:hover:not(:disabled), .crossview-step:focus-visible:not(:disabled) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)) }
+.crossview-play:focus-visible, .crossview-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }
+.crossview-play:disabled, .crossview-step:disabled { cursor: not-allowed; opacity: .42 }
+.crossview-icon { display: block; width: 20px; height: 20px; fill: currentColor }
+.crossview-step .crossview-icon { width: 18px; height: 18px }
+.crossview-step-previous .crossview-icon { transform: scaleX(-1) }
 .crossview-range { width: 100%; accent-color: var(--accent) }
 .crossview-counter { color: var(--muted); font-size: .74rem; text-align: center }
 .crossview-zoom-control { display: grid; gap: 5px; margin: 9px 0; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-align: center; text-transform: uppercase }
@@ -216,7 +225,7 @@
 	.crossview-caption { text-align: left }
 	.crossview-stage { min-height: 220px }
 	.crossview-side { display: grid; grid-template-columns: auto 1fr; align-items: center }
-	.crossview-play { grid-row: span 2 }
+	.crossview-play-controls { grid-row: span 2 }
 	.crossview-range { min-width: 0 }
 	.crossview-counter { text-align: left }
 	.crossview-selection { grid-column: 1 / -1 }
