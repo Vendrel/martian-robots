@@ -133,10 +133,10 @@
 .crossview-controls label { display: grid; gap: 6px; color: var(--muted); font: 700 .67rem/1 system-ui; letter-spacing: .06em; text-transform: uppercase }
 .crossview-controls input { width: 118px; accent-color: var(--accent) }
 .crossview-controls output { color: var(--ink); font-size: .75rem; letter-spacing: 0 }
-.crossview-action, .crossview-download, .crossview-mp4, .crossview-reset { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
+.crossview-action, .crossview-download, .crossview-gif, .crossview-apng, .crossview-reset { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
 .crossview-action { background: var(--accent); color: var(--accent-ink) }
-.crossview-action:hover:not(:disabled), .crossview-download:hover:not(:disabled), .crossview-mp4:hover:not(:disabled), .crossview-reset:hover:not(:disabled) { box-shadow: 0 0 18px var(--glow) }
-.crossview-action:disabled, .crossview-download:disabled, .crossview-mp4:disabled, .crossview-reset:disabled { opacity: .58; cursor: wait }
+.crossview-action:hover:not(:disabled), .crossview-download:hover:not(:disabled), .crossview-gif:hover:not(:disabled), .crossview-apng:hover:not(:disabled), .crossview-reset:hover:not(:disabled) { box-shadow: 0 0 18px var(--glow) }
+.crossview-action:disabled, .crossview-download:disabled, .crossview-gif:disabled, .crossview-apng:disabled, .crossview-reset:disabled { opacity: .48; cursor: not-allowed }
 .crossview-status { min-height: 1.35em; margin: 13px 2px 0; color: var(--muted); font-size: .8rem }
 .crossview-status.error { color: #b34938 }
 .crossview-groups { display: grid; gap: 18px; margin-top: 16px }
@@ -161,7 +161,10 @@
 .crossview-reset { flex: 2 1 0; min-width: 0 }
 .crossview-include-label::after { content: attr(data-tooltip); position: absolute; z-index: 9; bottom: calc(100% + 8px); left: 0; width: max-content; max-width: 220px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
 .crossview-include-label:hover::after, .crossview-include-label:focus-within::after { opacity: 1; transform: translateY(0) }
-.crossview-side .crossview-download, .crossview-side .crossview-mp4 { width: 100% }
+.crossview-animation-action { position: relative }
+.crossview-animation-action::after { content: attr(data-tooltip); position: absolute; z-index: 9; right: 0; bottom: calc(100% + 8px); width: max-content; max-width: 230px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 500 .72rem/1.35 system-ui; letter-spacing: 0; text-align: left; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity .15s ease, transform .15s ease }
+.crossview-animation-action:disabled:hover::after, .crossview-animation-action:disabled:focus-visible::after { opacity: 1; transform: translateY(0) }
+.crossview-side .crossview-download, .crossview-side .crossview-gif, .crossview-side .crossview-apng { width: 100% }
 
 @media(max-width:760px) {
 	.crossview { padding: 14px }
@@ -174,8 +177,16 @@
 	.crossview-range { min-width: 0 }
 	.crossview-counter { text-align: left }
 	.crossview-selection { grid-column: 1 / -1 }
-	.crossview-side .crossview-download, .crossview-side .crossview-mp4 { grid-column: span 1 }
+	.crossview-side .crossview-download, .crossview-side .crossview-gif, .crossview-side .crossview-apng { grid-column: span 1 }
 }
+
+.download-notice { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(4, 10, 16, .55); backdrop-filter: blur(5px) }
+.download-notice[hidden] { display: none }
+.download-notice-card { position: relative; display: flex; align-items: center; gap: 14px; width: min(100%, 480px); padding: 25px 48px 25px 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink) }
+.download-notice-card p { margin: 0; font: 600 .95rem/1.45 system-ui }
+.download-notice-icon { display: grid; flex: 0 0 auto; place-items: center; width: 30px; height: 30px; border: 1px solid var(--accent); border-radius: 50%; color: var(--accent); font: 800 1.05rem/1 Georgia, serif }
+.download-notice-close { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--muted); font: 1.35rem/1 system-ui; cursor: pointer }
+.download-notice-close:hover, .download-notice-close:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0; box-shadow: 0 0 12px var(--glow) }
 
 .sol-direct-control {
 	display: grid;

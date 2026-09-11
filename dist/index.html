@@ -101,6 +101,14 @@
       <section id="crossviewPanel" class="crossview" hidden aria-live="polite"></section>
       <section id="image-gallery" hidden aria-live="polite"></section>
 
+      <div id="downloadNotice" class="download-notice" hidden role="dialog" aria-modal="true" aria-labelledby="downloadNoticeText">
+        <div class="download-notice-card">
+          <button id="closeDownloadNotice" class="download-notice-close" type="button" aria-label="Close notification">×</button>
+          <span class="download-notice-icon" aria-hidden="true">i</span>
+          <p id="downloadNoticeText"></p>
+        </div>
+      </div>
+
       <section class="legend-row">
         <div><span class="legend-symbol">⌁</span><span data-i18n="legendGeometry">Each frame is positioned from its available camera axis and elevation data.</span></div>
         <div><span class="legend-symbol">◷</span><span data-i18n="legendLayer">Later images render above earlier captures.</span></div>
@@ -108,6 +116,6 @@
     </main>
     <script src="./locales/en.js"></script>
     <script src="./locales/hu.js"></script>
-<script type="module" src="./app.js?202609112145"></script>
+<script type="module" src="./app.js?202609112230"></script>
   </body>
 </html>
