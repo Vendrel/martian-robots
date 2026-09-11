@@ -120,20 +120,19 @@
         <div><span class="legend-symbol">◷</span><span data-i18n="legendLayer">Later images render above earlier captures.</span></div>
       </section>
     </main>
-    <div id="presentationMouse" class="presentation-mouse" aria-hidden="true">
-      <div class="presentation-mouse-ring presentation-mouse-ring-a"></div>
-      <div class="presentation-mouse-ring presentation-mouse-ring-b"></div>
-      <div class="presentation-mouse-layer presentation-mouse-layer-1"><i></i></div>
-      <div class="presentation-mouse-layer presentation-mouse-layer-2"><i></i></div>
-      <div class="presentation-mouse-ticks"></div>
-      <div class="presentation-mouse-crosshair"></div>
-      <div class="presentation-mouse-diamond"></div>
-      <div class="presentation-mouse-scan"></div>
-      <div class="presentation-mouse-center"></div>
+    <div id="presentationMouse" class="presentation-mouse reticle" aria-hidden="true">
+      <div class="thin-ring ring-a"></div>
+      <div class="thin-ring ring-b"></div>
+      <div class="layer layer-1"><div class="arc" style="--start: 5deg; --arc: 58deg; --thickness: 3px"></div></div>
+      <div class="layer layer-2 reverse"><div class="arc" style="--start: 32deg; --arc: 92deg; --thickness: 2px"></div></div>
+      <div class="ticks"></div>
+      <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
+      <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
+      <div class="scan"></div>
     </div>
     <script src="./locales/en.js"></script>
     <script src="./locales/hu.js"></script>
-    <script type="module" src="./app.js?202609120100"></script>
-    <script type="module" src="./presentation-mouse.js?202609120100"></script>
+    <script type="module" src="./app.js?202609120115"></script>
+    <script type="module" src="./presentation-mouse.js?202609120115"></script>
   </body>
 </html>

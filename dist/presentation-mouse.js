@@ -5,7 +5,7 @@
 const PRESENTATION_MOUSE_FADE_IN_MS = 300;
 const PRESENTATION_MOUSE_IDLE_DELAY_MS = 900;
 const PRESENTATION_MOUSE_FADE_OUT_MS = 3000;
-const PRESENTATION_MOUSE_EDGE_GUARD_PX = 52;
+const PRESENTATION_MOUSE_EDGE_GUARD_PX = 100;
 
 const presentationMouse = document.querySelector('#presentationMouse');
 const presentationMouseToggle = document.querySelector('#presentationMouseToggle');
