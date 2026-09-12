@@ -623,9 +623,12 @@ select,
 .terrain-3d-hud { top: 13px; left: 13px; display: grid; gap: 3px }
 .terrain-3d-hud strong { color: #9ceeff; font-size: .64rem; letter-spacing: .11em }
 .terrain-3d-hud span { color: #c9d7dc; letter-spacing: .025em; text-transform: none }
-.terrain-3d-controls { right: 13px; bottom: 13px; display: flex; align-items: center; gap: 9px; pointer-events: auto; color: #cfdee2; text-transform: uppercase }
-.terrain-3d-controls label { display: flex; align-items: center; gap: 6px }
-.terrain-3d-controls input { width: 46px; padding: 3px; border: 1px solid rgba(219,239,246,.35); border-radius: 4px; background: #101923; color: #eef8fa; font: inherit; text-align: center; pointer-events: auto; user-select: text; -webkit-user-select: text; touch-action: manipulation }
+.terrain-3d-controls { right: 13px; bottom: 13px; display: flex; flex-wrap: wrap; align-items: end; gap: 8px; max-width: min(680px,calc(100% - 26px)); pointer-events: auto; color: #cfdee2; text-transform: uppercase }
+.terrain-3d-controls legend { width: 100%; color: #9ceeff; font: 700 .62rem/1 system-ui; letter-spacing: .1em }
+.terrain-3d-controls label { display: grid; grid-template-columns: 1fr 54px; align-items: center; gap: 5px; min-width: 126px }
+.terrain-3d-controls label > span { grid-column: 1 / -1; color: #cfdee2 }
+.terrain-3d-controls input { box-sizing: border-box; min-width: 0; padding: 4px; border: 1px solid rgba(219,239,246,.35); border-radius: 4px; background: #101923; color: #eef8fa; font: inherit; text-align: center; pointer-events: auto; user-select: text; -webkit-user-select: text; touch-action: manipulation }
+.terrain-3d-controls input[type=range] { width: 100%; accent-color: #9ceeff }
 .terrain-3d-controls span { color: #9ceeff; white-space: nowrap }
 
 .panorama-wrap:active {
