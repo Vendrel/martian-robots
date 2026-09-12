@@ -81,7 +81,7 @@
       <section class="viewer-grid">
         <div class="panorama-card">
           <div class="viewer-topline">
-            <div class="viewer-status"><div class="view-mode-toggle" id="viewModeToggle" role="group" aria-label="Viewer mode"><button id="panoramaModeButton" class="view-mode-button is-active" type="button" aria-pressed="true" title="Panorama view"><img src="./brand-mark.png" alt="Panorama" /></button><button id="terrainModeButton" class="view-mode-button" type="button" aria-pressed="false" title="3D terrain view"><img src="./curiosity-3d-pictogram.png" alt="3D terrain" /></button></div><div><span class="live-dot"></span><span id="statusText" data-i18n="readyStatus">Ready to map image geometry</span></div></div>
+            <div><span class="live-dot"></span><span id="statusText" data-i18n="readyStatus">Ready to map image geometry</span></div>
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
@@ -89,7 +89,6 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" aria-label="Interactive Mars panorama"></canvas>
-            <div id="terrain3dView" class="terrain-3d-view" hidden aria-label="Interactive synthesized rover terrain"><div class="terrain-3d-hud"><strong>LOCAL TERRAIN</strong><span id="terrain3dStatus">Waiting for stereo inputs</span></div><fieldset id="terrain3dControls" class="terrain-3d-controls"><legend>Terrain synthesis</legend><label><span data-i18n="crossviewSolWindow">Sol half-window</span><input id="terrainSolWindow" type="number" min="1" step="1" value="2" inputmode="numeric" /></label><label><span>Terrain coverage (m)</span><input id="terrainSizeRange" type="range" min="12" max="100" step="1" value="36" /><input id="terrainSizeInput" type="number" min="12" max="100" step="1" value="36" inputmode="numeric" /></label><label><span>Mesh resolution</span><input id="terrainResolutionRange" type="range" min="16" max="96" step="2" value="44" /><input id="terrainResolutionInput" type="number" min="16" max="96" step="2" value="44" inputmode="numeric" /></label><label><span>Elevation ×</span><input id="terrainElevationRange" type="range" min="0.1" max="5" step="0.1" value="1" /><input id="terrainElevationInput" type="number" min="0.1" max="5" step="0.1" value="1" inputmode="decimal" /></label><span id="terrain3dInputCount">0 inputs</span></fieldset></div>
             <button class="fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button>
             <div class="drag-hint" id="dragHint"><span>↔</span><span data-i18n="dragHint">Drag to explore</span></div>
           </div>
@@ -138,11 +137,9 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}</script>
-    <script src="./runtime-config.js"></script>
     <script src="./locales/en.js"></script>
     <script src="./locales/hu.js"></script>
-    <script type="module" src="./app.js?202609121630"></script>
+    <script type="module" src="./app.js?202609120310"></script>
     <script type="module" src="./presentation-mouse.js?202609120115"></script>
   </body>
 </html>
