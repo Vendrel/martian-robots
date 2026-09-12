@@ -163,13 +163,19 @@
 .crossview-controls .crossview-distance-input { width: 150px }
 .crossview-controls .crossview-distance-input input { box-sizing: border-box; width: 86px; height: 41px; padding: 10px 7px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: 500 .9rem inherit; letter-spacing: 0; text-transform: none }
 .crossview-controls .crossview-distance-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); outline: 0 }
+.crossview-controls .crossview-angle-control { position: relative }
+.crossview-tolerance-preview { position: absolute; z-index: 8; right: calc(100% + 13px); bottom: -10px; width: min(300px, 38vw); padding: 9px; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--surface) 92%, var(--bg)); box-shadow: 0 12px 30px rgba(0,0,0,.32); pointer-events: none }
+.crossview-tolerance-preview img { display: block; width: 100%; height: auto; object-fit: contain; background: #10151d }
+.crossview-tolerance-preview canvas { display: block; width: 100%; height: auto }
+.crossview-tolerance-preview canvas { position: absolute; inset: 9px; width: calc(100% - 18px); height: auto }
+.crossview-tolerance-preview p { margin: 7px 0 0; color: var(--accent); font: 700 .63rem/1 system-ui; letter-spacing: .06em; text-align: center; text-transform: uppercase }
 .crossview-controls > .crossview-unit-toggle { position: absolute; top: 10px; right: 11px; width: auto; min-width: 33px; padding: 3px 5px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--muted); font: 700 .58rem/1 system-ui; letter-spacing: .06em; cursor: pointer }
 .crossview-unit-toggle:hover, .crossview-unit-toggle:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
 .crossview-controls output { color: var(--ink); font-size: .75rem; letter-spacing: 0 }
 .crossview-action, .crossview-download, .crossview-reset, .crossview-second-target, .crossview-refine { min-height: 36px; padding: 8px 11px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font: 700 .75rem/1 system-ui; cursor: pointer }
 .crossview-action { background: var(--accent); color: var(--accent-ink) }
 .crossview-action.is-collecting { display: inline-flex; align-items: center; gap: 8px }
-.crossview-action.is-collecting::before, .crossview-status.is-collecting::before { content: ''; display: inline-block; width: .82em; height: .82em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: crossview-spin .7s linear infinite }
+.crossview-spinner, .crossview-status.is-collecting::before { content: ''; display: inline-block; flex: 0 0 auto; width: .9em; height: .9em; border-radius: 50%; background: conic-gradient(currentColor 0 320deg, transparent 320deg); -webkit-mask: radial-gradient(transparent 52%, #000 55%); mask: radial-gradient(transparent 52%, #000 55%); animation: crossview-spin .7s linear infinite }
 .crossview-status.is-collecting { display: flex; align-items: center; gap: 7px; color: var(--accent) }
 @keyframes crossview-spin { to { transform: rotate(1turn) } }
 .crossview-action:hover:not(:disabled), .crossview-download:hover:not(:disabled), .crossview-reset:hover:not(:disabled) { box-shadow: 0 0 18px var(--glow) }
@@ -204,6 +210,12 @@
 .crossview-zoom-control input { width: 100%; accent-color: var(--accent) }
 .crossview-zoom-control output { color: var(--ink); font-size: .75rem; letter-spacing: 0; text-align: center }
 .crossview-selection { display: flex; align-items: stretch; gap: 8px }
+.crossview-aspect-controls, .crossview-match-controls { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; border: 0 }
+.crossview-aspect-controls legend, .crossview-match-controls legend { width: 100%; margin-bottom: 2px; color: var(--muted); font: 700 .62rem/1 system-ui; letter-spacing: .06em; text-align: center; text-transform: uppercase }
+.crossview-aspect-controls label, .crossview-match-controls label { cursor: pointer }
+.crossview-aspect-controls input, .crossview-match-controls input { position: absolute; opacity: 0; pointer-events: none }
+.crossview-aspect-controls span, .crossview-match-controls span { display: block; min-width: 42px; padding: 6px 5px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); font: 700 .63rem/1 system-ui; text-align: center }
+.crossview-aspect-controls input:checked + span, .crossview-match-controls input:checked + span { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent) }
 .crossview-sort-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px }
 .crossview-sort-controls button { min-height: 32px; padding: 6px; border: 1px solid var(--line); border-radius: 7px; background: transparent; color: var(--muted); font: 700 .66rem/1.15 system-ui; cursor: pointer }
 .crossview-sort-controls button:hover, .crossview-sort-controls button:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
@@ -240,6 +252,7 @@
 	.crossview-note-row { align-items: flex-start; flex-direction: column; gap: 4px }
 	.crossview-caption { text-align: left }
 	.crossview-stage { min-height: 220px }
+	.crossview-tolerance-preview { right: auto; bottom: auto; left: 0; top: calc(100% + 10px); width: min(300px, 75vw) }
 	.crossview-side { display: grid; grid-template-columns: auto 1fr; align-items: center }
 	.crossview-play-controls { grid-row: span 2 }
 	.crossview-range { min-width: 0 }
