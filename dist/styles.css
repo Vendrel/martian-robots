@@ -48,6 +48,13 @@
 	color: var(--muted)
 }
 
+.location-resolution { display: grid; grid-template-columns: minmax(135px,1fr) minmax(135px,1fr); gap: 12px; align-items: end; min-width: 285px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface) }
+.location-resolution label { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .07em; text-transform: uppercase }
+.location-resolution input { width: 100%; accent-color: var(--accent) }
+.location-resolution output { color: var(--accent); font-size: .7rem; letter-spacing: 0; text-transform: none }
+.location-motion { position: relative }
+.location-motion output { color: var(--accent); font-size: .7rem; letter-spacing: 0; text-transform: none }
+
 .perseverance-image-filters {
 	display: flex;
 	align-items: center;

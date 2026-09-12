@@ -4,7 +4,7 @@ window.localeDictionaries.en = {
   name: 'English',
   controlEyebrow: 'MISSION EXPLORER',
   title: 'Look around where the rovers looked',
-  roverLabel: 'Rover', solLabel: 'Sol', solDirectLabel: 'Go to Sol', solQuotaTooltip: 'Changing Sol may request a new image set and use the daily NASA download allowance.', earthDateLabel: 'Earth date',
+  roverLabel: 'Rover', solLabel: 'Sol', locationLabel: 'Location', locationResolutionLabel: 'Location resolution', locationResolutionStrict: 'Rigorous', locationResolutionPermissive: 'Permissive', locationMotionLabel: 'Location motion', solDirectLabel: 'Go to Sol', solQuotaTooltip: 'Changing Sol may request a new image set and use the daily NASA download allowance.', earthDateLabel: 'Earth date', locationOption: '{count} / Sol {sols}',
   loadButton: 'Load panorama', readyStatus: 'Ready to map image geometry',
   loading: 'Retrieving image geometry…', selectionLoading: 'Applying the shared image selection…', horizon: 'ROVER FORWARD', dragHint: 'Drag to explore', fullscreen: 'Toggle fullscreen',
   coverageLabel: 'Coverage', altHint: 'Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.',

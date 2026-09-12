@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rover location diagnostics</title>
+  <style>
+    :root{color-scheme:dark}body{margin:0;background:#08111c;color:#e8f2fb;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}main{max-width:1200px;margin:auto;padding:28px}h1{margin:0 0 8px;font:600 24px system-ui}p{color:#9db3c7}.row{display:flex;gap:10px;align-items:end;flex-wrap:wrap}label{display:grid;gap:5px}input{width:10rem;padding:9px;border:1px solid #426078;border-radius:6px;background:#101f2d;color:#fff;font:inherit}button{padding:9px 14px;border:0;border-radius:6px;background:#55d4e9;color:#061018;font-weight:700;cursor:pointer}button:disabled{opacity:.5;cursor:wait}pre{overflow:auto;padding:16px;border:1px solid #223d55;border-radius:8px;background:#0d1a27;white-space:pre-wrap}.hint{font-size:.86rem}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Rover location diagnostics</h1>
+    <p>Loads every Curiosity raw-image record for one Sol and reports all source records plus position, RMC, timestamp, camera and image-burst grouping. It accepts <code>?sol=4456</code>.</p>
+    <div class="row">
+      <label>Sol <input id="sol" type="number" min="0" step="1" value="4456"></label>
+      <button id="analyze" type="button">Load Sol report</button>
+      <button id="download" type="button" disabled>Download JSON report</button>
+    </div>
+    <p class="hint">The proposed panorama-station section suppresses isolated capture groups that have too few geometry-ready views to make a panorama; the complete raw records remain in the JSON.</p>
+    <pre id="out">Enter a Sol number.</pre>
+  </main>
+  <script type="module" src="./location-diagnostic.js?202609130220"></script>
+</body>
+</html>
