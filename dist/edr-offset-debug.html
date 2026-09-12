@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EDR offset diagnostics</title>
+  <style>
+    :root{color-scheme:dark}body{margin:0;background:#08111c;color:#e8f2fb;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}main{max-width:1200px;margin:auto;padding:28px}h1{margin:0 0 8px;font:600 24px system-ui}p{color:#9db3c7}textarea{display:block;box-sizing:border-box;width:100%;min-height:120px;padding:10px;border:1px solid #426078;border-radius:6px;background:#101f2d;color:#fff;font:inherit}button{margin:10px 8px 10px 0;padding:9px 14px;border:0;border-radius:6px;background:#55d4e9;color:#061018;font-weight:700;cursor:pointer}button:disabled{opacity:.5;cursor:wait}pre{overflow:auto;padding:16px;border:1px solid #223d55;border-radius:8px;background:#0d1a27;white-space:pre-wrap}code{color:#91e7b4}.hint{font-size:.86rem}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>EDR camera-offset diagnostics</h1>
+    <p>Enter Curiosity image IDs separated by commas or new lines. The tool reloads their NASA raw-image records, compares all geometry-relevant fields, and retains the complete source records in an exportable JSON report. It accepts <code>?correct=id1,id2&amp;problematic=id3,id4</code>.</p>
+    <label for="correct">Correctly positioned images</label>
+    <textarea id="correct" aria-label="Correctly positioned Curiosity image IDs" spellcheck="false" placeholder="NRB_695164613EDR_S0922254NCAM00276M_"></textarea>
+    <label for="problematic">Images requiring offset correction</label>
+    <textarea id="problematic" aria-label="Problematic Curiosity image IDs" spellcheck="false" placeholder="NRB_695146812EDR_S0922002NCAM00594M_"></textarea>
+    <button id="analyze" type="button">Load and compare NASA records</button>
+    <button id="download" type="button" disabled>Download JSON report</button>
+    <p class="hint">The report compares product family, Sol/site/drive, timestamps, camera-model components, vectors, positions, subframe geometry, and extended metadata. It does not modify the panorama.</p>
+    <pre id="out">Waiting for labelled image IDs.</pre>
+  </main>
+  <script type="module" src="./edr-offset-diagnostic-v2.js?202609120600"></script>
+</body>
+</html>
