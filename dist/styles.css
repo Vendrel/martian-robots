@@ -623,8 +623,8 @@ select,
 .terrain-3d-hud { top: 13px; left: 13px; display: grid; gap: 3px }
 .terrain-3d-hud strong { color: #9ceeff; font-size: .64rem; letter-spacing: .11em }
 .terrain-3d-hud span { color: #c9d7dc; letter-spacing: .025em; text-transform: none }
-.terrain-3d-controls { right: 13px; bottom: 13px; display: flex; flex-wrap: wrap; align-items: start; gap: 8px; width: 92px; max-width: calc(100% - 26px); min-height: 132px; overflow: hidden; pointer-events: auto; color: #cfdee2; text-transform: uppercase; transition: width .22s ease, padding .22s ease, background .22s ease }
-.terrain-3d-controls.is-expanded { width: min(680px,calc(100% - 26px)); min-height: 132px }
+.terrain-3d-controls { right: 13px; bottom: 13px; display: flex; flex-wrap: wrap; align-items: start; gap: 8px; width: 92px; height: 86px; max-width: calc(100% - 26px); overflow: hidden; pointer-events: auto; color: #cfdee2; text-transform: uppercase; transition: width .22s ease, padding .22s ease, background .22s ease }
+.terrain-3d-controls.is-expanded { width: min(680px,calc(100% - 26px)); height: 86px }
 .terrain-3d-controls legend { width: 100%; color: #9ceeff; font: 700 .62rem/1 system-ui; letter-spacing: .1em; white-space: nowrap }
 .terrain-3d-controls legend::before { content: '▦ '; color: #cfdee2 }
 .terrain-3d-controls:not(.is-expanded) > :not(legend) { opacity: 0; pointer-events: none; transform: translateY(8px) }
