@@ -62,21 +62,24 @@
 
       <section class="control-deck" aria-label="Panorama controls">
         <div class="control-heading">
-          <p class="eyebrow" data-i18n="controlEyebrow">MISSION EXPLORER</p>
-          <h1 data-i18n="title">Look around where the rovers looked.</h1>
+          <p class="eyebrow" data-i18n="controlEyebrow"><span>MISSION</span><span>EXPLORER</span></p>
+          
         </div>
         <div class="control-fields">
           <label><span data-i18n="roverLabel">Rover</span><select id="roverSelect"></select></label>
           <label><span data-i18n="solLabel">Sol</span><select id="solSelect"></select></label>
           <label id="locationControl" hidden><span data-i18n="locationLabel">Location</span><select id="locationSelect"></select></label>
           <div id="locationResolution" class="location-resolution" hidden>
-            <label><span data-i18n="locationResolutionLabel">Location resolution</span><input id="locationTolerance" type="range" min="0" max="100" value="0"><output id="locationToleranceValue"></output></label>
+            <label><span data-i18n="locationResolutionLabel">Location resolution</span><input id="locationTolerance" type="range" min="0" max="100" value="100"><output id="locationToleranceValue"></output></label>
             <label class="location-motion"><span data-i18n="locationMotionLabel">Location motion</span><input id="locationMotion" type="range" min="-100" max="100" value="0"><output id="locationMotionValue">0</output></label>
           </div>
-          <div class="sol-direct-control"><span data-i18n="solDirectLabel">Go to Sol</span><input id="solInput" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Go to Sol" /></div>
-          <div class="sol-stepper" aria-label="Sol navigation">
-            <button id="previousSolButton" type="button" class="sol-step-button" data-i18n-tooltip="solQuotaTooltip" data-tooltip="Changing Sol may request a new image set and use the daily NASA download allowance." aria-label="Previous Sol">‹</button>
-            <button id="nextSolButton" type="button" class="sol-step-button" data-i18n-tooltip="solQuotaTooltip" data-tooltip="Changing Sol may request a new image set and use the daily NASA download allowance." aria-label="Next Sol">›</button>
+          <div class="sol-direct-control">
+            <span data-i18n="solDirectLabel">Go to Sol</span>
+            <input id="solInput" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Go to Sol" />
+            <div class="sol-stepper" aria-label="Sol navigation">
+              <button id="previousSolButton" type="button" class="sol-step-button" data-i18n-tooltip="solQuotaTooltip" data-tooltip="Changing Sol may request a new image set and use the daily NASA download allowance." aria-label="Previous Sol">‹</button>
+              <button id="nextSolButton" type="button" class="sol-step-button" data-i18n-tooltip="solQuotaTooltip" data-tooltip="Changing Sol may request a new image set and use the daily NASA download allowance." aria-label="Next Sol">›</button>
+            </div>
           </div>
           <div class="date-readout"><span data-i18n="earthDateLabel">Earth date</span><strong id="earthDate">—</strong></div>
           <button class="load-button" id="loadButton" type="button"><span>↻</span><span data-i18n="loadButton">Load panorama</span></button>
