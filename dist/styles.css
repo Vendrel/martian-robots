@@ -52,8 +52,25 @@
 .location-resolution label { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .07em; text-transform: uppercase }
 .location-resolution input { width: 100%; accent-color: var(--accent) }
 .location-resolution output { color: var(--accent); font-size: .7rem; letter-spacing: 0; text-transform: none }
-.location-motion { position: relative }
-.location-motion output { color: var(--accent); font-size: .7rem; letter-spacing: 0; text-transform: none }
+.location-motion { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .07em; text-transform: uppercase }
+.location-motion .location-stepper { align-self: stretch; justify-self: start }
+
+.fullscreen-location-indicator { display: none }
+.panorama-wrap:fullscreen .fullscreen-location-indicator { position: absolute; z-index: 4; top: 50%; left: 50%; display: grid; width: min(330px, calc(100vw - 44px)); gap: 9px; padding: 13px 15px; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: var(--shadow), 0 0 26px var(--glow); color: var(--muted); font: 700 .68rem/1 system-ui; letter-spacing: .08em; text-transform: uppercase; opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.84); transition: opacity .16s ease, transform .2s cubic-bezier(.2,.8,.2,1) }
+.panorama-wrap:fullscreen .fullscreen-location-indicator.is-visible { opacity: 1; transform: translate(-50%, -50%) scale(1) }
+.fullscreen-location-indicator-track { height: 7px; overflow: hidden; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--bg) 76%, transparent) }
+.fullscreen-location-indicator-track i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--accent); box-shadow: 0 0 12px var(--glow); transition: width .18s cubic-bezier(.2,.8,.2,1) }
+.fullscreen-location-indicator output { color: var(--accent); font-size: .78rem; letter-spacing: 0; text-align: right; text-transform: none }
+.fullscreen-panorama-hud { display: none }
+.panorama-wrap:fullscreen .fullscreen-panorama-hud { position: absolute; z-index: 3; top: 18px; left: 20px; display: grid; gap: 4px; max-width: calc(100vw - 100px); padding: 9px 12px; border: 1px solid color-mix(in srgb, var(--line) 78%, transparent); border-radius: 9px; background: color-mix(in srgb, var(--surface) 76%, transparent); box-shadow: 0 7px 22px rgba(0,0,0,.2); color: var(--muted); font: 700 .64rem/1.2 system-ui; letter-spacing: .09em; text-transform: uppercase; pointer-events: none }
+.fullscreen-panorama-hud strong { color: var(--accent); font-size: .76rem; letter-spacing: .11em }
+.fullscreen-location-change { display: none }
+.panorama-wrap:fullscreen .fullscreen-location-change { position: absolute; z-index: 4; top: 50%; left: 50%; display: grid; max-width: calc(100vw - 44px); padding: 13px 17px; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: var(--shadow), 0 0 26px var(--glow); color: var(--accent); font: 700 .8rem/1.2 system-ui; letter-spacing: .07em; text-align: center; text-transform: uppercase; opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.84); transition: opacity .16s ease, transform .2s cubic-bezier(.2,.8,.2,1) }
+.panorama-wrap:fullscreen .fullscreen-location-change.is-visible { opacity: 1; transform: translate(-50%, -50%) scale(1) }
+.panorama-status-indicator { display: none }
+.panorama-wrap:fullscreen .panorama-status-indicator, .panorama-status-indicator.is-error { position: absolute; z-index: 4; top: 50%; left: 50%; display: grid; width: min(390px, calc(100% - 44px)); padding: 13px 17px; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--surface) 90%, transparent); box-shadow: var(--shadow), 0 0 26px var(--glow); color: var(--muted); font: 700 .74rem/1.35 system-ui; letter-spacing: .045em; text-align: center; opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.84); transition: opacity .16s ease, transform .2s cubic-bezier(.2,.8,.2,1) }
+.panorama-status-indicator.is-error { border-color: color-mix(in srgb, #ff9a88 68%, var(--line)); color: #ffd0c8; box-shadow: var(--shadow), 0 0 24px rgba(255,113,91,.25) }
+.panorama-status-indicator.is-visible { opacity: 1; transform: translate(-50%, -50%) scale(1) }
 
 .perseverance-image-filters {
 	display: flex;
@@ -110,6 +127,10 @@
 	border-color: var(--accent);
 	color: var(--accent)
 }
+
+.parallax-layer-control { display: flex; align-items: center; gap: 6px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .055em; text-transform: uppercase; white-space: nowrap }
+.parallax-layer-control input { width: 74px; accent-color: var(--accent) }
+.parallax-layer-control output { min-width: 2.6em; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none }
 
 .download-all-button {
 	display: block;
