@@ -286,7 +286,7 @@
 }
 
 .sol-direct-control input {
-	width: 132px;
+	width: 62px;
 	height: 41px;
 	padding: 10px 12px;
 	border: 1px solid var(--line);
@@ -527,7 +527,7 @@ body {
 
 select,
 .date-readout strong {
-	min-width: 132px;
+	min-width: 96px;
 	padding: 10px 12px;
 	border: 1px solid var(--line);
 	border-radius: 8px;
@@ -539,7 +539,7 @@ select,
 }
 
 .date-readout strong {
-	min-height: 40px
+	min-height: 40px;
 }
 
 .selectionMode .panel-image-target,
