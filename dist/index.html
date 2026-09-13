@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?202609120420" />
+    <link rel="stylesheet" href="./styles.css?202609130422" />
   </head>
   <body>
     <main class="app-shell">
@@ -56,6 +56,7 @@
           <label class="language-select" aria-label="Interface language">
             <span>◎</span><select id="languageSelect"></select>
           </label>
+          <button class="help-button" id="helpButton" type="button" data-i18n-aria-label="helpOpen" aria-label="Open help">?</button>
           <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme">☼</button>
         </div>
       </header>
@@ -145,6 +146,63 @@
           <span class="download-notice-icon" aria-hidden="true">i</span>
           <p id="downloadNoticeText"></p>
         </div>
+      </div>
+
+      <div id="helpModal" class="help-modal" hidden role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+        <section class="help-modal-card">
+          <header class="help-modal-header">
+            <div><p class="eyebrow" data-i18n="helpEyebrow">MISSION CONTROL</p><h2 id="helpModalTitle" data-i18n="helpTitle">Explorer controls</h2></div>
+            <button id="closeHelpModal" class="help-modal-close" type="button" data-i18n-aria-label="helpClose" aria-label="Close help">×</button>
+          </header>
+          <div class="help-modal-body">
+            <p class="help-intro" data-i18n="helpIntro">Navigate the panorama, inspect overlapping source frames, and move through each rover’s mapped locations.</p>
+            <div class="help-control-grid">
+              <section class="help-section"><h3 data-i18n="helpMouseTitle">Mouse & panorama</h3><dl>
+                <div><dt data-i18n="helpMouseDragKey">Drag</dt><dd data-i18n="helpMouseDragValue">Look around the panorama.</dd></div>
+                <div><dt data-i18n="helpMouseWheelKey">Mouse wheel</dt><dd data-i18n="helpMouseWheelValue">Zoom in and out.</dd></div>
+                <div><dt><kbd>Alt</kbd> + <span data-i18n="helpMouseHoverKey">hover</span></dt><dd data-i18n="helpMouseHoverValue">Reveal the overlapping image beneath the pointer.</dd></div>
+                <div><dt data-i18n="helpMouseClickKey">Click an image</dt><dd data-i18n="helpMouseClickValue">Open its image information panel.</dd></div>
+                <div><dt><kbd>Shift</kbd> + <span data-i18n="helpMouseClickKey">click</span></dt><dd data-i18n="helpShiftClickValue">Add or remove an alignment-correction image.</dd></div>
+                <div><dt><kbd>Shift</kbd> + <span data-i18n="helpMouseDragKey">drag</span></dt><dd data-i18n="helpShiftDragValue">Draw a circular image selection.</dd></div>
+              </dl></section>
+              <section class="help-section"><h3 data-i18n="helpKeyboardTitle">Keyboard</h3><dl>
+                <div><dt><kbd>A</kbd> / <kbd>D</kbd></dt><dd data-i18n="helpKeyHorizontal">Move the virtual camera left / right.</dd></div>
+                <div><dt><kbd>W</kbd> / <kbd>S</kbd></dt><dd data-i18n="helpKeyDepth">Move the virtual camera forward / back.</dd></div>
+                <div><dt><kbd>Q</kbd> / <kbd>E</kbd></dt><dd data-i18n="helpKeyUp">Move the virtual camera up.</dd></div>
+                <div><dt><kbd>C</kbd></dt><dd data-i18n="helpKeyDown">Move the virtual camera down.</dd></div>
+                <div><dt><kbd>Space</kbd></dt><dd data-i18n="helpKeyReset">Smoothly return the virtual camera to the panorama centre.</dd></div>
+                <div><dt><kbd>Esc</kbd></dt><dd data-i18n="helpKeyEscape">Cancel an image selection, close a notice, or close this help.</dd></div>
+              </dl></section>
+              <section class="help-section"><h3 data-i18n="helpNavigationTitle">Navigation & layers</h3><dl>
+                <div><dt data-i18n="helpSolKey">Sol stepper</dt><dd data-i18n="helpSolValue">Change the requested Martian day; loading fetches a new public image set.</dd></div>
+                <div><dt data-i18n="helpLocationKey">Location stepper</dt><dd data-i18n="helpLocationValue">Move through mapped rover stations, including the adjacent Sol when necessary.</dd></div>
+                <div><dt data-i18n="helpResolutionKey">Location resolution</dt><dd data-i18n="helpResolutionValue">Merge or separate nearby rover positions within the active Sol.</dd></div>
+                <div><dt data-i18n="helpLayerKey">Layer spacing</dt><dd data-i18n="helpLayerValue">Adjust the faux-depth separation of overlapping captures.</dd></div>
+                <div><dt data-i18n="helpFullscreenKey">Fullscreen</dt><dd data-i18n="helpFullscreenValue">Use the upper-right canvas button for an unobstructed view and live HUD feedback.</dd></div>
+              </dl></section>
+            </div>
+            <section class="help-controller-section"><div class="help-controller-copy"><p class="eyebrow" data-i18n="helpControllerEyebrow">GAMEPAD</p><h3 data-i18n="helpControllerTitle">Controller mapping</h3><p data-i18n="helpControllerIntro">Standard Gamepad mapping is supported. Analog sticks and triggers use exponential response after their dead zones.</p></div>
+              <div class="controller-map" aria-label="Controller mapping diagram">
+                <img class="controller-map-image" src="./controller-map.png" alt="" />
+                <span class="controller-map-label controller-map-label--left-stick" data-i18n="helpPadLeftStick">Left stick · move camera</span>
+                <span class="controller-map-label controller-map-label--right-stick" data-i18n="helpPadRightStick">Right stick · look</span>
+                <span class="controller-map-label controller-map-label--l1" data-i18n="helpPadL1">L1 · —</span>
+                <span class="controller-map-label controller-map-label--l2" data-i18n="helpPadL2">L2 · analog zoom</span>
+                <span class="controller-map-label controller-map-label--r1" data-i18n="helpPadR1">R1 · move up</span>
+                <span class="controller-map-label controller-map-label--r2" data-i18n="helpPadR2">R2 · move down</span>
+                <span class="controller-map-label controller-map-label--l3" data-i18n="helpPadL3">L3 · reset camera</span>
+                <span class="controller-map-label controller-map-label--r3" data-i18n="helpPadR3">R3 · reveal image beneath</span>
+                <span class="controller-map-label controller-map-label--dpad" data-i18n="helpPadDpad">D-pad · location & resolution</span>
+                <span class="controller-map-label controller-map-label--circle" data-i18n="helpPadCircle">Circle · Escape</span>
+                <span class="controller-map-label controller-map-label--square" data-i18n="helpPadSquare">Square · Fullscreen</span>
+              </div>
+              <dl class="help-controller-details">
+                <div><dt data-i18n="helpPadDpadHorizontalKey">D-pad left / right</dt><dd data-i18n="helpPadDpadHorizontalValue">Decrease / increase location resolution.</dd></div>
+                <div><dt data-i18n="helpPadDpadVerticalKey">D-pad up / down</dt><dd data-i18n="helpPadDpadVerticalValue">Next / previous mapped location.</dd></div>
+              </dl>
+            </section>
+          </div>
+        </section>
       </div>
 
       <section class="legend-row">

@@ -546,6 +546,65 @@ body {
 	top: 10px;
 }
 
+.help-button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); color: var(--accent); cursor: pointer; font: 800 1rem/1 system-ui; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease }
+.help-button:hover, .help-button:focus-visible { border-color: var(--accent); box-shadow: var(--shadow), 0 0 16px var(--glow); outline: 0; transform: translateY(-1px) }
+
+.help-modal[hidden] { display: none }
+.help-modal { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 22px; background: color-mix(in srgb, var(--bg) 46%, transparent); backdrop-filter: blur(10px); opacity: 0; transition: opacity .18s ease }
+.help-modal:not([hidden]) { opacity: 1 }
+.help-modal-card { display: grid; grid-template-rows: auto minmax(0,1fr); width: min(1480px, calc(100vw - 44px)); height: min(820px, calc(100vh - 44px)); overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line)); border-radius: 18px; background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); box-shadow: 0 28px 80px rgba(4,10,22,.4), 0 0 45px var(--glow); transform: translateY(7px) scale(.985); transition: transform .2s cubic-bezier(.2,.8,.2,1) }
+.help-modal:not([hidden]) .help-modal-card { transform: translateY(0) scale(1) }
+.help-modal-header { display: flex; justify-content: space-between; gap: 22px; align-items: start; padding: 24px 28px 20px; border-bottom: 1px solid var(--line); background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%) }
+.help-modal-header .eyebrow { margin: 0 0 7px }
+.help-modal-header h2 { margin: 0; font-size: clamp(1.35rem, 2vw, 1.8rem); letter-spacing: .025em }
+.help-modal-close { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer; font-size: 1.35rem; line-height: 1; transition: border-color .16s ease, transform .16s ease }
+.help-modal-close:hover, .help-modal-close:focus-visible { border-color: var(--accent); outline: 0; transform: rotate(90deg) }
+.help-modal-body { min-height: 0; overflow: auto; padding: 24px 28px 30px; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 55%, var(--line)) color-mix(in srgb, var(--surface2) 70%, transparent) }
+.help-modal-body::-webkit-scrollbar { width: 11px }
+.help-modal-body::-webkit-scrollbar-track { background: color-mix(in srgb, var(--surface2) 70%, transparent); border-radius: 99px }
+.help-modal-body::-webkit-scrollbar-thumb { border: 3px solid color-mix(in srgb, var(--surface2) 70%, transparent); border-radius: 99px; background: color-mix(in srgb, var(--accent) 68%, var(--muted)) }
+[data-theme="dark"] .help-modal-body { scrollbar-color: color-mix(in srgb, var(--accent) 72%, #c8f8ff) color-mix(in srgb, var(--surface2) 80%, #020711) }
+[data-theme="dark"] .help-modal-body::-webkit-scrollbar-track { background: color-mix(in srgb, var(--surface2) 80%, #020711) }
+[data-theme="dark"] .help-modal-body::-webkit-scrollbar-thumb { border-color: color-mix(in srgb, var(--surface2) 80%, #020711); background: color-mix(in srgb, var(--accent) 74%, #c8f8ff) }
+.help-intro { max-width: 78ch; margin: 0 0 20px; color: var(--muted); font-size: .93rem; line-height: 1.55 }
+.help-control-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px }
+.help-section, .help-controller-section { border: 1px solid var(--line); border-radius: 13px; background: color-mix(in srgb, var(--surface) 84%, transparent); box-shadow: 0 8px 22px color-mix(in srgb, var(--ink) 6%, transparent) }
+.help-section { padding: 16px }
+.help-section h3, .help-controller-section h3 { margin: 0 0 13px; color: var(--accent); font-size: .84rem; letter-spacing: .09em; text-transform: uppercase }
+.help-section dl, .help-controller-details { display: grid; gap: 10px; margin: 0 }
+.help-section dl > div, .help-controller-details > div { display: grid; gap: 4px }
+.help-section dt, .help-controller-details dt { color: var(--ink); font-size: .77rem; font-weight: 750 }
+.help-section dd, .help-controller-details dd { margin: 0; color: var(--muted); font-size: .76rem; line-height: 1.42 }
+.help-modal kbd { display: inline-grid; min-width: 1.55em; padding: .16em .38em; border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--surface2) 72%, transparent); color: var(--accent); font: 750 .76rem/1 system-ui; text-align: center }
+.help-controller-section { display: grid; grid-template-columns: minmax(210px,.65fr) minmax(440px,1.5fr) minmax(190px,.55fr); gap: 18px; align-items: center; margin-top: 18px; padding: 18px }
+.help-controller-copy .eyebrow { margin: 0 0 6px }
+.help-controller-copy h3 { margin-bottom: 8px }
+.help-controller-copy p:last-child { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.5 }
+.controller-map { position: relative; width: 100%; min-height: 340px; overflow: hidden; border: 1px dashed color-mix(in srgb, var(--accent) 42%, var(--line)); border-radius: 11px; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%) }
+.controller-map-image { display: block; width: 100%; height: 100%; min-height: 340px; object-fit: contain; object-position: center; transition: filter .2s ease }
+.controller-map-label {position: absolute;top: 0;left: 0;max-width: 134px;padding: 4px 6px;border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--line));border-radius: 5px;background: color-mix(in srgb, var(--surface) 84%, transparent);box-shadow: 0 0 12px var(--glow);color: var(--accent);font: 750 .63rem/1.25 system-ui;letter-spacing: .035em;pointer-events: none}
+.help-controller-details { padding: 8px 0 }
+body.has-help-modal { overflow: hidden }
+@media (max-width: 980px) { .help-control-grid { grid-template-columns: 1fr 1fr }.help-controller-section { grid-template-columns: 1fr }.controller-map { min-height: 300px }.controller-map-image { min-height: 300px } }
+@media (max-width: 620px) { .help-modal { padding: 10px }.help-modal-card { width: calc(100vw - 20px); height: calc(100vh - 20px); border-radius: 13px }.help-modal-header, .help-modal-body { padding-left: 17px; padding-right: 17px }.help-control-grid { grid-template-columns: 1fr }.help-controller-section { padding: 14px }.controller-map, .controller-map-image { min-height: 240px } }
+
+.controller-map-label--left-stick {top: 262px;left: 258px;text-align: center;width: 110px;}
+.controller-map-label--right-stick {top: 262px;left: 374px;text-align: center;width: 120px;}
+.controller-map-label--l1 {display:none;top:100px;left:10px}
+.controller-map-label--l2 {top: 10px;left:50px}
+.controller-map-label--r1 {top: 59px;left: 587px;width: 100px;}
+.controller-map-label--r2 {top: 9px;left: 587px;}
+.controller-map-label--l3 {top: 302px;left: 258px;text-align: center;}
+.controller-map-label--r3 {top: 302px;left: 374px;}
+.controller-map-label--dpad {top: 162px;left: 31px;width: 125px;}
+.controller-map-label--circle {display:none;top:100px;left:10px}
+.controller-map-label--square {top: 169px;left: 587px;width: 101px;}
+
+[data-theme="light"] .controller-map-image {
+  filter: invert(100%) hue-rotate(180deg);
+  CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX;
+}
+
 .control-deck {
 	border: 1px solid var(--line);
 	background: linear-gradient(115deg, var(--surface), var(--surface2));

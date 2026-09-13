@@ -208,6 +208,13 @@ render=()=>{ paintPanorama(); drawSelectionOverlay(); $('#coverageValue').textCo
 const renderPanel=panel;
 panel=(image)=>{ renderPanel(image); if (!image) return; const full=/EDR_F\d+/i.test(imageIdentity(image)), preview=$('#panelImage'); preview.style.maxHeight=full?'none':'220px'; preview.style.aspectRatio='auto'; preview.style.objectFit='contain'; };
 
+let helpModalLastFocus=null;
+function setHelpModal(open){const modal=$('#helpModal');if(!modal)return;if(open){helpModalLastFocus=document.activeElement;modal.hidden=false;document.body.classList.add('has-help-modal');requestAnimationFrame(()=>$('#closeHelpModal').focus())}else{modal.hidden=true;document.body.classList.remove('has-help-modal');helpModalLastFocus?.focus?.();helpModalLastFocus=null}}
+$('#helpButton').addEventListener('click',()=>setHelpModal(true));
+$('#closeHelpModal').addEventListener('click',()=>setHelpModal(false));
+$('#helpModal').addEventListener('click',event=>{if(event.target===event.currentTarget)setHelpModal(false)});
+window.addEventListener('keydown',event=>{const modal=$('#helpModal');if(modal.hidden)return;if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();setHelpModal(false);return}if(event.key!=='Tab')return;const focusable=[...modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(element=>!element.disabled&&!element.hidden);if(!focusable.length)return;const current=focusable.indexOf(document.activeElement),next=event.shiftKey?(current<=0?focusable.length-1:current-1):(current===focusable.length-1?0:current+1);event.preventDefault();focusable[next].focus()},{capture:true});
+
 async function toggleFullscreen() {
   try {
     if (document.fullscreenElement) await document.exitFullscreen();
