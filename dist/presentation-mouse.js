@@ -9,6 +9,7 @@ const PRESENTATION_MOUSE_EDGE_GUARD_PX = 100;
 
 const presentationMouse = document.querySelector('#presentationMouse');
 const presentationMouseToggle = document.querySelector('#presentationMouseToggle');
+const controllerAimer = document.querySelector('#controllerAimer');
 let presentationMouseEnabled = false;
 let presentationMouseHasPointer = false;
 let presentationMouseX = 0;
@@ -31,3 +32,18 @@ window.addEventListener('pointermove',presentationMouseMove,{passive:true});
 window.addEventListener('blur',presentationMouseStop);
 window.addEventListener('mouseout',event=>{if(!event.relatedTarget)presentationMouseStop()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)presentationMouseStop()});
+
+// The controller aimer is deliberately a second reticle instance. It shares
+// the presentation finder's animation language but has no pointer dependency:
+// R3 drives a centred aim point in the panorama renderer through this event.
+let controllerAimerHeld = false;
+let controllerAimerLastActivity = 0;
+let controllerAimerOpacity = 0;
+let controllerAimerFrame = 0;
+let controllerAimerLastFrame = 0;
+function controllerAimerStop(){if(controllerAimerFrame){cancelAnimationFrame(controllerAimerFrame);controllerAimerFrame=0}controllerAimerOpacity=0;controllerAimer.style.opacity='0';controllerAimer.classList.remove('is-active')}
+function controllerAimerTick(now){const elapsed=Math.max(0,now-controllerAimerLastFrame);controllerAimerLastFrame=now;const shouldShow=controllerAimerHeld||now-controllerAimerLastActivity<PRESENTATION_MOUSE_IDLE_DELAY_MS,target=shouldShow?1:0,duration=shouldShow?PRESENTATION_MOUSE_FADE_IN_MS:PRESENTATION_MOUSE_FADE_OUT_MS;controllerAimerOpacity+=Math.sign(target-controllerAimerOpacity)*Math.min(Math.abs(target-controllerAimerOpacity),elapsed/duration);controllerAimer.style.opacity=String(controllerAimerOpacity);if(controllerAimerOpacity>0||shouldShow)controllerAimerFrame=requestAnimationFrame(controllerAimerTick);else{controllerAimerFrame=0;controllerAimer.classList.remove('is-active')}}
+function controllerAimerSetActive(active){if(!controllerAimer)return;controllerAimerHeld=active;controllerAimerLastActivity=performance.now();if(active){controllerAimer.classList.add('is-active');if(!controllerAimerFrame){controllerAimerLastFrame=controllerAimerLastActivity;controllerAimerFrame=requestAnimationFrame(controllerAimerTick)}}else if(controllerAimerOpacity&&!controllerAimerFrame){controllerAimerLastFrame=controllerAimerLastActivity;controllerAimerFrame=requestAnimationFrame(controllerAimerTick)}}
+window.addEventListener('mars360controlleraimer',event=>controllerAimerSetActive(Boolean(event.detail?.active)));
+window.addEventListener('blur',()=>{controllerAimerHeld=false;controllerAimerStop()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){controllerAimerHeld=false;controllerAimerStop()}});

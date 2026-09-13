@@ -25,6 +25,7 @@
 .presentation-mouse { --pm-bright: rgba(22, 174, 224, .96); --pm-soft: rgba(0, 126, 190, .42); position: fixed; top: 0; left: 0; z-index: 2147483646; width: 188px; height: 188px; opacity: 0; pointer-events: none; visibility: hidden; transform: translate3d(-200px, -200px, 0) translate(-50%, -50%); will-change: transform, opacity; filter: drop-shadow(0 0 3px var(--pm-soft)) drop-shadow(0 0 11px color-mix(in srgb, var(--pm-bright) 28%, transparent)); }
 [data-theme="dark"] .presentation-mouse { --pm-bright: rgba(70, 255, 255, .98); --pm-soft: rgba(0, 220, 255, .48) }
 .presentation-mouse.is-active { visibility: visible }
+.controller-aimer { top: 50%; left: 50%; width: 375px; height: 375px; transform: translate(-50%, -50%); z-index: 2147483647 }
 .presentation-mouse .layer, .presentation-mouse .thin-ring, .presentation-mouse .ticks, .presentation-mouse-toggle-preview .layer, .presentation-mouse-toggle-preview .thin-ring, .presentation-mouse-toggle-preview .ticks { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50% }
 .presentation-mouse .layer, .presentation-mouse-toggle-preview .layer { width: var(--size); height: var(--size); opacity: var(--alpha); animation: presentation-mouse-rotate var(--speed) linear infinite }
 .presentation-mouse .arc, .presentation-mouse-toggle-preview .arc { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from var(--start), transparent 0 10deg, color-mix(in srgb, var(--pm-bright) 16%, transparent) 11deg, var(--pm-bright) 13deg, var(--pm-bright) var(--arc), transparent calc(var(--arc) + 5deg) 360deg); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px)); mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px)); filter: drop-shadow(0 0 3px var(--pm-bright)) }
@@ -791,6 +792,8 @@ canvas {
 	height: 100vh;
 	background: #02050b
 }
+
+.panorama-wrap:fullscreen.is-cursor-hidden, .panorama-wrap:fullscreen.is-cursor-hidden * { cursor: none !important }
 
 .panorama-wrap:fullscreen canvas {
 	width: 100%;
