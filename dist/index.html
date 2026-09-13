@@ -70,7 +70,7 @@
           <label><span data-i18n="solLabel">Sol</span><select id="solSelect"></select></label>
           <label id="locationControl" hidden><span data-i18n="locationLabel">Location</span><select id="locationSelect"></select></label>
           <div id="locationResolution" class="location-resolution" hidden>
-            <label><span data-i18n="locationResolutionLabel">Location resolution</span><input id="locationTolerance" type="range" min="0" max="100" value="100"><output id="locationToleranceValue"></output></label>
+            <label><span data-i18n="locationResolutionLabel" data-i18n-tooltip="locationResolutionTooltip" data-tooltip="A rover may move within a single Sol, which can sometimes make a panorama appear chaotic. Use this slider together with Location motion to fine-tune how those cases are displayed." tabindex="0">Location resolution</span><input id="locationTolerance" type="range" min="0" max="100" value="100"><output id="locationToleranceValue" data-i18n="locationResolutionPermissive">Permissive</output></label>
             <label class="location-motion"><span data-i18n="locationMotionLabel">Location motion</span><input id="locationMotion" type="range" min="-100" max="100" value="0"><output id="locationMotionValue">0</output></label>
           </div>
           <div class="sol-direct-control">

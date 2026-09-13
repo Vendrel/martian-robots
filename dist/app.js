@@ -213,7 +213,7 @@ $('#locationMotion').addEventListener('input',event=>{const speed=Number(event.t
 const locationShareParams=shareParams;
 shareParams=()=>{const params=locationShareParams();params.set('sol',String(s.requestedSol??0));params.set('location',String(s.selectedLocationIndex));params.set('locationTolerance',String(s.locationTolerance));return params};
 const locationRestoreShareUrl=restoreShareUrl;
-restoreShareUrl=()=>{const params=new URLSearchParams(location.hash.slice(1)),sol=Number(params.get('sol')),index=Number(params.get('location')),tolerance=Number(params.get('locationTolerance'));if(Number.isFinite(sol))s.requestedSol=sol;if(Number.isInteger(index)&&index>=0)s.selectedLocationIndex=index;if(Number.isFinite(tolerance)&&tolerance>=0&&tolerance<=100)s.locationTolerance=tolerance;locationRestoreShareUrl();};
+restoreShareUrl=()=>{const params=new URLSearchParams(location.hash.slice(1)),sol=Number(params.get('sol')),index=Number(params.get('location')),tolerance=Number(params.get('locationTolerance'));if(Number.isFinite(sol))s.requestedSol=sol;if(Number.isInteger(index)&&index>=0)s.selectedLocationIndex=index;if(params.has('locationTolerance')&&Number.isFinite(tolerance)&&tolerance>=0&&tolerance<=100)s.locationTolerance=tolerance;locationRestoreShareUrl();};
 window.addEventListener('hashchange',restoreShareUrl);
 $('#roverSelect').onchange=async event=>{if(s.selection||s.selectionDraft)clearSelection();s.rover=event.target.value;s.yaw=0;s.pitch=0;s.pointer=null;await discoverLatest(rovers[s.rover]);s.requestedSol=rovers[s.rover].latest;s.selectedLocationIndex=0;sols(rovers[s.rover].latest);syncSolControls();load();scheduleShareUrl();};
 if(location.hash)restoreShareUrl();

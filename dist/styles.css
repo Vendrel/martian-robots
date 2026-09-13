@@ -394,6 +394,41 @@
 	transform: translateY(0)
 }
 
+.location-resolution label > span[data-i18n-tooltip] {
+	position: relative;
+	width: fit-content;
+	cursor: help
+}
+
+.location-resolution label > span[data-i18n-tooltip]::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	z-index: 8;
+	top: calc(100% + 8px);
+	left: 0;
+	width: 245px;
+	padding: 9px 10px;
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background: var(--surface);
+	box-shadow: var(--shadow);
+	color: var(--ink);
+	font: 500 .72rem/1.35 system-ui;
+	letter-spacing: 0;
+	text-align: left;
+	text-transform: none;
+	opacity: 0;
+	transform: translateY(-4px);
+	pointer-events: none;
+	transition: opacity .16s, transform .16s
+}
+
+.location-resolution label > span[data-i18n-tooltip]:hover::after,
+.location-resolution label > span[data-i18n-tooltip]:focus-visible::after {
+	opacity: 1;
+	transform: translateY(0)
+}
+
 :root[data-theme="dark"] {
 	--bg: #050812;
 	--surface: #0c1222;
