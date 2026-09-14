@@ -49,11 +49,11 @@
 	color: var(--muted)
 }
 
-.location-resolution { display: grid; grid-template-columns: minmax(135px,1fr) minmax(135px,1fr); gap: 12px; align-items: end; min-width: 285px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface) }
-.location-resolution label { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .07em; text-transform: uppercase }
+.location-resolution { display: grid; grid-template-columns: minmax(135px, 170px) auto; flex: 0 1 auto; gap: 12px; align-items: start; width: fit-content; max-width: 100%; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface) }
+.location-resolution label { display: grid; gap: 5px }
 .location-resolution input { width: 100%; accent-color: var(--accent) }
 .location-resolution output { color: var(--accent); font-size: .7rem; letter-spacing: 0; text-transform: none }
-.location-motion { display: grid; gap: 5px; color: var(--muted); font: 700 .64rem/1 system-ui; letter-spacing: .07em; text-transform: uppercase }
+.location-motion { display: grid; gap: 5px }
 .location-motion .location-stepper { align-self: stretch; justify-self: start }
 
 .fullscreen-location-indicator { display: none }
@@ -303,11 +303,7 @@
 	grid-template-columns: auto auto;
 	grid-template-areas: "label label" "input stepper";
 	gap: 7px;
-	align-self: end;
-	font-size: .75rem;
-	text-transform: uppercase;
-	letter-spacing: .1em;
-	color: var(--muted)
+	align-self: end
 }
 
 .sol-direct-control > span { grid-area: label; justify-self: center }
@@ -646,10 +642,17 @@ body.has-help-modal { overflow: hidden }
 	flex-wrap: wrap
 }
 
-.control-fields label,
+.control-fields > label,
 .date-readout {
 	display: grid;
-	gap: 7px;
+	gap: 7px
+}
+
+.control-fields > label > span,
+.location-resolution > label > span,
+.location-motion > span,
+.sol-direct-control > span,
+.date-readout > span {
 	font-size: .75rem;
 	text-transform: uppercase;
 	letter-spacing: .1em;
