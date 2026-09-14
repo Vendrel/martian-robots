@@ -133,6 +133,19 @@
 .parallax-layer-control input { width: 74px; accent-color: var(--accent) }
 .parallax-layer-control output { min-width: 2.6em; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none }
 
+.flatfield-panel-button { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 7px; background: transparent; color: var(--accent); cursor: pointer }
+.flatfield-panel-button:hover, .flatfield-panel-button:focus-visible, .flatfield-panel-button[aria-expanded="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 11%, transparent); box-shadow: 0 0 14px var(--glow); outline: 0 }
+.flatfield-panel-button > span { display: block; width: 12px; height: 12px; border: 1.5px solid currentColor; border-radius: 2px; box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 36%, transparent), inset 0 0 6px color-mix(in srgb, currentColor 70%, transparent) }
+.flatfield-control { display: grid; gap: 13px; margin: 0; padding: 0; border: 0; color: var(--muted); font: 700 .68rem/1 system-ui; letter-spacing: .055em; text-transform: uppercase }
+.flatfield-control legend { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
+.flatfield-control label { display: grid; grid-template-columns: minmax(0, 1fr) minmax(104px, 1.4fr) 3.2em; align-items: center; gap: 9px }
+.flatfield-control .flatfield-toggle { display: flex; gap: 8px }
+.flatfield-control input[type="range"] { width: 100%; min-width: 0; accent-color: var(--accent) }
+.flatfield-control output { min-width: 2.6em; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none }
+.flatfield-control button { justify-self: end; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--muted); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer }
+.flatfield-control button:hover, .flatfield-control button:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
+.flatfield-control input:disabled, .flatfield-control input:disabled + output { opacity: .5 }
+
 .download-all-button {
 	display: block;
 	margin: 18px 0 0 auto;
@@ -729,6 +742,8 @@ select,
 }
 
 .viewer-topline {
+	align-items: center;
+	flex-wrap: wrap;
 	border-bottom: 1px solid var(--line)
 }
 
@@ -871,6 +886,11 @@ canvas {
 	top: 14px;
 	padding: 17px
 }
+
+.flatfield-panel .panel-heading { margin-bottom: 20px }
+.flatfield-panel h2 { margin-bottom: 0 }
+.flatfield-panel #closeFlatfieldPanel { display: grid; place-items: center; width: 29px; height: 29px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--muted); font: 1.28rem/1 system-ui; cursor: pointer }
+.flatfield-panel #closeFlatfieldPanel:hover, .flatfield-panel #closeFlatfieldPanel:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
 
 .panel-heading {
 	display: flex;

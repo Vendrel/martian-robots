@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?202609141331" />
+    <link rel="stylesheet" href="./styles.css?2026091415" />
   </head>
   <body>
     <main class="app-shell">
@@ -94,6 +94,7 @@
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
+            <button class="flatfield-panel-button" id="flatfieldPanelButton" type="button" aria-controls="flatfieldPanel" aria-expanded="false" data-i18n-aria-label="flatfieldOpen" aria-label="Open flatfield correction"><span aria-hidden="true"></span></button>
             <label class="parallax-layer-control"><span data-i18n="parallaxLayerLabel">Layer spacing</span><input id="parallaxLayerSeparation" type="range" min="0.1" max="1.5" step="0.01" value="0.5" data-i18n-aria-label="parallaxLayerLabel" aria-label="Layer spacing"><output id="parallaxLayerSeparationValue">0.5</output></label>
             <div class="coverage"><span data-i18n="coverageLabel">Coverage</span><strong id="coverageValue">0° / 360°</strong></div>
           </div>
@@ -134,6 +135,18 @@
             <button id="collectCrossviewButton" class="download-all-button" type="button" data-i18n="collectCrossview">Collect Crossview Slideshow</button>
             <button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button>
           </div>
+        </aside>
+        <aside class="image-panel flatfield-panel" id="flatfieldPanel" hidden aria-live="polite">
+          <div class="panel-heading"><div><p class="eyebrow" data-i18n="flatfieldLegend">FLATFIELD CORRECTION</p><h2 data-i18n="flatfieldTitle">Vignetting correction</h2></div><button id="closeFlatfieldPanel" type="button" data-i18n-aria-label="flatfieldClose" aria-label="Close flatfield correction">×</button></div>
+          <fieldset class="flatfield-control" id="flatfieldControls">
+            <legend data-i18n="flatfieldLegend">Flatfield correction</legend>
+            <label class="flatfield-toggle"><input id="flatfieldEnabled" type="checkbox"><span data-i18n="flatfieldEnabled">Correct vignetting</span></label>
+            <label><span data-i18n="flatfieldEdgeLift">Edge lift</span><input id="flatfieldEdgeLift" type="range" min="0" max="0.6" step="0.01" value="0.6"><output id="flatfieldEdgeLiftValue">2.50×</output></label>
+            <label><span data-i18n="flatfieldFalloff">Falloff</span><input id="flatfieldFalloff" type="range" min="0.5" max="4" step="0.1" value="2.4"><output id="flatfieldFalloffValue">2.4</output></label>
+            <label><span data-i18n="flatfieldCenterX">Centre X</span><input id="flatfieldCenterX" type="range" min="0" max="1" step="0.01" value="0.5"><output id="flatfieldCenterXValue">0.50</output></label>
+            <label><span data-i18n="flatfieldCenterY">Centre Y</span><input id="flatfieldCenterY" type="range" min="0" max="1" step="0.01" value="0.5"><output id="flatfieldCenterYValue">0.50</output></label>
+            <button id="flatfieldReset" type="button" data-i18n="flatfieldReset">Reset</button>
+          </fieldset>
         </aside>
       </section>
 
@@ -235,7 +248,7 @@
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script>window.mars360PresentationMouseTiming=Object.freeze({idleDelayMs:900,fadeOutMs:3000});</script>
-    <script type="module" src="./app.js?2026091404"></script>
+    <script type="module" src="./app.js?2026091415"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
