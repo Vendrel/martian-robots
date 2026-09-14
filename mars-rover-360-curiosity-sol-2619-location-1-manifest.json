@@ -1,0 +1,2812 @@
+{
+  "format": "mars-rover-360-export/v1",
+  "exportedAt": "2026-09-14T09:25:36.114Z",
+  "rover": "curiosity",
+  "sol": 2619,
+  "location": 0,
+  "view": {
+    "yawDegrees": 2814.5046280373167,
+    "pitchDegrees": 20.174764171801655,
+    "fovDegrees": 75
+  },
+  "images": [
+    {
+      "id": 761996,
+      "camera_vector": "(-0.0024501853622273394,0.8765749302302791,0.4812591695578091)",
+      "site": 78,
+      "imageid": "NLB_629906004EDR_D0781002TRAV00832M_",
+      "subframe_rect": "(1,1,256,256)",
+      "sol": 2618,
+      "scale_factor": 4,
+      "camera_model_component_list": "(1.0189,0.675203,-1.8809);(0.00319229,0.880777,0.473503);(-305.775,112.523,59.4438);(-0.5074,-34.6342,329.033);(0.00319529,0.880777,0.473503);(0.0,0.000130702,0.00637702)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "spacecraft_clock": 629906004.342,
+      "attitude": "(0.393151,0.0675366,-0.0238114,-0.916681)",
+      "camera_position": "(1.0189,0.675203,-1.8809)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:03.071Z",
+      "updated_at": "2020-02-18T04:25:57.611Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:00:52.078",
+        "bucket": "msl-raws",
+        "mast_az": "90.0531",
+        "mast_el": "-28.6744",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906004EDR_D0781002TRAV00832M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "downsampled",
+        "subframeRect": "(1,1,256,256)"
+      },
+      "date_taken": "2019-12-18T02:32:08.000Z",
+      "date_received": "2019-12-19T10:53:27.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 3,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:32:08 UTC).",
+      "link": "/raw_images/761996",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0031923164876321757,
+          0.8807843081384225,
+          0.4735069288326869
+        ],
+        "H": [
+          -305.775,
+          112.523,
+          59.4438
+        ],
+        "V": [
+          -0.5074,
+          -34.6342,
+          329.033
+        ],
+        "C": [
+          1.0189,
+          0.675203,
+          -1.8809
+        ],
+        "O": [
+          0.0031953164819082877,
+          0.8807842996991623,
+          0.47350692429576663
+        ],
+        "R": [
+          0,
+          0.000130702,
+          0.00637702
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.3931510118591017,
+          0.06753660203719031,
+          -0.023811400718252818,
+          -0.916681027650987
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          1.0189,
+          0.675203,
+          -1.8809
+        ],
+        "A": [
+          0.0031923164876321757,
+          0.8807843081384225,
+          0.4735069288326869
+        ],
+        "H": [
+          -305.775,
+          112.523,
+          59.4438
+        ],
+        "V": [
+          -0.5074,
+          -34.6342,
+          329.033
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 256,
+          "h": 256
+        }
+      }
+    },
+    {
+      "id": 762026,
+      "camera_vector": "(-7.949956343047685E-4,0.8769387870587178,0.48060142710350595)",
+      "site": 78,
+      "imageid": "NRB_629906004EDR_D0781002TRAV00832M_",
+      "subframe_rect": "(1,1,256,256)",
+      "sol": 2618,
+      "scale_factor": 4,
+      "camera_model_component_list": "(0.595755,0.67723,-1.8813);(0.00242349,0.875492,0.483209);(-304.752,112.965,59.7002);(-2.01614,-34.5066,329.288);(0.0030197,0.873724,0.486396);(1.29576e-05,0.00185397,-0.00590516)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "spacecraft_clock": 629906004.342,
+      "attitude": "(0.393151,0.0675366,-0.0238114,-0.916681)",
+      "camera_position": "(0.595755,0.67723,-1.8813)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T11:04:06.157Z",
+      "updated_at": "2020-02-18T04:25:58.586Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:00:52.078",
+        "bucket": "msl-raws",
+        "mast_az": "89.9441",
+        "mast_el": "-28.6315",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906004EDR_D0781002TRAV00832M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "downsampled",
+        "subframeRect": "(1,1,256,256)"
+      },
+      "date_taken": "2019-12-18T02:32:08.000Z",
+      "date_received": "2019-12-19T10:54:09.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 3,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:32:08 UTC).",
+      "link": "/raw_images/762026",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.002423510535644419,
+          0.8754994185544003,
+          0.4832130945117182
+        ],
+        "H": [
+          -304.752,
+          112.965,
+          59.7002
+        ],
+        "V": [
+          -2.01614,
+          -34.5066,
+          329.288
+        ],
+        "C": [
+          0.595755,
+          0.67723,
+          -1.8813
+        ],
+        "O": [
+          0.003019724436343018,
+          0.8737310704438741,
+          0.4863999360663306
+        ],
+        "R": [
+          0.0000129576,
+          0.00185397,
+          -0.00590516
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.3931510118591017,
+          0.06753660203719031,
+          -0.023811400718252818,
+          -0.916681027650987
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906004EDR_D0781002TRAV00832M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.595755,
+          0.67723,
+          -1.8813
+        ],
+        "A": [
+          0.002423510535644419,
+          0.8754994185544003,
+          0.4832130945117182
+        ],
+        "H": [
+          -304.752,
+          112.965,
+          59.7002
+        ],
+        "V": [
+          -2.01614,
+          -34.5066,
+          329.288
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 256,
+          "h": 256
+        }
+      }
+    },
+    {
+      "id": 761642,
+      "camera_vector": "(0.9067794655118566,0.2574148440277835,0.3338990850544274)",
+      "site": 78,
+      "imageid": "NLB_629906331EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.976728,0.385327,-1.90002);(0.910384,0.253889,0.326689);(132.471,1308.4,164.878);(71.9931,20.7181,1321.84);(0.910384,0.253886,0.326689);(0.0,0.000129554,0.00637871)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906331.797,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.976728,0.385327,-1.90002)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:57.262Z",
+      "updated_at": "2020-02-18T04:26:57.296Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:10.774",
+        "bucket": "msl-raws",
+        "mast_az": "15.8232",
+        "mast_el": "-19.4822",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906331EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:37:36.000Z",
+      "date_received": "2019-12-18T18:44:22.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:37:36 UTC).",
+      "link": "/raw_images/761642",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.9103911217909143,
+          0.2538909861337342,
+          0.3266915556366896
+        ],
+        "H": [
+          132.471,
+          1308.4,
+          164.878
+        ],
+        "V": [
+          71.9931,
+          20.7181,
+          1321.84
+        ],
+        "C": [
+          0.976728,
+          0.385327,
+          -1.90002
+        ],
+        "O": [
+          0.9103918152133335,
+          0.2538881794904704,
+          0.3266918044695741
+        ],
+        "R": [
+          0,
+          0.000129554,
+          0.00637871
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.976728,
+          0.385327,
+          -1.90002
+        ],
+        "A": [
+          0.9103911217909143,
+          0.2538909861337342,
+          0.3266915556366896
+        ],
+        "H": [
+          132.471,
+          1308.4,
+          164.878
+        ],
+        "V": [
+          71.9931,
+          20.7181,
+          1321.84
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761643,
+      "camera_vector": "(0.907475488535767,0.2559378068116912,0.3331427272974642)",
+      "site": 78,
+      "imageid": "NRB_629906331EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.863361,0.793022,-1.9002);(0.90665,0.253617,0.337117);(135.356,1304.97,165.595);(71.04,26.7204,1322.81);(0.905621,0.252703,0.340552);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906331.797,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.863361,0.793022,-1.9002)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:57.420Z",
+      "updated_at": "2020-02-18T04:27:01.773Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:10.774",
+        "bucket": "msl-raws",
+        "mast_az": "15.7252",
+        "mast_el": "-19.4363",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906331EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:37:36.000Z",
+      "date_received": "2019-12-18T18:44:34.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:37:36 UTC).",
+      "link": "/raw_images/761643",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.9066573997698714,
+          0.25361906993595706,
+          0.33711975143464373
+        ],
+        "H": [
+          135.356,
+          1304.97,
+          165.595
+        ],
+        "V": [
+          71.04,
+          26.7204,
+          1322.81
+        ],
+        "C": [
+          0.863361,
+          0.793022,
+          -1.9002
+        ],
+        "O": [
+          0.9056283054821471,
+          0.25270503850976844,
+          0.3405547471718922
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906331EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.863361,
+          0.793022,
+          -1.9002
+        ],
+        "A": [
+          0.9066573997698714,
+          0.25361906993595706,
+          0.33711975143464373
+        ],
+        "H": [
+          135.356,
+          1304.97,
+          165.595
+        ],
+        "V": [
+          71.04,
+          26.7204,
+          1322.81
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761644,
+      "camera_vector": "(0.6607299588597165,0.6883495082013832,0.2993507575139094)",
+      "site": 78,
+      "imageid": "NLB_629906356EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.04116,0.496187,-1.90427);(0.665436,0.686939,0.292049);(-542.253,1200.45,146.749);(84.7063,89.1911,1318.23);(0.665438,0.686937,0.292049);(0.0,0.000129266,0.00637913)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906356.62,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(1.04116,0.496187,-1.90427)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:57.914Z",
+      "updated_at": "2020-02-18T04:27:14.456Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:34.933",
+        "bucket": "msl-raws",
+        "mast_az": "46.1482",
+        "mast_el": "-17.3953",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906356EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:38:01.000Z",
+      "date_received": "2019-12-18T18:45:32.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:38:01 UTC).",
+      "link": "/raw_images/761644",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.6654416967982181,
+          0.6869448808854212,
+          0.292051500231762
+        ],
+        "H": [
+          -542.253,
+          1200.45,
+          146.749
+        ],
+        "V": [
+          84.7063,
+          89.1911,
+          1318.23
+        ],
+        "C": [
+          1.04116,
+          0.496187,
+          -1.90427
+        ],
+        "O": [
+          0.6654437254312418,
+          0.6869429104087247,
+          0.2920515127907765
+        ],
+        "R": [
+          0,
+          0.000129266,
+          0.00637913
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          1.04116,
+          0.496187,
+          -1.90427
+        ],
+        "A": [
+          0.6654416967982181,
+          0.6869448808854212,
+          0.292051500231762
+        ],
+        "H": [
+          -542.253,
+          1200.45,
+          146.749
+        ],
+        "V": [
+          84.7063,
+          89.1911,
+          1318.23
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761645,
+      "camera_vector": "(0.6620550659141409,0.6874104660826236,0.29857987343003023)",
+      "site": 78,
+      "imageid": "NRB_629906356EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.737476,0.790883,-1.90466);(0.662612,0.685098,0.302603);(-538.018,1198.96,147.397);(80.8831,93.9226,1319.17);(0.662272,0.683881,0.306081);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906356.62,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.737476,0.790883,-1.90466)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:58.075Z",
+      "updated_at": "2020-02-18T04:27:19.227Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:34.933",
+        "bucket": "msl-raws",
+        "mast_az": "46.0518",
+        "mast_el": "-17.349",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906356EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:38:01.000Z",
+      "date_received": "2019-12-18T18:45:34.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:38:01 UTC).",
+      "link": "/raw_images/761645",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.6626177953610899,
+          0.685103992028958,
+          0.30260564663732603
+        ],
+        "H": [
+          -538.018,
+          1198.96,
+          147.397
+        ],
+        "V": [
+          80.8831,
+          93.9226,
+          1319.17
+        ],
+        "C": [
+          0.737476,
+          0.790883,
+          -1.90466
+        ],
+        "O": [
+          0.6622776284876979,
+          0.6838868121373021,
+          0.3060836013075338
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906356EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.737476,
+          0.790883,
+          -1.90466
+        ],
+        "A": [
+          0.6626177953610899,
+          0.685103992028958,
+          0.30260564663732603
+        ],
+        "H": [
+          -538.018,
+          1198.96,
+          147.397
+        ],
+        "V": [
+          80.8831,
+          93.9226,
+          1319.17
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761647,
+      "camera_vector": "(0.24203407481387862,0.942568877710059,0.23018127074414557)",
+      "site": 78,
+      "imageid": "NLB_629906380EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.04165,0.620451,-1.91277);(0.246685,0.943144,0.22273);(-1059.78,788.13,111.268);(53.4436,210.509,1306.02);(0.246688,0.943143,0.22273);(0.0,0.000128979,0.00637956)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906380.585,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(1.04165,0.620451,-1.91277)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:58.732Z",
+      "updated_at": "2020-02-18T04:27:32.679Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:58.258",
+        "bucket": "msl-raws",
+        "mast_az": "75.5746",
+        "mast_el": "-13.2844",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906380EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:38:25.000Z",
+      "date_received": "2019-12-18T18:46:31.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:38:25 UTC).",
+      "link": "/raw_images/761647",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.24668712807283408,
+          0.9431521362025458,
+          0.22273192142068768
+        ],
+        "H": [
+          -1059.78,
+          788.13,
+          111.268
+        ],
+        "V": [
+          53.4436,
+          210.509,
+          1306.02
+        ],
+        "C": [
+          1.04165,
+          0.620451,
+          -1.91277
+        ],
+        "O": [
+          0.24669017819841174,
+          0.9431513277361876,
+          0.22273196665477143
+        ],
+        "R": [
+          0,
+          0.000128979,
+          0.00637956
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          1.04165,
+          0.620451,
+          -1.91277
+        ],
+        "A": [
+          0.24668712807283408,
+          0.9431521362025458,
+          0.22273192142068768
+        ],
+        "H": [
+          -1059.78,
+          788.13,
+          111.268
+        ],
+        "V": [
+          53.4436,
+          210.509,
+          1306.02
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761646,
+      "camera_vector": "(0.24361787706089164,0.9423560832203954,0.22938034439301838)",
+      "site": 78,
+      "imageid": "NRB_629906380EDR_F0781002NCAM00257M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.63235,0.727889,-1.9133);(0.245321,0.940894,0.233494);(-1055.35,788.93,111.776);(47.8095,212.832,1306.91);(0.245685,0.939911,0.237045);(1.30359e-05,0.00184974,-0.00587789)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "spacecraft_clock": 629906380.585,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.63235,0.727889,-1.9133)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:53:58.572Z",
+      "updated_at": "2020-02-18T04:27:29.248Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:06:58.258",
+        "bucket": "msl-raws",
+        "mast_az": "75.481",
+        "mast_el": "-13.2373",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906380EDR_F0781002NCAM00257M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:38:25.000Z",
+      "date_received": "2019-12-18T18:45:56.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:38:25 UTC).",
+      "link": "/raw_images/761646",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.24532304105779923,
+          0.9409018281885242,
+          0.23349594265778215
+        ],
+        "H": [
+          -1055.35,
+          788.93,
+          111.776
+        ],
+        "V": [
+          47.8095,
+          212.832,
+          1306.91
+        ],
+        "C": [
+          0.63235,
+          0.727889,
+          -1.9133
+        ],
+        "O": [
+          0.24568694840706395,
+          0.9399184539724929,
+          0.23704687988746762
+        ],
+        "R": [
+          0.0000130359,
+          0.00184974,
+          -0.00587789
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906380EDR_F0781002NCAM00257M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.63235,
+          0.727889,
+          -1.9133
+        ],
+        "A": [
+          0.24532304105779923,
+          0.9409018281885242,
+          0.23349594265778215
+        ],
+        "H": [
+          -1055.35,
+          788.93,
+          111.776
+        ],
+        "V": [
+          47.8095,
+          212.832,
+          1306.91
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761652,
+      "camera_vector": "(0.5898265140030517,0.34103381075401334,0.7319840321356769)",
+      "site": 78,
+      "imageid": "NLB_629906609EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.999741,0.4244,-1.84554);(0.596828,0.340019,0.72675);(-303.398,1236.69,367.733);(-473.794,-269.166,1206.62);(0.59683,0.340017,0.72675);(0.0,0.000128979,0.00637956)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906609.4,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.999741,0.4244,-1.84554)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:00.558Z",
+      "updated_at": "2020-02-18T04:29:32.544Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:10:40.953",
+        "bucket": "msl-raws",
+        "mast_az": "30.0018",
+        "mast_el": "-47.0298",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906609EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:42:13.000Z",
+      "date_received": "2019-12-18T18:46:38.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:42:13 UTC).",
+      "link": "/raw_images/761652",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.5968333284189463,
+          0.3400220356546303,
+          0.726756488349188
+        ],
+        "H": [
+          -303.398,
+          1236.69,
+          367.733
+        ],
+        "V": [
+          -473.794,
+          -269.166,
+          1206.62
+        ],
+        "C": [
+          0.999741,
+          0.4244,
+          -1.84554
+        ],
+        "O": [
+          0.5968350218838095,
+          0.34001986099202,
+          0.7267561150646894
+        ],
+        "R": [
+          0,
+          0.000128979,
+          0.00637956
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.999741,
+          0.4244,
+          -1.84554
+        ],
+        "A": [
+          0.5968333284189463,
+          0.3400220356546303,
+          0.726756488349188
+        ],
+        "H": [
+          -303.398,
+          1236.69,
+          367.733
+        ],
+        "V": [
+          -473.794,
+          -269.166,
+          1206.62
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761653,
+      "camera_vector": "(0.5911365689334435,0.3399492728788899,0.7314315065258745)",
+      "site": 78,
+      "imageid": "NRB_629906609EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.790594,0.792269,-1.84556);(0.589444,0.336667,0.734299);(-300.246,1233.78,369.213);(-476.626,-263.83,1207.81);(0.58741,0.334812,0.736773);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906609.4,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.790594,0.792269,-1.84556)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:00.718Z",
+      "updated_at": "2020-02-18T04:29:37.191Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:10:40.953",
+        "bucket": "msl-raws",
+        "mast_az": "29.8675",
+        "mast_el": "-46.9833",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906609EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:42:13.000Z",
+      "date_received": "2019-12-18T18:46:51.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:42:13 UTC).",
+      "link": "/raw_images/761653",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.5894487393560892,
+          0.33666970693195025,
+          0.7343049040459093
+        ],
+        "H": [
+          -300.246,
+          1233.78,
+          369.213
+        ],
+        "V": [
+          -476.626,
+          -263.83,
+          1207.81
+        ],
+        "C": [
+          0.790594,
+          0.792269,
+          -1.84556
+        ],
+        "O": [
+          0.5874146884769768,
+          0.33481467233849194,
+          0.7367788806340505
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906609EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.790594,
+          0.792269,
+          -1.84556
+        ],
+        "A": [
+          0.5894487393560892,
+          0.33666970693195025,
+          0.7343049040459093
+        ],
+        "H": [
+          -300.246,
+          1233.78,
+          369.213
+        ],
+        "V": [
+          -476.626,
+          -263.83,
+          1207.81
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761655,
+      "camera_vector": "(0.3392672950445079,0.590903454834038,0.7319363425724813)",
+      "site": 78,
+      "imageid": "NLB_629906633EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.04111,0.540453,-1.84547);(0.345835,0.593544,0.726696);(-882.465,918.18,367.261);(-275.423,-470.082,1206.65);(0.345837,0.593542,0.726696);(0.0,0.000128692,0.00637998)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906633.166,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(1.04111,0.540453,-1.84547)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:01.375Z",
+      "updated_at": "2020-02-18T04:29:53.193Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:11:04.082",
+        "bucket": "msl-raws",
+        "mast_az": "60.1032",
+        "mast_el": "-47.0256",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906633EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:42:37.000Z",
+      "date_received": "2019-12-18T18:46:39.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:42:37 UTC).",
+      "link": "/raw_images/761655",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.3458378698476961,
+          0.5935489254149549,
+          0.7267020303521661
+        ],
+        "H": [
+          -882.465,
+          918.18,
+          367.261
+        ],
+        "V": [
+          -275.423,
+          -470.082,
+          1206.65
+        ],
+        "C": [
+          1.04111,
+          0.540453,
+          -1.84547
+        ],
+        "O": [
+          0.34584004120117684,
+          0.5935472194549135,
+          0.7267023903767683
+        ],
+        "R": [
+          0,
+          0.000128692,
+          0.00637998
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          1.04111,
+          0.540453,
+          -1.84547
+        ],
+        "A": [
+          0.3458378698476961,
+          0.5935489254149549,
+          0.7267020303521661
+        ],
+        "H": [
+          -882.465,
+          918.18,
+          367.261
+        ],
+        "V": [
+          -275.423,
+          -470.082,
+          1206.65
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761654,
+      "camera_vector": "(0.3409349247318275,0.5906469043748739,0.7313683144972044)",
+      "site": 78,
+      "imageid": "NRB_629906633EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.675746,0.75396,-1.84565);(0.341122,0.586943,0.734246);(-878.292,917.231,368.721);(-280.539,-466.869,1207.86);(0.340289,0.584317,0.736723);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906633.166,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.675746,0.75396,-1.84565)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:01.217Z",
+      "updated_at": "2020-02-18T04:29:49.180Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:11:04.082",
+        "bucket": "msl-raws",
+        "mast_az": "59.9708",
+        "mast_el": "-46.9779",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906633EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:42:37.000Z",
+      "date_received": "2019-12-18T18:46:33.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:42:37 UTC).",
+      "link": "/raw_images/761654",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.34112481554515184,
+          0.5869478444970365,
+          0.734252060303251
+        ],
+        "H": [
+          -878.292,
+          917.231,
+          368.721
+        ],
+        "V": [
+          -280.539,
+          -466.869,
+          1207.86
+        ],
+        "C": [
+          0.675746,
+          0.75396,
+          -1.84565
+        ],
+        "O": [
+          0.34029176679786594,
+          0.5843217509235639,
+          0.7367289900955488
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906633EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.675746,
+          0.75396,
+          -1.84565
+        ],
+        "A": [
+          0.34112481554515184,
+          0.5869478444970365,
+          0.734252060303251
+        ],
+        "H": [
+          -878.292,
+          917.231,
+          368.721
+        ],
+        "V": [
+          -280.539,
+          -466.869,
+          1207.86
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 762011,
+      "camera_vector": "(-0.004534053925599855,0.6829450575229489,0.730455673371065)",
+      "site": 78,
+      "imageid": "NLB_629914500EDR_F0781002CCAM04618M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01847,0.662321,-1.84567);(-0.000219709,0.688542,0.725185);(-1224.83,349.686,366.355);(-1.38571,-542.195,1207.82);(-0.000216733,0.688542,0.725185);(0.0,0.000127567,0.0063815)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "spacecraft_clock": 629914500.212,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(1.01847,0.662321,-1.84567)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:20.341Z",
+      "updated_at": "2020-02-18T04:31:29.684Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:18:40.714",
+        "bucket": "msl-raws",
+        "mast_az": "90.3459",
+        "mast_el": "-46.9013",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629914500EDR_F0781002CCAM04618M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:53:44.000Z",
+      "date_received": "2019-12-19T10:47:28.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:53:44 UTC).",
+      "link": "/raw_images/762011",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0002197108216012961,
+          0.6885477086828469,
+          0.7251910124889553
+        ],
+        "H": [
+          -1224.83,
+          349.686,
+          366.355
+        ],
+        "V": [
+          -1.38571,
+          -542.195,
+          1207.82
+        ],
+        "C": [
+          1.01847,
+          0.662321,
+          -1.84567
+        ],
+        "O": [
+          -0.00021673479706811716,
+          0.6885477091300148,
+          0.7251910129599208
+        ],
+        "R": [
+          0,
+          0.000127567,
+          0.0063815
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          1.01847,
+          0.662321,
+          -1.84567
+        ],
+        "A": [
+          -0.0002197108216012961,
+          0.6885477086828469,
+          0.7251910124889553
+        ],
+        "H": [
+          -1224.83,
+          349.686,
+          366.355
+        ],
+        "V": [
+          -1.38571,
+          -542.195,
+          1207.82
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 762012,
+      "camera_vector": "(-0.0030342230587212396,0.68360942678533,0.7298417260616596)",
+      "site": 78,
+      "imageid": "NRB_629914500EDR_F0781002CCAM04618M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.595281,0.662785,-1.8459);(-0.00096836,0.680481,0.732754);(-1220.75,350.913,367.749);(-7.42468,-541.942,1209.09);(-0.00036735,0.677788,0.735246);(1.32168e-05,0.00184341,-0.005837)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "spacecraft_clock": 629914500.212,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.595281,0.662785,-1.8459)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:20.492Z",
+      "updated_at": "2020-02-18T04:31:34.032Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:18:40.714",
+        "bucket": "msl-raws",
+        "mast_az": "90.2197",
+        "mast_el": "-46.8499",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629914500EDR_F0781002CCAM04618M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:53:44.000Z",
+      "date_received": "2019-12-19T10:47:30.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:53:44 UTC).",
+      "link": "/raw_images/762012",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0009683678662787262,
+          0.6804865277512638,
+          0.7327599523805215
+        ],
+        "H": [
+          -1220.75,
+          350.913,
+          367.749
+        ],
+        "V": [
+          -7.42468,
+          -541.942,
+          1209.09
+        ],
+        "C": [
+          0.595281,
+          0.662785,
+          -1.8459
+        ],
+        "O": [
+          -0.00036735305117253757,
+          0.6777936296396675,
+          0.7352521068800967
+        ],
+        "R": [
+          0.0000132168,
+          0.00184341,
+          -0.005837
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629914500EDR_F0781002CCAM04618M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.595281,
+          0.662785,
+          -1.8459
+        ],
+        "A": [
+          -0.0009683678662787262,
+          0.6804865277512638,
+          0.7327599523805215
+        ],
+        "H": [
+          -1220.75,
+          350.913,
+          367.749
+        ],
+        "V": [
+          -7.42468,
+          -541.942,
+          1209.09
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761659,
+      "camera_vector": "(-0.34121106476584945,0.5897781562086508,0.7319403908382701)",
+      "site": 78,
+      "imageid": "NLB_629906681EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.939527,0.754644,-1.84547);(-0.340211,0.596782,0.726699);(-1236.86,-303.283,367.264);(268.679,-473.981,1206.65);(-0.340208,0.596784,0.726699);(0.0,0.000128405,0.0063804)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906681.185,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.939527,0.754644,-1.84547)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:02.690Z",
+      "updated_at": "2020-02-18T04:30:13.380Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:11:50.818",
+        "bucket": "msl-raws",
+        "mast_az": "120.017",
+        "mast_el": "-47.0262",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906681EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:43:25.000Z",
+      "date_received": "2019-12-18T18:47:15.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:43:25 UTC).",
+      "link": "/raw_images/761659",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.3402137699219016,
+          0.5967868588656225,
+          0.7267049166207912
+        ],
+        "H": [
+          -1236.86,
+          -303.283,
+          367.264
+        ],
+        "V": [
+          268.679,
+          -473.981,
+          1206.65
+        ],
+        "C": [
+          0.939527,
+          0.754644,
+          -1.84547
+        ],
+        "O": [
+          -0.3402107110613335,
+          0.5967887556730789,
+          0.7267047909442458
+        ],
+        "R": [
+          0,
+          0.000128405,
+          0.0063804
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.939527,
+          0.754644,
+          -1.84547
+        ],
+        "A": [
+          -0.3402137699219016,
+          0.5967868588656225,
+          0.7267049166207912
+        ],
+        "H": [
+          -1236.86,
+          -303.283,
+          367.264
+        ],
+        "V": [
+          268.679,
+          -473.981,
+          1206.65
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761658,
+      "camera_vector": "(-0.3401714038391085,0.591092347121218,0.731363967655544)",
+      "site": 78,
+      "imageid": "NRB_629906681EDR_F0781002NCAM00354M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.571627,0.545537,-1.84565);(-0.336861,0.589395,0.734249);(-1233.94,-300.16,368.71);(263.328,-476.788,1207.87);(-0.335006,0.587355,0.736728);(1.30962e-05,0.00184763,-0.00586426)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "spacecraft_clock": 629906681.185,
+      "attitude": "(0.393147,0.0676842,-0.0238665,-0.916671)",
+      "camera_position": "(0.571627,0.545537,-1.84565)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-18T18:54:02.528Z",
+      "updated_at": "2020-02-18T04:30:12.408Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M13:11:50.818",
+        "bucket": "msl-raws",
+        "mast_az": "119.886",
+        "mast_el": "-46.9777",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906681EDR_F0781002NCAM00354M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T02:43:25.000Z",
+      "date_received": "2019-12-18T18:46:51.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 02:43:25 UTC).",
+      "link": "/raw_images/761658",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.33686379710170605,
+          0.5893998940000773,
+          0.7342550967851148
+        ],
+        "H": [
+          -1233.94,
+          -300.16,
+          368.71
+        ],
+        "V": [
+          263.328,
+          -476.788,
+          1207.87
+        ],
+        "C": [
+          0.571627,
+          0.545537,
+          -1.84565
+        ],
+        "O": [
+          -0.3350088371943187,
+          0.5873599743594712,
+          0.736734239412118
+        ],
+        "R": [
+          0.0000130962,
+          0.00184763,
+          -0.00586426
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39314679426596494,
+          0.06768416458082198,
+          -0.0238664875106478,
+          -0.916670520305576
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629906681EDR_F0781002NCAM00354M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.571627,
+          0.545537,
+          -1.84565
+        ],
+        "A": [
+          -0.33686379710170605,
+          0.5893998940000773,
+          0.7342550967851148
+        ],
+        "H": [
+          -1233.94,
+          -300.16,
+          368.71
+        ],
+        "V": [
+          263.328,
+          -476.788,
+          1207.87
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761997,
+      "camera_vector": "(-0.2550635670712367,0.9435947454625331,0.2111197126949411)",
+      "site": 78,
+      "imageid": "NLB_629913789EDR_F0781002NCAM00258M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.980811,0.72926,-1.9151);(-0.25127,0.946246,0.203629);(-1311.1,165.449,101.578);(-63.7981,234.133,1301.52);(-0.251267,0.946247,0.203629);(0.0,0.000128692,0.00637998)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "spacecraft_clock": 629913789.274,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.980811,0.72926,-1.9151)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:15.942Z",
+      "updated_at": "2020-02-18T04:30:46.552Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:07:08.791",
+        "bucket": "msl-raws",
+        "mast_az": "105.102",
+        "mast_el": "-12.1646",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913789EDR_F0781002NCAM00258M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:41:53.000Z",
+      "date_received": "2019-12-19T10:46:19.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:41:53 UTC).",
+      "link": "/raw_images/761997",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.25127215151984733,
+          0.9462541023084708,
+          0.20363074358990327
+        ],
+        "H": [
+          -1311.1,
+          165.449,
+          101.578
+        ],
+        "V": [
+          -63.7981,
+          234.133,
+          1301.52
+        ],
+        "C": [
+          0.980811,
+          0.72926,
+          -1.9151
+        ],
+        "O": [
+          -0.2512691031388587,
+          0.9462549202156892,
+          0.20363070440233955
+        ],
+        "R": [
+          0,
+          0.000128692,
+          0.00637998
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.980811,
+          0.72926,
+          -1.9151
+        ],
+        "A": [
+          -0.25127215151984733,
+          0.9462541023084708,
+          0.20363074358990327
+        ],
+        "H": [
+          -1311.1,
+          165.449,
+          101.578
+        ],
+        "V": [
+          -63.7981,
+          234.133,
+          1301.52
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761998,
+      "camera_vector": "(-0.2536483631695985,0.9441694592517433,0.21025351382950594)",
+      "site": 78,
+      "imageid": "NRB_629913789EDR_F0781002NCAM00258M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.571712,0.620998,-1.91564);(-0.251402,0.943819,0.214443);(-1307.62,168.256,102.029);(-69.8693,233.466,1302.41);(-0.250619,0.943205,0.218029);(1.32771e-05,0.0018413,-0.00582336)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "spacecraft_clock": 629913789.274,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.571712,0.620998,-1.91564)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:16.097Z",
+      "updated_at": "2020-02-18T04:30:47.680Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:07:08.791",
+        "bucket": "msl-raws",
+        "mast_az": "105.013",
+        "mast_el": "-12.1138",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913789EDR_F0781002NCAM00258M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:41:53.000Z",
+      "date_received": "2019-12-19T10:46:21.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:41:53 UTC).",
+      "link": "/raw_images/761998",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.2514041280677698,
+          0.9438269892395225,
+          0.21444481521720893
+        ],
+        "H": [
+          -1307.62,
+          168.256,
+          102.029
+        ],
+        "V": [
+          -69.8693,
+          233.466,
+          1302.41
+        ],
+        "C": [
+          0.571712,
+          0.620998,
+          -1.91564
+        ],
+        "O": [
+          -0.2506212305354943,
+          0.943213394623835,
+          0.21803094048106206
+        ],
+        "R": [
+          0.0000132771,
+          0.0018413,
+          -0.00582336
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629913789EDR_F0781002NCAM00258M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.571712,
+          0.620998,
+          -1.91564
+        ],
+        "A": [
+          -0.2514041280677698,
+          0.9438269892395225,
+          0.21444481521720893
+        ],
+        "H": [
+          -1307.62,
+          168.256,
+          102.029
+        ],
+        "V": [
+          -69.8693,
+          233.466,
+          1302.41
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 761999,
+      "camera_vector": "(-0.6773625382240798,0.7112082185147927,0.18805015747838982)",
+      "site": 78,
+      "imageid": "NLB_629913819EDR_F0781002NCAM00258M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.878647,0.792606,-1.91795);(-0.675186,0.715209,0.180509);(-1232.86,-478.156,90.142);(-188.504,197.808,1295.44);(-0.675184,0.715211,0.180509);(0.0,0.000128118,0.00638083)",
+      "instrument": "NAV_LEFT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "spacecraft_clock": 629913819.746,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.878647,0.792606,-1.91795)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:16.570Z",
+      "updated_at": "2020-02-18T04:30:50.826Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:07:38.447",
+        "bucket": "msl-raws",
+        "mast_az": "133.58",
+        "mast_el": "-10.8157",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913819EDR_F0781002NCAM00258M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:42:24.000Z",
+      "date_received": "2019-12-19T10:46:23.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:42:24 UTC).",
+      "link": "/raw_images/761999",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NLB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.6751915543653088,
+          0.7152148836114169,
+          0.18051048494330085
+        ],
+        "H": [
+          -1232.86,
+          -478.156,
+          90.142
+        ],
+        "V": [
+          -188.504,
+          197.808,
+          1295.44
+        ],
+        "C": [
+          0.878647,
+          0.792606,
+          -1.91795
+        ],
+        "O": [
+          -0.6751895002990493,
+          0.7152168263738231,
+          0.18051047049320051
+        ],
+        "R": [
+          0,
+          0.000128118,
+          0.00638083
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.878647,
+          0.792606,
+          -1.91795
+        ],
+        "A": [
+          -0.6751915543653088,
+          0.7152148836114169,
+          0.18051048494330085
+        ],
+        "H": [
+          -1232.86,
+          -478.156,
+          90.142
+        ],
+        "V": [
+          -188.504,
+          197.808,
+          1295.44
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 762000,
+      "camera_vector": "(-0.6764058128820765,0.7123550857214394,0.18715076314602083)",
+      "site": 78,
+      "imageid": "NRB_629913819EDR_F0781002NCAM00258M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.570697,0.502339,-1.9184);(-0.674319,0.713199,0.191375);(-1231.12,-474.05,90.5421);(-193.56,194.366,1296.32);(-0.673395,0.713095,0.194984);(1.33375e-05,0.00183919,-0.00580973)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "spacecraft_clock": 629913819.746,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.570697,0.502339,-1.9184)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:16.722Z",
+      "updated_at": "2020-02-18T04:30:51.884Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:07:38.447",
+        "bucket": "msl-raws",
+        "mast_az": "133.493",
+        "mast_el": "-10.7632",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913819EDR_F0781002NCAM00258M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T04:42:24.000Z",
+      "date_received": "2019-12-19T10:46:54.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 04:42:24 UTC).",
+      "link": "/raw_images/762000",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ncam/NRB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.674324624569534,
+          0.7132049488719243,
+          0.19137659628009082
+        ],
+        "H": [
+          -1231.12,
+          -474.05,
+          90.5421
+        ],
+        "V": [
+          -193.56,
+          194.366,
+          1296.32
+        ],
+        "C": [
+          0.570697,
+          0.502339,
+          -1.9184
+        ],
+        "O": [
+          -0.6734003652357532,
+          0.7131006815432093,
+          0.19498555352375366
+        ],
+        "R": [
+          0.0000133375,
+          0.00183919,
+          -0.00580973
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 1,
+      "parallaxDepth": 2.5,
+      "downloadFile": "NRB_629913819EDR_F0781002NCAM00258M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.570697,
+          0.502339,
+          -1.9184
+        ],
+        "A": [
+          -0.674324624569534,
+          0.7132049488719243,
+          0.19137659628009082
+        ],
+        "H": [
+          -1231.12,
+          -474.05,
+          90.5421
+        ],
+        "V": [
+          -193.56,
+          194.366,
+          1296.32
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 762014,
+      "camera_vector": "(-0.08324541982605288,0.8240310849840708,0.5603953703038235)",
+      "site": 78,
+      "imageid": "CR0_629915820EDR_F0781002CCAM04618M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 2618,
+      "scale_factor": null,
+      "camera_model_component_list": "(0.897857,0.7508,-2.04171);(-0.237818,0.90548,0.351471);(-48656.1,-4364.19,69.3036);(2474.28,-26799.9,40655.1)",
+      "instrument": "CHEMCAM_RMI",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ccam/CR0_629915820EDR_F0781002CCAM04618M_.JPG",
+      "spacecraft_clock": 629915820.292,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.897857,0.7508,-2.04171)",
+      "camera_model_type": "CAHV",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-19T10:54:20.791Z",
+      "updated_at": "2020-02-18T04:31:46.804Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02618M15:40:05.488",
+        "bucket": "msl-raws",
+        "mast_az": "95.7679",
+        "mast_el": "-34.0826",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ccam/CR0_629915820EDR_F0781002CCAM04618M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2019-12-18T05:15:44.000Z",
+      "date_received": "2019-12-19T10:46:13.000Z",
+      "instrument_sort": 4,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 2618: Chemistry & Camera (ChemCam)",
+      "description": "This image was taken by Chemistry & Camera (ChemCam) onboard NASA's Mars rover Curiosity on Sol 2618 (2019-12-18 05:15:44 UTC).",
+      "link": "/raw_images/762014",
+      "image_credit": "NASA/JPL-Caltech/LANL/CNES/CNRS/IRAP/IAS/LPG",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02618/opgs/edr/ccam/CR0_629915820EDR_F0781002CCAM04618M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.2378199863563293,
+          0.9054875629512024,
+          0.3514739356341631
+        ],
+        "H": [
+          -48656.1,
+          -4364.19,
+          69.3036
+        ],
+        "V": [
+          2474.28,
+          -26799.9,
+          40655.1
+        ],
+        "C": [
+          0.897857,
+          0.7508,
+          -2.04171
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHV",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "CR0_629915820EDR_F0781002CCAM04618M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHV",
+        "C": [
+          0.897857,
+          0.7508,
+          -2.04171
+        ],
+        "A": [
+          -0.2378199863563293,
+          0.9054875629512024,
+          0.3514739356341631
+        ],
+        "H": [
+          -48656.1,
+          -4364.19,
+          69.3036
+        ],
+        "V": [
+          2474.28,
+          -26799.9,
+          40655.1
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 762486,
+      "camera_vector": "(-0.7390660296299554,0.6565049927511073,0.15093905505164223)",
+      "site": 78,
+      "imageid": "NRB_630080359EDR_S0781002NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 2620,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.581161,0.478617,-1.94681);(-0.744535,0.665602,-0.0512435);(-1192.37,-570.83,-33.0282);(-245.671,210.28,1204.9);(-0.744267,0.666171,-0.0475967);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080359EDR_S0781002NCAM00594M_.JPG",
+      "spacecraft_clock": 630080359.821,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.581161,0.478617,-1.94681)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-20T19:33:40.066Z",
+      "updated_at": "2020-01-08T08:00:45.810Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02620M12:09:04.178",
+        "bucket": "msl-raws",
+        "mast_az": "138.296",
+        "mast_el": "3.2025",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080359EDR_S0781002NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2019-12-20T02:58:06.000Z",
+      "date_received": "2019-12-20T19:30:56.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 2620: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2620 (2019-12-20 02:58:06 UTC).",
+      "link": "/raw_images/762486",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080359EDR_S0781002NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.7445408502820319,
+          0.6656072300555663,
+          -0.05124390265256476
+        ],
+        "H": [
+          -1192.37,
+          -570.83,
+          -33.0282
+        ],
+        "V": [
+          -245.671,
+          210.28,
+          1204.9
+        ],
+        "C": [
+          0.581161,
+          0.478617,
+          -1.94681
+        ],
+        "O": [
+          -0.7442734698556511,
+          0.6661767909731439,
+          -0.04759711375444359
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NRB_630080359EDR_S0781002NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.581161,
+          0.478617,
+          -1.94681
+        ],
+        "A": [
+          -0.7445408502820319,
+          0.6656072300555663,
+          -0.05124390265256476
+        ],
+        "H": [
+          -1192.37,
+          -570.83,
+          -33.0282
+        ],
+        "V": [
+          -245.671,
+          210.28,
+          1204.9
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 762504,
+      "camera_vector": "(0.6244510039928384,0.7261494403855451,0.2876941671985997)",
+      "site": 78,
+      "imageid": "NRB_630080742EDR_S0781002NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 2620,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.723151,0.784917,-1.93066);(0.651927,0.753037,0.0889309);(-589.997,1182.84,38.2654);(93.8693,119.293,1238.27);(0.652165,0.752393,0.0925719);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080742EDR_S0781002NCAM00594M_.JPG",
+      "spacecraft_clock": 630080742.821,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.723151,0.784917,-1.93066)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-20T19:33:45.838Z",
+      "updated_at": "2020-01-08T08:00:58.546Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02620M12:15:16.934",
+        "bucket": "msl-raws",
+        "mast_az": "49.2091",
+        "mast_el": "-4.8361",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080742EDR_S0781002NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2019-12-20T03:04:29.000Z",
+      "date_received": "2019-12-20T19:32:49.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 2620: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2620 (2019-12-20 03:04:29 UTC).",
+      "link": "/raw_images/762504",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080742EDR_S0781002NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.6519327886435826,
+          0.7530436864277711,
+          0.08893168964252682
+        ],
+        "H": [
+          -589.997,
+          1182.84,
+          38.2654
+        ],
+        "V": [
+          93.8693,
+          119.293,
+          1238.27
+        ],
+        "C": [
+          0.723151,
+          0.784917,
+          -1.93066
+        ],
+        "O": [
+          0.6521702270532708,
+          0.7523990303731288,
+          0.09257264195679418
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NRB_630080742EDR_S0781002NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.723151,
+          0.784917,
+          -1.93066
+        ],
+        "A": [
+          0.6519327886435826,
+          0.7530436864277711,
+          0.08893168964252682
+        ],
+        "H": [
+          -589.997,
+          1182.84,
+          38.2654
+        ],
+        "V": [
+          93.8693,
+          119.293,
+          1238.27
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 762507,
+      "camera_vector": "(-0.06509155332545974,0.9794951664820125,0.19066281368964785)",
+      "site": 78,
+      "imageid": "NRB_630080800EDR_S0781002NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 2620,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.588631,0.660214,-1.9423);(-0.06303,0.997943,-0.0109311);(-1249.94,431.451,-12.9103);(-24.6664,273.459,1216.95);(-0.0624325,0.998014,-0.00727491);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080800EDR_S0781002NCAM00594M_.JPG",
+      "spacecraft_clock": 630080800.837,
+      "attitude": "(0.393156,0.0676653,-0.0238582,-0.916668)",
+      "camera_position": "(0.588631,0.660214,-1.9423)",
+      "camera_model_type": "CAHVOR",
+      "drive": 1002,
+      "xyz": "(-46.6762,-65.0917,-9.70419)",
+      "created_at": "2019-12-20T19:33:46.816Z",
+      "updated_at": "2020-01-08T08:01:00.926Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-02620M12:16:13.398",
+        "bucket": "msl-raws",
+        "mast_az": "93.7064",
+        "mast_el": "0.892376",
+        "url_list": "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080800EDR_S0781002NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2019-12-20T03:05:27.000Z",
+      "date_received": "2019-12-20T19:33:06.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 2620: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 2620 (2019-12-20 03:05:27 UTC).",
+      "link": "/raw_images/762507",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02620/opgs/edr/ncam/NRB_630080800EDR_S0781002NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.06303055148519075,
+          0.9979517315688674,
+          -0.01093119564238884
+        ],
+        "H": [
+          -1249.94,
+          431.451,
+          -12.9103
+        ],
+        "V": [
+          -24.6664,
+          273.459,
+          1216.95
+        ],
+        "C": [
+          0.588631,
+          0.660214,
+          -1.9423
+        ],
+        "O": [
+          -0.06243304049866431,
+          0.9980226401350892,
+          -0.007274972981285996
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "attitude": [
+          0.39315606504938067,
+          0.06766531119552,
+          -0.023858203947443594,
+          -0.916668151666732
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NRB_630080800EDR_S0781002NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "C": [
+          0.588631,
+          0.660214,
+          -1.9423
+        ],
+        "A": [
+          -0.06303055148519075,
+          0.9979517315688674,
+          -0.01093119564238884
+        ],
+        "H": [
+          -1249.94,
+          431.451,
+          -12.9103
+        ],
+        "V": [
+          -24.6664,
+          273.459,
+          1216.95
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    }
+  ]
+}

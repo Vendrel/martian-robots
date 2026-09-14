@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curiosity geometry diagnostic</title>
+  <style>
+    :root { color-scheme: light dark; font: 15px/1.45 system-ui, sans-serif; }
+    body { max-width: 1180px; margin: 2rem auto; padding: 0 1rem; }
+    input, button { font: inherit; padding: .45rem .55rem; }
+    input { min-width: min(42rem, 75vw); }
+    button { cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .86rem; }
+    th, td { padding: .38rem; text-align: left; vertical-align: top; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+    th { position: sticky; top: 0; background: Canvas; }
+    code, pre { overflow-wrap: anywhere; white-space: pre-wrap; }
+    .ok { color: #198754; } .warn { color: #b36b00; } .bad { color: #b42318; }
+    #status { margin: 1rem 0; font-weight: 600; }
+    details { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Curiosity camera-geometry diagnostic</h1>
+  <p>Compares three interpretations of each manifest record against <code>camera_vector</code>. Smaller angular residual is better.</p>
+  <form id="controls">
+    <label>Manifest URL <input id="manifest" name="manifest" spellcheck="false"></label>
+    <label>Threshold ° <input id="threshold" name="threshold" type="number" min="0.001" step="0.001"></label>
+    <button>Run analysis</button>
+    <button type="button" id="copy">Copy result JSON</button>
+  </form>
+  <p id="status" aria-live="polite"></p>
+  <div id="summary"></div>
+  <div id="table"></div>
+  <details><summary>Machine-readable result</summary><pre id="json"></pre></details>
+
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      const defaultManifest = '../mars-rover-360-curiosity-sol-2619-location-1-manifest.json';
+      const $ = id => document.getElementById(id);
+      $('manifest').value = params.get('manifest') || defaultManifest;
+      $('threshold').value = params.get('threshold') || '0.25';
+
+      const dot = (a, b) => a.reduce((sum, value, i) => sum + value * b[i], 0);
+      const sub = (a, b) => a.map((value, i) => value - b[i]);
+      const add = (a, b) => a.map((value, i) => value + b[i]);
+      const mul = (a, scalar) => a.map(value => value * scalar);
+      const normalize = a => mul(a, 1 / Math.hypot(...a));
+      const degrees = (a, b) => Math.acos(Math.max(-1, Math.min(1, dot(a, b) / Math.hypot(...a) / Math.hypot(...b)))) * 180 / Math.PI;
+      const vector = value => typeof value === 'string'
+        ? (value.match(/[-+]?\d*\.?\d+(?:e[-+]?\d+)?/ig) || []).map(Number)
+        : value;
+      const fmt = value => Number.isFinite(value) ? value.toFixed(3) : '—';
+
+      // CAHV inverse projection. CAHVOR distortion is intentionally omitted here:
+      // this is a centre-ray consistency test, not a replacement for production warping.
+      function cahvRay(A, H, V, u, v) {
+        const hPerp = sub(H, mul(A, dot(H, A)));
+        const vPerp = sub(V, mul(A, dot(V, A)));
+        const x = u - dot(H, A), y = v - dot(V, A);
+        const hh = dot(hPerp, hPerp), hv = dot(hPerp, vPerp), vv = dot(vPerp, vPerp);
+        const determinant = hh * vv - hv * hv;
+        if (!Number.isFinite(determinant) || Math.abs(determinant) < 1e-12) throw new Error('singular CAHV basis');
+        const alpha = (x * vv - y * hv) / determinant;
+        const beta = (y * hh - x * hv) / determinant;
+        return normalize(add(A, add(mul(hPerp, alpha), mul(vPerp, beta))));
+      }
+
+      function analyseImage(image, threshold) {
+        const model = image.model || image.cameraGeometry || {};
+        const crop = (image.cameraGeometry && image.cameraGeometry.subframe) || image.subframe || {};
+        const A = vector(model.A), H = vector(model.H), V = vector(model.V), centreVector = vector(image.camera_vector);
+        const left = Number(crop.l ?? crop.left), top = Number(crop.top), width = Number(crop.w ?? crop.width), height = Number(crop.h ?? crop.height);
+        const scale = Number(image.scale_factor ?? image.geometry_scale ?? 1);
+        if (![A, H, V, centreVector].every(v => Array.isArray(v) && v.length === 3) || ![left, top, width, height, scale].every(Number.isFinite)) {
+          return { id: image.imageid || String(image.id), valid: false, reason: 'missing camera model, camera_vector, or normalized crop' };
+        }
+        const centre = [(width - 1) / 2, (height - 1) / 2];
+        const plans = {
+          // Confirmed convention for this manifest: H/V and crop are in the same geometry pixel space.
+          cropOnce: [left + centre[0], top + centre[1]],
+          // Bug hypothesis 1: crop origin was ignored after using a full-detector model.
+          cropOmitted: centre,
+          // Bug hypothesis 2: scale_factor was applied again even though this manifest's H/V are already normalized.
+          scaleAppliedTwice: [left + (width * scale - 1) / 2, top + (height * scale - 1) / 2]
+        };
+        const residuals = Object.fromEntries(Object.entries(plans).map(([name, point]) => [name, degrees(cahvRay(A, H, V, ...point), centreVector)]));
+        const winner = Object.entries(residuals).sort((a, b) => a[1] - b[1])[0][0];
+        return {
+          id: image.imageid || String(image.id), valid: true, instrument: image.instrument || '—', sampleType: image.extended?.sample_type || '—',
+          crop: [left, top, width, height], scale, residuals, winner,
+          pass: residuals.cropOnce <= threshold,
+          centreVsAxis: degrees(centreVector, A)
+        };
+      }
+
+      function median(values) {
+        const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+        if (!sorted.length) return null;
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+      }
+
+      function render(result) {
+        const rows = result.images;
+        const onlyPlanThatPassesAll = result.summary.planPasses.cropOnce === result.summary.validImages &&
+          Object.entries(result.summary.planPasses).every(([name, count]) => name === 'cropOnce' || count < result.summary.validImages);
+        const verdict = onlyPlanThatPassesAll
+          ? 'Confirmed: use cropOnce. The other two interpretations are inconsistent with this manifest.'
+          : 'Not confirmed: inspect the rows marked for quarantine before changing the renderer.';
+        $('status').className = onlyPlanThatPassesAll ? 'ok' : 'bad';
+        $('status').textContent = verdict;
+        $('summary').innerHTML = `<p><strong>${result.summary.validImages}/${result.summary.totalImages}</strong> usable records; ` +
+          `plans passing ${result.threshold}°: crop once <strong>${result.summary.planPasses.cropOnce}</strong>, ` +
+          `crop omitted <strong>${result.summary.planPasses.cropOmitted}</strong>, ` +
+          `scale twice <strong>${result.summary.planPasses.scaleAppliedTwice}</strong>.</p>` +
+          `<p>Median residuals: crop once <strong>${fmt(result.summary.medians.cropOnce)}°</strong>; crop omitted <strong>${fmt(result.summary.medians.cropOmitted)}°</strong>; scale twice <strong>${fmt(result.summary.medians.scaleAppliedTwice)}°</strong>.</p>`;
+        const html = rows.map(row => !row.valid
+          ? `<tr class="bad"><td><code>${row.id}</code></td><td colspan="8">${row.reason}</td></tr>`
+          : `<tr class="${row.pass ? 'ok' : 'bad'}"><td><code>${row.id}</code></td><td>${row.instrument}</td><td>${row.sampleType}</td><td>${row.crop.join(', ')}</td><td>${row.scale}</td><td>${fmt(row.residuals.cropOnce)}</td><td>${fmt(row.residuals.cropOmitted)}</td><td>${fmt(row.residuals.scaleAppliedTwice)}</td><td>${row.winner}${row.pass ? '' : ' — quarantine'}</td></tr>`
+        ).join('');
+        $('table').innerHTML = `<table><thead><tr><th>Image</th><th>Camera</th><th>Sample</th><th>l, top, w, h</th><th>Scale</th><th>Crop once °</th><th>Crop omitted °</th><th>Scale twice °</th><th>Best plan</th></tr></thead><tbody>${html}</tbody></table>`;
+        $('json').textContent = JSON.stringify(result, null, 2);
+      }
+
+      async function run() {
+        const manifestUrl = $('manifest').value.trim();
+        const threshold = Number($('threshold').value);
+        const url = new URL(location.href);
+        url.searchParams.set('manifest', manifestUrl); url.searchParams.set('threshold', String(threshold));
+        history.replaceState(null, '', url);
+        $('status').className = 'warn'; $('status').textContent = 'Loading manifest…';
+        try {
+          const manifest = await fetch(manifestUrl).then(response => {
+            if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+            return response.json();
+          });
+          const images = (manifest.images || []).map(image => analyseImage(image, threshold));
+          const valid = images.filter(image => image.valid);
+          const names = ['cropOnce', 'cropOmitted', 'scaleAppliedTwice'];
+          const result = {
+            tool: 'curiosity-geometry-diagnostic/v1', manifestUrl, threshold,
+            manifest: { format: manifest.format, rover: manifest.rover, sol: manifest.sol, location: manifest.location },
+            summary: {
+              totalImages: images.length, validImages: valid.length,
+              planPasses: Object.fromEntries(names.map(name => [name, valid.filter(image => image.residuals[name] <= threshold).length])),
+              medians: Object.fromEntries(names.map(name => [name, median(valid.map(image => image.residuals[name]))]))
+            }, images
+          };
+          render(result);
+        } catch (error) {
+          $('status').className = 'bad'; $('status').textContent = `Cannot analyse manifest: ${error.message}`;
+        }
+      }
+      $('controls').addEventListener('submit', event => { event.preventDefault(); run(); });
+      $('copy').addEventListener('click', async () => {
+        await navigator.clipboard.writeText($('json').textContent);
+        $('status').textContent = 'Result JSON copied.';
+      });
+      run();
+    })();
+  </script>
+</body>
+</html>

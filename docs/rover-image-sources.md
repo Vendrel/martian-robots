@@ -1,6 +1,6 @@
 # Mars rover image sources and geometry integration notes
 
-Last verified: 2026-09-10
+Last verified: 2026-09-14
 
 This is the source-of-truth research note for the public image feeds used by
 Mars Rover 360.  It distinguishes NASA's **browse/raw-image sites** (useful for
@@ -13,6 +13,7 @@ other.
 
 | Rover | Public browse feed usable in a browser | Authoritative archive | Important implementation consequence |
 | --- | --- | --- | --- |
+| Curiosity | NASA Mars raw-image gallery and its currently observed JSON feed | PDS3 MSL camera EDR/RDR archive | A browse record can contain usable CAHVOR metadata, but its `camera_vector` is the delivered-image centre ray, not invariably the physical camera optical axis. |
 | Perseverance | NASA Mars raw-image gallery and its currently observed JSON feed | PDS4 Mars 2020 camera bundles | JSON supplies image URLs and useful geometry; PDS labels remain the authoritative science record. |
 | Spirit | No maintained NASA raw-image JSON gallery identified | PDS3/PDS4 MER archive | A PDS label/image decoder plus an index adapter is required. |
 | Opportunity | No maintained NASA raw-image JSON gallery identified | PDS3/PDS4 MER archive | A PDS label/image decoder plus an index adapter is required. |
@@ -20,7 +21,108 @@ other.
 `MER1` is **Opportunity** and `MER2` is **Spirit**.  Do not reverse these
 identifiers in an adapter, URL, cache key, or route-data request.
 
-## 1. Perseverance (Mars 2020)
+## 1. Curiosity (MSL): browse metadata and subframe pointing
+
+### Public browse source
+
+The current Curiosity gallery uses the following observed, paginated endpoint:
+
+```text
+GET https://mars.nasa.gov/api/v1/raw_image_items/
+  ?order=sol%20asc%2Cdate_taken%20asc
+  &per_page=100
+  &page={p}
+  &condition_1=msl%3Amission
+  &condition_2={sol}%3Asol%3Agte
+  &condition_3={sol}%3Asol%3Alte
+  &search=
+  &extended=
+```
+
+Read `items`, `more`, `page`, and `per_page`; retain every original record.
+This is a gallery endpoint, not a versioned science API.  Useful fields are
+`imageid`, `spacecraft_clock`, `sol`, `site`, `drive`, `date_taken`,
+`instrument`, `camera_vector`, `camera_position`, `camera_model_type`,
+`camera_model_component_list`, `attitude`, `subframe_rect`, `scale_factor`,
+and `extended.mast_az`/`mast_el`.
+
+The raw gallery URL is a browse rendition.  Resolve geometry-critical products
+against the MSL camera EDR/RDR archive and label when a panorama or an export
+requires reproducibility:
+
+- MSL Camera & LIBS EDR/RDR SIS:
+  <https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMOS_1XXX/DOCUMENT/MSL_CAMERA_SIS.PDF>
+- MSL Navcam EDR archive:
+  <https://planetarydata.jpl.nasa.gov/w10n/msl/msl_navcam_raw/>
+- MSL geometric camera-model description:
+  <https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMOS_1XXX/DOCUMENT/GEOMETRIC_CM.TXT>
+
+### Do not confuse a centre ray with an optical axis
+
+For a CAHVOR record, `A` from `camera_model_component_list` is the camera
+optical axis.  `camera_vector` is useful as a check on the *delivered image's
+centre ray*.  They are not interchangeable when the delivered pixels are a
+subframe.  The principal point of the full detector is approximately
+`(dot(H, A), dot(V, A))`; calculate every delivered-pixel ray using the
+complete `C, A, H, V, O, R` model and the actual crop/scale relationship.
+
+This distinction explains the diagnostic pair in
+`edr-offset-diagnostic.json`:
+
+| Product | Delivered pixels | `angle(camera_vector, A)` | Interpretation |
+| --- | --- | ---: | --- |
+| `NRB_630080684EDR_S0781002NCAM00594M` | `subframe_rect=(1,257,1024,512)` | 11.62° | The delivered image centre is far from the full-detector optical axis; this is expected for this crop. |
+| `NLB_629906331EDR_F0781002NCAM00257M` | `subframe_rect=(1,1,1024,1024)` | 0.50° | A nearly full frame; centre ray and optical axis nearly coincide. |
+
+The two records have the same site/drive (`78/1002`) and `xyz`, and their
+attitudes differ by only about 0.0013°.  They nevertheless have distinct
+pointing metadata: the centre rays are 11.47° apart, mast azimuth differs by
+12.01°, and mast elevation by -13.71°.  The report therefore does **not** show
+evidence that NASA assigned a random attitude to the `F` product.  It shows a
+crop-sensitive centre-ray/optical-axis difference.  Similar-looking Navcam
+images can overlap strongly despite that real pointing difference.
+
+As a consistency check, the CAHV inverse projection (before the small CAHVOR
+lens-distortion refinement) of each record's delivered-pixel centre is only
+0.0334° and 0.0336°, respectively, from its stored `camera_vector`.  Thus the
+two browse records are internally coherent.  In particular, the `S` image's
+crop begins at line 257 and is 512 lines high, so both products' centre maps to
+about detector line 512.5; the large `A` difference is not a bad direction
+coordinate.
+
+### Panorama quality gate for apparent uniform direction errors
+
+Do not discard all `S` products or all `F` products: those letters describe
+the filename/product variant, not a trustworthy bad-geometry class.  Instead,
+flag a record for PDS-label resolution or omit it from automatic placement when
+any of these tests fail:
+
+1. `camera_model_type`, all required CAHVOR components, `subframe_rect`, or
+   `scale_factor` is missing or unparsable.
+2. The crop transformed into delivered pixels is inconsistent with the image
+   dimensions (allow a documented one-pixel origin convention only).
+3. The stored `camera_vector` differs materially from the ray computed at the
+   delivered image centre.  This detects a metadata/image pairing error while
+   allowing the expected large difference from `A` for off-axis subframes.
+4. The renderer uses `camera_vector` as the image orientation **and** applies
+   a subframe translation to `H/V`, or uses `A` without applying the
+   translation.  Both are deterministic, crop-dependent double/no correction
+   bugs and produce the repeated uniform offsets seen in a panorama.
+
+For diagnosis, log: product ID, SCLK, instrument, site/drive, image dimensions,
+raw and scaled crop, `dot(H,A)`, `dot(V,A)`, the modelled delivered-centre ray,
+`camera_vector`, and their angular residual.  Cluster outliers by normalized
+crop rectangle and camera string; that finds a rendering-rule defect without
+mistaking valid subframes for falsely localized photos.
+
+Use the CAHVOR inverse model for the production residual.  Until an
+instrument-specific distribution has been measured, treat a residual above
+0.25° as a *quarantine/re-resolve* signal, not as proof that the image is bad;
+the two healthy diagnostic records are approximately 0.034° even with a
+CAHV-only check.  Never use `angle(camera_vector, A)` itself as the rejection
+criterion.
+
+## 2. Perseverance (Mars 2020)
 
 ### Public browse source
 
@@ -98,7 +200,7 @@ The PDS4 label is the source to use when a scientific export needs the
 coordinate frame, camera-model transform, sample format, calibration lineage,
 or the exact archived product rather than a gallery rendition.
 
-## 2. Spirit and Opportunity (Mars Exploration Rover / MER)
+## 3. Spirit and Opportunity (Mars Exploration Rover / MER)
 
 ### Archive identity
 
@@ -165,13 +267,13 @@ and IMU-related collections.  A route adapter should join location samples to
 image Sols through rover identity plus site/drive/RMC and preserve the original
 frame.  It must never mix MER1 and MER2 coordinates.
 
-## 3. App-facing normalized contract
+## 4. App-facing normalized contract
 
 Every rover adapter should return this shape before rendering:
 
 ```js
 {
-  rover: 'perseverance' | 'spirit' | 'opportunity',
+  rover: 'curiosity' | 'perseverance' | 'spirit' | 'opportunity',
   source: 'nasa-browse' | 'pds',
   sourceId: 'stable image id or PDS LIDVID',
   sol: Number,
@@ -192,7 +294,7 @@ image-scale relationship is unknown.  It may still appear in a conventional
 gallery and be available for download.  This is safer than producing a
 convincing-looking but geometrically false panorama.
 
-## 4. Implementation status and next work
+## 5. Implementation status and next work
 
 - **Perseverance:** browser browse-feed adapter available; validate every
   `scaleFactor`/`subframeRect` relationship and prefer PDS labels for research
@@ -200,6 +302,6 @@ convincing-looking but geometrically false panorama.
 - **Spirit / Opportunity:** discovery and decoding are separate tasks.  Do not
   claim support until a PDS3 label/image decoder and a Sol-index adapter have
   been tested against both MER1 and MER2.
-- **Curiosity:** it has its own NASA raw browse feed and PDS archive; do not
-  reuse its endpoint, product naming rules, offsets, route data, or camera
-  assumptions for the other three rovers.
+- **Curiosity:** use the raw browse feed only behind an adapter.  Place
+  subframes from the CAHVOR model, not from a bare `camera_vector` or `A`;
+  validate centre-ray residuals and resolve flagged products against PDS.
