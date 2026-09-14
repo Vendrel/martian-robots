@@ -75,7 +75,7 @@ const FULLSCREEN_AIM_GAMEPAD_ACTIVITY_MS = 2200;
 // Browse JPEGs may be displayed but cannot be read pixel-by-pixel because
 // they are not origin-clean. This local profile is blended at draw time.
 const FLATFIELD_STORAGE_KEY='mars360-flatfield/v2';
-const DEFAULT_FLATFIELD={enabled:true,edgeLift:.6,falloff:2.4,centerX:.5,centerY:.5};
+const DEFAULT_FLATFIELD={enabled:true,edgeLift:.3,falloff:2.4,centerX:.5,centerY:.5};
 function flatfieldNumber(value,fallback,minimum,maximum){value=Number(value);return Number.isFinite(value)?Math.max(minimum,Math.min(maximum,value)):fallback}
 function readFlatfieldSettings(){try{let saved=JSON.parse(localStorage.getItem(FLATFIELD_STORAGE_KEY)||'{}');return{enabled:typeof saved.enabled==='boolean'?saved.enabled:DEFAULT_FLATFIELD.enabled,edgeLift:flatfieldNumber(saved.edgeLift,DEFAULT_FLATFIELD.edgeLift,0,.6),falloff:flatfieldNumber(saved.falloff,DEFAULT_FLATFIELD.falloff,.5,4),centerX:flatfieldNumber(saved.centerX,DEFAULT_FLATFIELD.centerX,0,1),centerY:flatfieldNumber(saved.centerY,DEFAULT_FLATFIELD.centerY,0,1)}}catch{return{...DEFAULT_FLATFIELD}}}
 const flatfield=readFlatfieldSettings();
