@@ -383,7 +383,7 @@
 	cursor: not-allowed
 }
 
-.sol-step-button::after {
+.sol-step-button[data-tooltip]::after {
 	content: attr(data-tooltip);
 	position: absolute;
 	z-index: 8;
@@ -406,8 +406,8 @@
 	transition: opacity .16s, transform .16s
 }
 
-.sol-step-button:hover::after,
-.sol-step-button:focus-visible::after {
+.sol-step-button[data-tooltip]:hover::after,
+.sol-step-button[data-tooltip]:focus-visible::after {
 	opacity: 1;
 	transform: translateY(0)
 }
