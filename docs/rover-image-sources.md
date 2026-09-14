@@ -57,6 +57,33 @@ requires reproducibility:
 - MSL geometric camera-model description:
   <https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMOS_1XXX/DOCUMENT/GEOMETRIC_CM.TXT>
 
+### Direct lookup by URL or product ID
+
+For an image-inspection UI, the public gallery can resolve a complete Curiosity
+`imageid` without scanning Sols.  The observed request is:
+
+```text
+GET https://mars.nasa.gov/api/v1/raw_image_items/
+  ?condition_1={IMAGEID}:imageid:eq
+  &per_page=2&page=0&extended=
+```
+
+The response's first exact `items[].imageid` match provides `sol` and the
+usual browse geometry.  This was verified on 2026-09-14 with
+`FLB_631411016EDR_F0781138FHAZ00341M_`, which resolves to Sol 2635.  A full
+legacy browse URL may not expose that modern product ID in its filename, but
+its `.../msss/{zero-padded-sol}/...` path segment is a reliable Sol hint; load
+that Sol and compare the normalized image URL/filename as a fallback.
+
+Use exact IDs only for this direct endpoint.  A substring in `search` is a
+camera/filter expression in the gallery API, not a general product-ID search.
+Some valid browse records are intentionally **source-only**: for example,
+Curiosity `3454MR1019030291601925C00_DXXX` (Sol 3454) has a valid image URL but
+null `camera_vector`, CAHV-family component list, attitude, camera position,
+and mast angles.  Such a record can be opened in an information panel, but it
+must not be projected into a panorama or used to rotate the camera: the
+metadata does not support a truthful placement.
+
 ### Do not confuse a centre ray with an optical axis
 
 For a CAHVOR record, `A` from `camera_model_component_list` is the camera
@@ -156,6 +183,20 @@ Paginate until the returned `images` array has fewer than `num` items.  Query
 by a product identifier with the same endpoint's `id` parameter when an
 individual image is needed.  Preserve the complete JSON record in exports;
 NASA may add fields without notice.
+
+For lookup, an exact Mars 2020 product ID can be requested directly:
+
+```text
+GET https://mars.nasa.gov/rss/api/?feed=raw_images&category=mars2020,ingenuity
+  &feedtype=json&id={IMAGEID}
+```
+
+Validate the returned `images[].imageid` exactly before trusting its `sol`.
+When a complete Mars 2020 browse URL is supplied, its
+`.../surface/sol/{zero-padded-sol}/...` segment is also a useful fallback.
+These are observed public gallery interfaces rather than stable versioned
+contracts, so the application should retain both the direct-ID and URL/Sol
+fallback paths.
 
 ### Observed browse-record fields worth normalizing
 

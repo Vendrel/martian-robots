@@ -558,6 +558,19 @@ body {
 
 .help-button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); color: var(--accent); cursor: pointer; font: 800 1rem/1 system-ui; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease }
 .help-button:hover, .help-button:focus-visible { border-color: var(--accent); box-shadow: var(--shadow), 0 0 16px var(--glow); outline: 0; transform: translateY(-1px) }
+.image-lookup { position: relative; z-index: 40 }
+.image-lookup-button svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 2 }
+.image-lookup-popover { position: absolute; top: calc(100% + 10px); right: 0; display: grid; gap: 9px; width: min(360px, calc(100vw - 24px)); padding: 13px; border: 1px solid color-mix(in srgb, var(--accent) 52%, var(--line)); border-radius: 12px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); box-shadow: var(--shadow), 0 0 22px color-mix(in srgb, var(--glow) 35%, transparent); opacity: 0; pointer-events: none; transform: translateY(-5px) scale(.98); transform-origin: top right; transition: opacity .16s ease, transform .16s ease }
+.image-lookup.is-open .image-lookup-popover { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1) }
+.image-lookup-popover label { color: var(--accent); font: 800 .72rem/1.2 system-ui; letter-spacing: .08em; text-transform: uppercase }
+.image-lookup-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 7px }
+.image-lookup-row input { min-width: 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px; background: color-mix(in srgb, var(--bg) 38%, var(--surface)); color: var(--ink); font: 600 .76rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; outline: 0 }
+.image-lookup-row input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--glow) 22%, transparent) }
+.image-lookup-row button { padding: 0 11px; border: 1px solid var(--accent); border-radius: 7px; background: var(--accent); color: #03111a; font: 800 .72rem system-ui; cursor: pointer }
+.image-lookup-row button:disabled { cursor: wait; opacity: .65 }
+#imageLookupStatus { min-height: 1.2em; margin: 0; color: var(--muted); font: 600 .71rem/1.35 system-ui }
+#imageLookupStatus[data-state="error"] { color: #ff9b8d }
+#imageLookupStatus[data-state="success"] { color: var(--accent) }
 
 .help-modal[hidden] { display: none }
 .help-modal { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 22px; background: color-mix(in srgb, var(--bg) 46%, transparent); backdrop-filter: blur(10px); opacity: 0; transition: opacity .18s ease }

@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026091415" />
+    <link rel="stylesheet" href="./styles.css?2026091419" />
   </head>
   <body>
     <main class="app-shell">
@@ -56,6 +56,16 @@
           <label class="language-select" aria-label="Interface language">
             <span>◎</span><select id="languageSelect"></select>
           </label>
+          <div class="image-lookup" id="imageLookup">
+            <button class="help-button image-lookup-button" id="imageLookupButton" type="button" data-i18n-aria-label="imageLookupOpen" aria-label="Find rover image">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="5.75"></circle><path d="m15.25 15.25 4.25 4.25"></path></svg>
+            </button>
+            <form class="image-lookup-popover" id="imageLookupForm" role="search">
+              <label for="imageLookupInput" data-i18n="imageLookupLabel">Open a rover image</label>
+              <div class="image-lookup-row"><input id="imageLookupInput" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="imageLookupPlaceholder" placeholder="Paste image URL or image ID"><button type="submit" data-i18n="imageLookupGo">Find</button></div>
+              <p id="imageLookupStatus" aria-live="polite" data-i18n="imageLookupHint">Curiosity and Perseverance browse images are supported.</p>
+            </form>
+          </div>
           <button class="help-button" id="helpButton" type="button" data-i18n-aria-label="helpOpen" aria-label="Open help">?</button>
           <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme">☼</button>
         </div>
@@ -248,7 +258,7 @@
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script>window.mars360PresentationMouseTiming=Object.freeze({idleDelayMs:900,fadeOutMs:3000});</script>
-    <script type="module" src="./app.js?2026091415"></script>
+    <script type="module" src="./app.js?2026091419"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
