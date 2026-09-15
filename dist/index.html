@@ -100,7 +100,7 @@
       <section class="viewer-grid">
         <div class="panorama-card">
           <div class="viewer-topline">
-            <div><span class="live-dot"></span><span id="statusText" data-i18n="readyStatus">Ready to map image geometry</span></div>
+            <div><span class="live-dot"></span><span id="statusText" aria-live="polite" data-i18n="readyStatus">Ready to map image geometry</span></div>
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
@@ -232,6 +232,7 @@
         <div><span class="legend-symbol">⌁</span><span data-i18n="legendGeometry">Each frame is positioned from its available camera axis and elevation data.</span></div>
         <div><span class="legend-symbol">◷</span><span data-i18n="legendLayer">Later images render above earlier captures.</span></div>
       </section>
+      <footer class="nasa-attribution" data-i18n="nasaAttributionDisclaimer">This project uses publicly available data and imagery provided by NASA. This project is not affiliated with, endorsed by, or sponsored by NASA. Mars rover imagery/data: NASA/JPL-Caltech</footer>
     </main>
     <div id="presentationMouse" class="presentation-mouse reticle" aria-hidden="true">
       <div class="thin-ring ring-a"></div>

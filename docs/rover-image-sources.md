@@ -9,6 +9,18 @@ archive** (authoritative metadata, calibration, and long-term reproducibility).
 The two are complementary; neither should be silently substituted for the
 other.
 
+## Rights and attribution
+
+This note previously covered technical provenance only.  The source images are
+subject to NASA's media-usage rules; see the project-facing summary in
+[`nasa-rover-image-use.md`](nasa-rover-image-use.md).  In brief, factual and
+educational use of NASA-provided rover imagery is generally allowed with NASA
+acknowledgement, but every selected asset must be checked for a third-party
+copyright notice.  Do not add the NASA Insignia, Logotype, Seal, or a statement
+that implies NASA endorsement; a NASA identifier already visible in an
+unaltered factual image may remain in context.  These rules apply equally to
+browse-gallery renditions and PDS-derived products.
+
 ## Quick decision table
 
 | Rover | Public browse feed usable in a browser | Authoritative archive | Important implementation consequence |
