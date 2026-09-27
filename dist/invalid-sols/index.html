@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curiosity invalid Sol konverter</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; }
+    body { max-width: 1100px; margin: 0 auto; padding: 2rem; background: #111827; color: #e5e7eb; }
+    h1 { margin-top: 0; font-size: 1.6rem; }
+    p { color: #9ca3af; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    label { display: block; margin-bottom: .4rem; font-weight: 700; }
+    textarea { box-sizing: border-box; width: 100%; min-height: 28rem; padding: .8rem; border: 1px solid #374151; border-radius: .5rem; background: #030712; color: #d1d5db; font: 14px/1.45 ui-monospace, monospace; resize: vertical; }
+    button { margin: 1rem .5rem 1rem 0; padding: .65rem 1rem; border: 0; border-radius: .4rem; background: #2563eb; color: white; font-weight: 700; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    #status { color: #93c5fd; }
+    @media (max-width: 760px) { body { padding: 1rem; } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Curiosity invalid Sol konverter</h1>
+  <p>Másold be a <code>find-missing-sols.sh</code> kimenetét. Soronként egy Sol-számot vár; az üres sorokat és a fölösleges whitespace-t figyelmen kívül hagyja.</p>
+  <div class="grid">
+    <section>
+      <label for="input">Hiányzó Sol-ok</label>
+      <textarea id="input" spellcheck="false" placeholder="3\n4\n5\n..."></textarea>
+    </section>
+    <section>
+      <label for="output">Generált curiosity.js</label>
+      <textarea id="output" readonly spellcheck="false"></textarea>
+    </section>
+  </div>
+  <button id="convert" type="button">Generálás</button>
+  <button id="copy" type="button">Kimenet másolása</button>
+  <span id="status" role="status"></span>
+
+  <script>
+    const input = document.querySelector('#input');
+    const output = document.querySelector('#output');
+    const status = document.querySelector('#status');
+
+    function generate() {
+      const values = input.value.split(/\s+/).filter(Boolean).map(Number);
+      const invalid = values.filter(value => !Number.isInteger(value) || value < 0);
+      if (invalid.length) {
+        status.textContent = `Hibás bemenet: ${invalid.length} érték nem érvényes nemnegatív egész szám.`;
+        output.value = '';
+        return;
+      }
+
+      const sols = [...new Set(values)].sort((a, b) => a - b);
+      const list = sols.length ? `\n${sols.map(sol => `  ${sol},`).join('\n')}\n` : '';
+      output.value = `window.mars360InitialInvalidSols??={};\nwindow.mars360InitialInvalidSols.curiosity=[${list}];\n`;
+      status.textContent = `${sols.length} egyedi Sol feldolgozva.`;
+    }
+
+    document.querySelector('#convert').addEventListener('click', generate);
+    document.querySelector('#copy').addEventListener('click', async () => {
+      if (!output.value) generate();
+      if (!output.value) return;
+      try {
+        await navigator.clipboard.writeText(output.value);
+        status.textContent = 'A kimenet a vágólapra került.';
+      } catch {
+        output.focus();
+        output.select();
+        status.textContent = 'A kimenet kijelölve; másold ki kézzel.';
+      }
+    });
+  </script>
+</body>
+</html>

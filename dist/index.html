@@ -100,7 +100,7 @@
       <section class="viewer-grid">
         <div class="panorama-card">
           <div class="viewer-topline">
-            <div><span class="live-dot"></span><span id="statusText" aria-live="polite" data-i18n="readyStatus">Ready to map image geometry</span></div>
+            <div class="nasa-request-summary"><span><span class="live-dot"></span><span id="statusText" aria-live="polite" data-i18n="readyStatus">Ready to map image geometry</span></span></div>
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
@@ -110,6 +110,7 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" tabindex="0" aria-label="Interactive Mars panorama"></canvas>
+            <ol id="nasaRequestTasks" class="nasa-request-tasks nasa-request-tasks--overlay" hidden aria-live="polite"></ol>
             <div class="fullscreen-panorama-hud" id="fullscreenPanoramaHud" aria-live="polite" aria-atomic="true">
               <strong id="fullscreenRoverName">Curiosity</strong>
               <span id="fullscreenLocationName">Location 1 / Sol 0</span>
@@ -258,8 +259,9 @@
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
+    <script src="./static-metadata-cache.js"></script>
     <script>window.mars360PresentationMouseTiming=Object.freeze({idleDelayMs:900,fadeOutMs:3000});</script>
-    <script type="module" src="./app.js?2026091419"></script>
+    <script type="module" src="./app.js?2026092002"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

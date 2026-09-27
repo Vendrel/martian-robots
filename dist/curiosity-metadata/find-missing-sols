@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+readonly filename_pattern='^mars-rover-360-curiosity-sol-([0-9]+)-research-manifest\.json\.gz$'
+
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT
+
+for range_dir in "$script_dir"/*/; do
+    [ -d "$range_dir" ] || continue
+
+    range_name=${range_dir%/}
+    range_name=${range_name##*/}
+
+    # Only process directories whose names are of the form START-END.
+    if [[ ! $range_name =~ ^([0-9]+)-([0-9]+)$ ]]; then
+        continue
+    fi
+
+    range_start=${BASH_REMATCH[1]}
+    range_end=${BASH_REMATCH[2]}
+    if (( range_start > range_end )); then
+        printf 'Invalid Sol range: %s\n' "$range_name" >&2
+        exit 1
+    fi
+
+    found_file="$tmp_dir/$range_name"
+    : > "$found_file"
+
+    while IFS= read -r -d '' file; do
+        filename=${file##*/}
+        if [[ $filename =~ $filename_pattern ]]; then
+            sol=${BASH_REMATCH[1]}
+            if (( sol >= range_start && sol <= range_end )); then
+                printf '%s\n' "$sol" >> "$found_file"
+            fi
+        fi
+    done < <(find "$range_dir" -mindepth 1 -maxdepth 1 -type f -print0)
+
+    sort -n -u -o "$found_file" "$found_file"
+
+    for (( sol = range_start; sol <= range_end; sol++ )); do
+        if ! grep -Fqx "$sol" "$found_file"; then
+            printf '%s\n' "$sol"
+        fi
+    done
+done

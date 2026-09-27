@@ -501,6 +501,23 @@ body {
 	text-align: center;
 }
 
+.nasa-request-summary { display: grid; gap: 7px; min-width: 0 }
+.nasa-request-tasks { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; color: var(--muted); font: 600 .68rem/1.35 system-ui, sans-serif }
+.nasa-request-tasks[hidden] { display: none !important }
+.nasa-request-tasks li { display: flex; align-items: center; gap: 6px; overflow-wrap: anywhere }
+.nasa-request-tasks li::before { display: inline-grid; place-items: center; flex: 0 0 1.15em; width: 1.15em; height: 1.15em; border: 1px solid var(--line); border-radius: 50%; content: '…'; color: var(--muted); font-weight: 800 }
+.nasa-request-tasks li[data-state="loading"]::before { content: '↻'; color: var(--accent); animation: nasa-task-spin .8s linear infinite }
+.nasa-request-tasks li[data-state="waiting"]::before { content: '⌛'; color: var(--accent) }
+.nasa-request-tasks li[data-state="done"]::before { border-color: var(--accent); content: '✓'; color: var(--accent) }
+.nasa-request-tasks li[data-state="error"]::before { content: '!'; color: #b34938 }
+.nasa-request-tasks .nasa-task-time { margin-left: auto; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap }
+.nasa-request-tasks--overlay { position: absolute; z-index: 6; top: 18px; left: 50%; width: min(560px, calc(100% - 120px)); padding: 10px 13px; border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); box-shadow: 0 9px 28px rgba(0,0,0,.22); color: var(--ink); pointer-events: none; transform: translateX(-50%); }
+.nasa-request-tasks--overlay li { min-width: 0 }
+.nasa-request-tasks--overlay .nasa-task-time { color: var(--accent) }
+.crossview-request-tasks { margin: 13px 2px 0 }
+@media(max-width:600px) { .nasa-request-tasks--overlay { top: 12px; width: calc(100% - 78px); padding: 8px 10px } }
+@keyframes nasa-task-spin { to { transform: rotate(1turn) } }
+
 .topbar {
 	height: 76px;
 	display: flex;

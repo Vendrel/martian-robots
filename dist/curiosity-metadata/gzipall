@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# A script saját mappája, függetlenül attól, honnan indítjuk.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo "JSON → GZIP tömörítés"
+echo "Gyökérmappa: $SCRIPT_DIR"
+echo
+
+find "$SCRIPT_DIR" \
+	-mindepth 2 \
+	-maxdepth 2 \
+	-type f \
+	-name '*.json' \
+	-print0 |
+while IFS= read -r -d '' file; do
+
+	gzfile="${file}.gz"
+
+	# Ha már létezik a .gz változat, kihagyjuk.
+	if [[ -f "$gzfile" ]]; then
+		echo "SKIP: ${file#$SCRIPT_DIR/}"
+		continue
+	fi
+
+	echo "GZIP: ${file#$SCRIPT_DIR/}"
+
+	# -k = eredeti JSON megtartása
+	# -9 = maximális gzip tömörítés
+	gzip -9 -k "$file"
+
+done
+
+echo
+echo "Kész."
