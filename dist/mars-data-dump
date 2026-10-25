@@ -80,11 +80,34 @@ process_downloads() {
   done < <(find "$SOURCE_DIR" -maxdepth 1 -type f -name 'mars-rover-360-*-sol-*-research-manifest.json' -print0)
 }
 
+refresh_metadata_indexes() {
+  local rover root file filename sol latest temporary
+  for rover in "${ROVERS[@]}"; do
+    root="$DIST_DIR/${rover}-metadata"
+    [ -d "$root" ] || continue
+    latest=''
+    while IFS= read -r -d '' file; do
+      filename=$(basename "$file")
+      if [[ $filename =~ ^mars-rover-360-${rover}-sol-([1-9][0-9]*)-research-manifest\.json\.gz$ ]]; then
+        sol=${BASH_REMATCH[1]}
+        if [[ -z $latest || $((10#$sol)) -gt $((10#$latest)) ]]; then
+          latest=$sol
+        fi
+      fi
+    done < <(find "$root" -type f -name "mars-rover-360-${rover}-sol-*-research-manifest.json.gz" -print0)
+    [ -n "$latest" ] || continue
+    temporary="$root/.latest.json.$$"
+    printf '{\n  "format": "mars360-local-metadata-index/v1",\n  "rover": "%s",\n  "latestSol": %s\n}\n' "$rover" "$latest" > "$temporary"
+    mv -f -- "$temporary" "$root/latest.json"
+  done
+}
+
 run_once() {
   [ -d "$SOURCE_DIR" ] || { log "ERROR: source directory does not exist: $SOURCE_DIR"; return 1; }
   [ -d "$DIST_DIR" ] || { log "ERROR: dist directory does not exist: $DIST_DIR"; return 1; }
   compress_existing_manifests
   process_downloads
+  refresh_metadata_indexes
 }
 
 if [[ ${1:-} == '--once' ]]; then

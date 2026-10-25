@@ -38,7 +38,7 @@ Research Mode downloads manifest JSON files to `/Volumes/Zike/Ideiglenes`. Run t
 ./dist/mars-data-dump
 ```
 
-It watches that directory once a minute, validates manifests for Curiosity, Perseverance, Spirit, and Opportunity, compresses them to `.json.gz`, and writes them to the matching `dist/<rover>-metadata/<start>-<end>/` directory. The original downloaded JSON is removed only after a successful compressed import. Use `./dist/mars-data-dump --once` for one pass.
+It watches that directory once a minute, validates manifests for Curiosity, Perseverance, Spirit, and Opportunity, compresses them to `.json.gz`, and writes them to the matching `dist/<rover>-metadata/<start>-<end>/` directory. It also refreshes each rover's `latest.json` cache index, which makes the first Curiosity load use a locally available Sol before any live request. The original downloaded JSON is removed only after a successful compressed import. Use `./dist/mars-data-dump --once` for one pass.
 
 The application calculates these 1000-Sol directories directly, so adding new cache files does not require a code build or metadata index update. Reload an unpacked extension after importing; for Chrome Web Store distribution, publish a new package with an incremented extension version.
 

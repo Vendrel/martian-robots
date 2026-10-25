@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Martian Robots – terjesztési stratégia</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08101a;--card:#101d2b;--line:#29465c;--ink:#eef8ff;--muted:#abc1d0;--accent:#79ddf4}*{box-sizing:border-box}body{max-width:980px;margin:auto;padding:42px 22px;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}h1{line-height:1.15}h2{margin-top:34px;color:var(--accent)}p,li{color:var(--muted)}section{margin:20px 0;padding:4px 22px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card)}table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--accent)}code{color:#c9f4ff}.flow{display:flex;gap:9px;flex-wrap:wrap}.flow div{flex:1 1 145px;padding:12px;border:1px solid var(--line);border-radius:9px;text-align:center;color:var(--ink)}
+  </style>
+</head>
+<body>
+  <h1>Martian Robots – terjesztési stratégia</h1>
+  <p>Rögzítve: a Chrome Web Store az elsődleges felhasználói telepítési csatorna; a nyilvános GitHub repository és GitHub Pages továbbra is értékes, de eltérő szereppel.</p>
+
+  <section>
+    <h2>Szerepek</h2>
+    <table><thead><tr><th>Felület</th><th>Elsődleges feladat</th><th>Nem erre való</th></tr></thead><tbody>
+      <tr><td>Chrome Web Store</td><td>Telepítés, aláírt kiadás, automatikus frissítés, felhasználói felfedezhetőség.</td><td>Forráskód és fejlesztői dokumentáció.</td></tr>
+      <tr><td>GitHub repository</td><td>Nyílt CC0 forrás, issue-k, dokumentáció, kiadási előzmények.</td><td>A végfelhasználók fő telepítési útja.</td></tr>
+      <tr><td>GitHub Pages / későbbi saját domain</td><td>Élő webes demó, megosztható permalinkek és projektbemutató.</td><td>A bővítményfrissítések terjesztése.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>Ajánlott kiadási folyamat</h2>
+    <div class="flow"><div>Kód és cache frissítése</div><div><code>manifest.json</code> verzió emelése</div><div><code>dist</code> ZIP-csomag</div><div>Chrome Web Store feltöltés</div><div>Automatikus kliensfrissítés</div></div>
+    <p>A <code>dist</code> marad a közös futtatási forrás: helyi HTTP-szerver, Pages és MV3-bővítmény ugyanazt olvassa. A kiadás ZIP-készítés, nem alkalmazásbuild.</p>
+  </section>
+
+  <section>
+    <h2>Következő, külön elvégzendő rendezés</h2>
+    <ul>
+      <li>A README elsődleges telepítési linkje a Store-link legyen, a Pages-link pedig webes demóként szerepeljen.</li>
+      <li>Release tagre vagy kézi indításra készülő ZIP-artifact workflow: ne kelljen kézzel kiválogatni a csomagot.</li>
+      <li>A fejlesztői dumpok, diagnosztikai fájlok és átmenetileg bemásolt külön projektek ne kerüljenek a Store-csomagba.</li>
+      <li>Ha a Pages vagy saját domain kanonikus címmé válik, a <code>PERMALINK_BASE_URL</code> kapja meg azt; ettől a meglévő megosztási funkció valódi permalinket exportál.</li>
+    </ul>
+  </section>
+</body>
+</html>
