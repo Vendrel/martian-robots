@@ -22,7 +22,7 @@
 
 /* Presentation overlay: it is fixed, pointer-transparent, and therefore never
    changes hit testing or the document's layout. */
-.presentation-mouse { --pm-bright: rgba(22, 174, 224, .96); --pm-soft: rgba(0, 126, 190, .42); position: fixed; top: 0; left: 0; z-index: 2147483646; width: 188px; height: 188px; opacity: 0; pointer-events: none; visibility: hidden; transform: translate3d(-200px, -200px, 0) translate(-50%, -50%); will-change: transform, opacity; filter: drop-shadow(0 0 3px var(--pm-soft)) drop-shadow(0 0 11px color-mix(in srgb, var(--pm-bright) 28%, transparent)); }
+.presentation-mouse { --pm-bright: rgba(22, 174, 224, .96); --pm-soft: rgba(0, 126, 190, .42); --pm-ticks-angle: 0deg; --pm-layer-3-angle: 0deg; --pm-layer-4-angle: 0deg; position: fixed; top: 0; left: 0; z-index: 2147483646; width: 188px; height: 188px; opacity: 0; pointer-events: none; visibility: hidden; transform: translate3d(-200px, -200px, 0) translate(-50%, -50%); will-change: transform, opacity; filter: drop-shadow(0 0 3px var(--pm-soft)) drop-shadow(0 0 11px color-mix(in srgb, var(--pm-bright) 28%, transparent)); }
 [data-theme="dark"] .presentation-mouse { --pm-bright: rgba(70, 255, 255, .98); --pm-soft: rgba(0, 220, 255, .48) }
 .presentation-mouse.is-active { visibility: visible }
 .controller-aimer { top: 0; left: 0; width: 188px; height: 188px; transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%); z-index: 2147483647 }
@@ -33,6 +33,9 @@
 .presentation-mouse .thin-ring, .presentation-mouse-toggle-preview .thin-ring { width: var(--size); height: var(--size); border: 1px solid color-mix(in srgb, var(--pm-bright) 35%, transparent); box-shadow: inset 0 0 5px color-mix(in srgb, var(--pm-bright) 15%, transparent), 0 0 5px color-mix(in srgb, var(--pm-bright) 15%, transparent) }
 .presentation-mouse .ring-a, .presentation-mouse-toggle-preview .ring-a { --size: 93.1% }.presentation-mouse .ring-b, .presentation-mouse-toggle-preview .ring-b { --size: 66% }
 .presentation-mouse .ticks, .presentation-mouse-toggle-preview .ticks { width: 81.4%; height: 81.4%; background: repeating-conic-gradient(var(--pm-bright) 0 1deg, transparent 1deg 10deg); -webkit-mask: radial-gradient(circle, transparent 66%, #000 67% 72%, transparent 73%); mask: radial-gradient(circle, transparent 66%, #000 67% 72%, transparent 73%); opacity: .55; animation: presentation-mouse-rotate 45s linear infinite reverse }
+.presentation-mouse.is-agile .ticks { animation: none; transform: translate(-50%, -50%) rotate(var(--pm-ticks-angle)) }
+.presentation-mouse.is-agile .layer-3 { animation: none; transform: translate(-50%, -50%) rotate(var(--pm-layer-3-angle)) }
+.presentation-mouse.is-agile .layer-4 { animation: none; transform: translate(-50%, -50%) rotate(var(--pm-layer-4-angle)) }
 @keyframes presentation-mouse-rotate { from { transform: translate(-50%, -50%) rotate(0deg) } to { transform: translate(-50%, -50%) rotate(360deg) } }
 @media (prefers-reduced-motion: reduce) { .presentation-mouse *, .presentation-mouse-toggle-preview * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important } }
 
@@ -552,6 +555,21 @@ body {
 	align-items: center
 }
 
+.header-icon-button { position: relative; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer }
+.header-icon-button svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round }
+.header-icon-button:hover, .header-icon-button:focus-visible { border-color: var(--accent); outline: 0; box-shadow: 0 0 14px var(--glow) }
+.header-icon-button[data-tooltip]::after { content: attr(data-tooltip); position: absolute; z-index: 31; top: calc(100% + 8px); right: 0; width: max-content; max-width: min(250px, calc(100vw - 32px)); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font: 600 .72rem/1.35 system-ui; opacity: 0; pointer-events: none; text-align: center; transform: translateY(-3px); transition: opacity .15s ease, transform .15s ease }
+.header-icon-button[data-tooltip]:hover::after, .header-icon-button[data-tooltip]:focus-visible::after { opacity: 1; transform: translateY(0) }
+
+.state-transfer-modal[hidden] { display: none }
+.state-transfer-modal { position: fixed; z-index: 110; inset: 0; display: grid; place-items: center; padding: 22px; background: color-mix(in srgb, var(--bg) 58%, transparent); backdrop-filter: blur(10px) }
+.state-transfer-card { width: min(100%, 620px); overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line)); border-radius: 18px; background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); box-shadow: 0 28px 80px rgba(4,10,22,.4), 0 0 45px var(--glow) }
+.state-transfer-header { display: flex; justify-content: space-between; gap: 20px; align-items: start; padding: 22px 24px 18px; border-bottom: 1px solid var(--line) }
+.state-transfer-header .eyebrow { margin: 0 0 7px }.state-transfer-header h2 { margin: 0; font-size: 1.35rem }.state-transfer-close { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer; font: 1.3rem/1 system-ui }
+.state-transfer-body { padding: 22px 24px 24px }.state-transfer-body > p { margin: 0 0 16px; color: var(--muted); font-size: .9rem; line-height: 1.5 }.state-transfer-body textarea { width: 100%; resize: vertical; padding: 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface2); color: var(--ink); font: .82rem/1.45 ui-monospace, monospace }
+.state-transfer-dropzone { display: grid; place-items: center; min-height: 76px; margin-top: 12px; padding: 12px; border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--line)); border-radius: 10px; color: var(--muted); cursor: pointer; font-size: .84rem; text-align: center }.state-transfer-dropzone.is-dragging { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent) }
+.state-transfer-error { margin: 12px 0 0 !important; color: #ff9b8d !important }.state-transfer-status { margin: 12px 0 0 !important; color: var(--muted); font-size: .84rem; line-height: 1.45 }.state-transfer-actions { display: flex; justify-content: end; gap: 10px; margin-top: 20px }.state-transfer-actions button:not(.load-button) { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font: 700 .84rem/1 system-ui }body.has-state-transfer-modal, body.has-invalid-sols-modal { overflow: hidden }
+
 .language-select {
 	display: flex;
 	gap: 7px;
@@ -626,6 +644,26 @@ body {
 .help-section dt, .help-controller-details dt { color: var(--ink); font-size: .77rem; font-weight: 750 }
 .help-section dd, .help-controller-details dd { margin: 0; color: var(--muted); font-size: .76rem; line-height: 1.42 }
 .help-modal kbd { display: inline-grid; min-width: 1.55em; padding: .16em .38em; border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--surface2) 72%, transparent); color: var(--accent); font: 750 .76rem/1 system-ui; text-align: center }
+.research-modal[hidden] { display: none }
+.research-modal { position: fixed; z-index: 110; inset: 0; display: grid; place-items: center; padding: 22px; background: color-mix(in srgb, var(--bg) 58%, transparent); backdrop-filter: blur(10px) }
+.research-modal-card { width: min(100%, 560px); overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line)); border-radius: 18px; background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); box-shadow: 0 28px 80px rgba(4,10,22,.4), 0 0 45px var(--glow) }
+.research-modal-header { display: flex; justify-content: space-between; gap: 22px; align-items: start; padding: 22px 24px 18px; border-bottom: 1px solid var(--line); background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%) }
+.research-modal-header .eyebrow { margin: 0 0 7px }
+.research-modal-header h2 { margin: 0; font-size: 1.35rem; letter-spacing: .025em }
+.research-modal-close { display: grid; flex: 0 0 auto; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer; font: 1.3rem/1 system-ui }
+.research-modal-close:hover, .research-modal-close:focus-visible { border-color: var(--accent); outline: 0; transform: rotate(90deg) }
+.research-modal-body { padding: 22px 24px 24px }
+.research-modal-body > p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.5 }
+.research-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px }
+.research-fields label { display: grid; gap: 7px; color: var(--muted); font-size: .76rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase }
+.research-fields select, .research-fields input { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); color: var(--ink); font: 700 .92rem/1 system-ui }
+.research-fields select:focus-visible, .research-fields input:focus-visible { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 28%, transparent) }
+.research-form-error { margin-top: 13px !important; color: #ff9b8d !important }
+.research-modal-actions { display: flex; justify-content: end; gap: 10px; margin-top: 22px }
+.research-modal-actions button:not(.load-button) { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font: 700 .84rem/1 system-ui }
+.research-modal-actions button:not(.load-button):hover, .research-modal-actions button:not(.load-button):focus-visible { border-color: var(--accent); color: var(--accent); outline: 0 }
+body.has-research-modal { overflow: hidden }
+@media (max-width: 560px) { .research-modal { padding: 12px }.research-modal-card { border-radius: 13px }.research-modal-header, .research-modal-body { padding-left: 18px; padding-right: 18px }.research-fields { grid-template-columns: 1fr } }
 .help-controller-section { display: grid; grid-template-columns: minmax(210px,.65fr) minmax(440px,1.5fr) minmax(190px,.55fr); gap: 18px; align-items: center; margin-top: 18px; padding: 18px }
 .help-controller-copy .eyebrow { margin: 0 0 6px }
 .help-controller-copy h3 { margin-bottom: 8px }

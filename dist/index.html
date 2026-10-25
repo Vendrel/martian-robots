@@ -56,6 +56,12 @@
           <label class="language-select" aria-label="Interface language">
             <span>◎</span><select id="languageSelect"></select>
           </label>
+          <button id="exportStateButton" class="header-icon-button" type="button" data-i18n-aria-label="stateExport" aria-label="Export URL parameter set" data-tooltip="Export URL parameter set">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15"></path><path d="M14 11a5 5 0 0 0-7.07-.07l-2 2A5 5 0 0 0 12 20l1.15-1.15"></path><path d="M8 12h8"></path></svg>
+          </button>
+          <button id="importStateButton" class="header-icon-button" type="button" data-i18n-aria-label="stateImport" aria-label="Import URL parameter set" data-tooltip="Import URL parameter set">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l3 3v15H7z"></path><path d="M15 3v4h4"></path><path d="M10 12h6M10 16h6"></path><path d="m8 14-3 3 3 3"></path></svg>
+          </button>
           <div class="image-lookup" id="imageLookup">
             <button class="help-button image-lookup-button" id="imageLookupButton" type="button" data-i18n-aria-label="imageLookupOpen" aria-label="Find rover image">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="5.75"></circle><path d="m15.25 15.25 4.25 4.25"></path></svg>
@@ -229,6 +235,50 @@
         </section>
       </div>
 
+      <div id="researchModal" class="research-modal" hidden role="dialog" aria-modal="true" aria-labelledby="researchModalTitle" aria-describedby="researchModalDescription">
+        <section class="research-modal-card">
+          <header class="research-modal-header">
+            <div><p class="eyebrow">INTERNAL TOOL</p><h2 id="researchModalTitle">Research Mode</h2></div>
+            <button id="closeResearchModal" class="research-modal-close" type="button" aria-label="Research Mode bezárása">×</button>
+          </header>
+          <form id="researchForm" class="research-modal-body" novalidate>
+            <p id="researchModalDescription">NASA-metaadatok gyűjtése a megadott Sol-tartományban. A határok sorrendje felcserélhető; mindkét határ beleértendő. A jelenlegi exportfolyamat letölthető manifestfájlokat készít.</p>
+            <div class="research-fields">
+              <label><span>Rover</span><select id="researchRover" name="rover"></select></label>
+              <label><span>Kezdő Sol</span><input id="researchStartSol" name="startSol" type="number" min="1" step="1" required inputmode="numeric"></label>
+              <label><span>Végső Sol</span><input id="researchTargetSol" name="targetSol" type="number" min="1" step="1" required inputmode="numeric"></label>
+            </div>
+            <p id="researchFormError" class="research-form-error" role="alert" hidden></p>
+            <div class="research-modal-actions"><button id="openInvalidSolsModal" type="button" data-i18n="invalidSolsOpen">Invalid Sols</button><button id="cancelResearchModal" type="button">Mégse</button><button class="load-button" type="submit"><span>↻</span><span>Research indítása</span></button></div>
+          </form>
+        </section>
+      </div>
+
+      <div id="invalidSolsModal" class="state-transfer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="invalidSolsTitle">
+        <section class="state-transfer-card">
+          <header class="state-transfer-header"><div><p class="eyebrow">INTERNAL TOOL</p><h2 id="invalidSolsTitle" data-i18n="invalidSolsTitle">Invalid Sols</h2></div><button id="closeInvalidSolsModal" class="state-transfer-close" type="button" data-i18n-aria-label="invalidSolsClose" aria-label="Close Invalid Sols">×</button></header>
+          <div class="state-transfer-body">
+            <p data-i18n="invalidSolsDescription">Export the complete local inverse cache as the four package files, or import the files after dropping them here.</p>
+            <button id="exportInvalidSols" class="load-button" type="button"><span>↓</span><span data-i18n="invalidSolsExport">Download 4 package files</span></button>
+            <label id="invalidSolsDropzone" class="state-transfer-dropzone" for="invalidSolsFile"><input id="invalidSolsFile" type="file" accept=".js,application/javascript,text/javascript,text/plain" multiple hidden><span data-i18n="invalidSolsDrop">Drop invalid-sols JavaScript files here, or choose them</span></label>
+            <p id="invalidSolsStatus" class="state-transfer-status" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+      </div>
+
+      <div id="stateTransferModal" class="state-transfer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="stateTransferTitle">
+        <section class="state-transfer-card">
+          <header class="state-transfer-header"><div><p class="eyebrow">STATE TRANSFER</p><h2 id="stateTransferTitle">Open shared state</h2></div><button id="closeStateTransferModal" class="state-transfer-close" type="button" data-i18n-aria-label="stateImportClose" aria-label="Close shared state">×</button></header>
+          <form id="stateTransferForm" class="state-transfer-body">
+            <p id="stateTransferDescription">Paste a URL parameter set or permalink, or drop its TXT file here.</p>
+            <textarea id="stateTransferInput" rows="6" spellcheck="false" data-i18n-placeholder="stateImportPlaceholder" placeholder="Paste URL parameter set or permalink"></textarea>
+            <label id="stateTransferDropzone" class="state-transfer-dropzone" for="stateTransferFile"><input id="stateTransferFile" type="file" accept=".txt,text/plain" hidden><span data-i18n="stateImportDrop">Drop a TXT file here, or choose one</span></label>
+            <p id="stateTransferError" class="state-transfer-error" role="alert" hidden></p>
+            <div class="state-transfer-actions"><button id="cancelStateTransferModal" type="button" data-i18n="stateImportCancel">Cancel</button><button class="load-button" type="submit"><span>↪</span><span data-i18n="stateImportApply">Open state</span></button></div>
+          </form>
+        </section>
+      </div>
+
       <section class="legend-row">
         <div><span class="legend-symbol">⌁</span><span data-i18n="legendGeometry">Each frame is positioned from its available camera axis and elevation data.</span></div>
         <div><span class="legend-symbol">◷</span><span data-i18n="legendLayer">Later images render above earlier captures.</span></div>
@@ -260,8 +310,8 @@
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
-    <script>window.mars360PresentationMouseTiming=Object.freeze({idleDelayMs:900,fadeOutMs:3000});</script>
-    <script type="module" src="./app.js?2026092002"></script>
+    <script src="./presentation-mouse-config.js"></script>
+    <script type="module" src="./app.js?2026092802"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

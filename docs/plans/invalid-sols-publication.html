@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Invalid Sols – cache és publikáció</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080d16;--card:#101a29;--line:#294158;--ink:#edf6ff;--muted:#a9bdcc;--accent:#78daf2}*{box-sizing:border-box}body{max-width:960px;margin:0 auto;padding:42px 22px;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}h1{line-height:1.12}h2{margin-top:34px;color:var(--accent)}p,li{color:var(--muted)}section{padding:1px 22px 20px;margin-top:18px;border:1px solid var(--line);border-radius:14px;background:var(--card)}code{color:#c6f4ff}table{width:100%;border-collapse:collapse}th,td{padding:10px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--accent)}.flow{display:flex;gap:8px;flex-wrap:wrap}.flow div{flex:1 1 130px;padding:12px;border:1px solid var(--line);border-radius:9px;text-align:center;color:var(--ink)}.flow div+div::before{content:'→';float:left;margin-left:-20px;color:var(--accent)}@media(max-width:600px){.flow div+div::before{display:none}}
+  </style>
+</head>
+<body>
+  <h1>Invalid Sols: inverz cache és kiadási folyamat</h1>
+  <p>Ez a dokumentum a kiadással szállított, közös „nincs adat” listák és az egyes böngészőpéldányok által tanult kiegészítések együttélését rögzíti.</p>
+
+  <section>
+    <h2>Adatforrások és határok</h2>
+    <table>
+      <thead><tr><th>Réteg</th><th>Hely</th><th>Szerep</th></tr></thead>
+      <tbody>
+        <tr><td>Kiadási alaplista</td><td><code>dist/invalid-sols/{rover}.js</code></td><td>Minden felhasználóhoz eljutó, statikus ismeret.</td></tr>
+        <tr><td>Helyi kiegészítés</td><td><code>localStorage: mars360-invalid-sols/v2</code></td><td>Futás közben tanult Sol-ok, csak az adott originben.</td></tr>
+      </tbody>
+    </table>
+    <p>A két lista induláskor uniót képez. A bővítmény <code>chrome-extension://&lt;id&gt;</code> originje és minden HTTP-szerver originje külön localStorage-területet kap, ezért nem szükséges külön extension-kódág.</p>
+  </section>
+
+  <section>
+    <h2>Futás közbeni viselkedés</h2>
+    <ul>
+      <li>Ismert invalid Sol esetén a négy rover egyikénél sem indul NASA API-kérés.</li>
+      <li>A normál panorámabetöltés a sikerült, de panorámához használhatatlan Sol-okat helyileg megjegyzi.</li>
+      <li>A Research Mode üres metaadat-válasz esetén megjegyzi az adott Sol-t, majd az üres manifestet is a szokásos módon exportálja.</li>
+      <li>A v1 helyi tároló automatikusan v2 sémába migrálódik; az eredeti v1 kulcs érintetlen marad.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Fejlesztői publikációs folyamat</h2>
+    <div class="flow"><div>Research / napi használat<br><small>helyi tanulás</small></div><div>Invalid Sols modal<br><small>4 JS-fájl letöltése</small></div><div><code>dist/invalid-sols/</code><br><small>fájlcsere</small></div><div>extension kiadás<br><small>minden példány új alaplistát kap</small></div></div>
+    <p>A Research Mode a Control Deck fejlécének hárommásodperces bal egérgombos nyomva tartásával nyílik meg. Itt az „Érvénytelen Sol-ok” gomb megnyitja az export/import modalt. Az export négy, a mappában már használt nevű JavaScript-fájlt tölt le 100 ms-os eltéréssel. Ezek közvetlenül cserélhetik a <code>dist/invalid-sols/</code> fájlokat; buildlépés nem szükséges.</p>
+  </section>
+
+  <section>
+    <h2>Import és biztonság</h2>
+    <p>A modal fájlimportja nem futtat JavaScriptet. Kizárólag a négy ismert rover nevű hozzárendeléséből egy egész számokból álló tömböt olvas ki, majd azt az aktuális origin localStorage-ához adja. Így a saját, bővítményen belüli listát vissza lehet állítani egy frissítés után is, míg a kiadási adat frissítése továbbra is a fent leírt fájlcserével történik.</p>
+  </section>
+</body>
+</html>

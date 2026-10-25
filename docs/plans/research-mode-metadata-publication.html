@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Research Mode – lokális metaadatok frissítése</title>
+    <style>
+      :root { color-scheme: dark; --bg:#091019; --surface:#101b28; --surface2:#142437; --ink:#e6f3ff; --muted:#9eb2c7; --accent:#74e4ff; --line:#294258; --good:#79e1ad; --warn:#ffcc75; }
+      * { box-sizing:border-box } body { max-width:960px; margin:0 auto; padding:40px 22px 70px; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif } h1,h2 { line-height:1.18 } h1 { margin:0 0 8px; font-size:clamp(1.8rem,5vw,2.8rem) } h2 { margin-top:38px } .lead,.muted { color:var(--muted) } .card { margin:16px 0; padding:18px; border:1px solid var(--line); border-radius:14px; background:var(--surface) } .flow { display:grid; gap:10px; grid-template-columns:repeat(5,minmax(100px,1fr)); align-items:stretch } .flow div { padding:14px; border:1px solid var(--line); border-radius:10px; background:var(--surface2); text-align:center; font-weight:650 } .flow div::after { content:'→'; float:right; color:var(--accent); font-size:1.4rem } .flow div:last-child::after { display:none } code { padding:.1em .35em; border-radius:4px; background:#07111e; color:var(--accent) } table { width:100%; border-collapse:collapse } th,td { padding:12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top } th { color:var(--accent) } .yes { color:var(--good); font-weight:700 } .no { color:#ff9b8d; font-weight:700 } .recommend { border-color:color-mix(in srgb,var(--good),var(--line) 55%); box-shadow:0 0 30px color-mix(in srgb,var(--good),transparent 88%) } @media (max-width:720px) { .flow { grid-template-columns:1fr }.flow div::after { content:'↓'; float:none; display:block; margin-top:6px }.flow div:last-child::after { display:none } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="muted">ARCHITEKTURÁLIS EGYEZTETÉS · 2026-10-25</p>
+      <h1>Research Mode és a terjesztett metaadat-cache</h1>
+      <p class="lead">Cél: a fejlesztői példányból összegyűjtött rover-metaadatok ellenőrzött beépítése a statikus alkalmazáscsomagba, majd Chrome Web Store frissítéssel való kiadása minden felhasználónak.</p>
+    </header>
+
+    <section>
+      <h2>Jelenlegi állapot</h2>
+      <div class="card">
+        <ul>
+          <li>A Research Mode jelenleg manifest JSON-fájlokat tölt le a böngészőben.</li>
+          <li>Minden rover cache-fájlja a <code>dist/ROVER-metadata/START-END/</code> tartománykönyvtárakban, gzip-pelve van.</li>
+          <li>Az alkalmazás a Sol-számból közvetlenül kiszámítja a 1000-es tartományú relatív URL-t; ez lokális szerverről és Chrome-bővítményből is működik.</li>
+          <li>Nincs felső Sol-korlát vagy külön indexfájl: nem létező helyi fájl esetén a NASA-fallback indul.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Mi nem működhet közvetlenül</h2>
+      <table>
+        <thead><tr><th>Futtatási mód</th><th>A csomag fáinak írása</th><th>Indok</th></tr></thead>
+        <tbody>
+          <tr><td>Chrome-bővítmény</td><td class="no">Nem</td><td>A telepített <code>chrome-extension://</code> csomag olvasható erőforrás; a módosítása sértené a bővítmény integritását.</td></tr>
+          <tr><td>Statikus HTTP-szerver</td><td class="no">Nem</td><td>A böngésző HTTP-n keresztül olvas; nincs jogosultsága a szerver könyvtárába írni.</td></tr>
+          <tr><td>Fejlesztői importáló/build eszköz</td><td class="yes">Igen</td><td>Helyben, ellenőrzött fájlrendszer-hozzáféréssel validálhatja, tömörítheti és a csomagba rendezheti az adatot.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card recommend">
+      <h2>Ajánlott publikációs folyamat</h2>
+      <div class="flow" aria-label="Adatfrissítési folyamat">
+        <div>Research Mode<br><small>manifest letöltés</small></div>
+        <div>Importáló eszköz<br><small>validálás</small></div>
+        <div>Cache import<br><small>gzip + rendezés</small></div>
+        <div>Verifikáció<br><small>mintabetöltés</small></div>
+        <div>Store kiadás<br><small>új extension ZIP</small></div>
+      </div>
+      <p>Az app mindkét futtatási módban változatlanul ugyanazt a <code>dist</code> fa-struktúrát olvassa. A Research Mode csak az új, ellenőrzésre váró bemenetet állítja elő; az importáló teszi azt kiadható, verziózott statikus erőforrássá.</p>
+    </section>
+
+    <section>
+      <h2>Javasolt következő implementáció</h2>
+      <ol>
+        <li>Hozzunk létre egy determinisztikus helyi importálót, amely a letöltött Research manifesteket beolvassa.</li>
+        <li>A <code>mars-data-dump</code> validálja a sémát, rover- és Sol-egyezést, majd a fájlt a megfelelő <code>ROVER-metadata/START-END</code> könyvtárba gzip-pelve írja.</li>
+        <li>A webapp minden Sol esetén először ezt a determinisztikus helyi útvonalat próbálja; ezért nincs index- vagy forráskódfrissítési feladat.</li>
+        <li>A teljes <code>dist</code> tartalma változatlanul használható marad HTTP-szerverről és unpacked/store extensionként is.</li>
+      </ol>
+      <p class="muted">A négy rover azonos export-manifest formátumot és könyvtárnómenklatúrát használ. Az aktuális vagy későbbi Sol-okban hiányzó fájlok automatikusan a meglévő NASA-adatforrásokra esnek vissza.</p>
+    </section>
+  </body>
+</html>

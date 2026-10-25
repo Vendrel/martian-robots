@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# Watches the browser download folder and atomically imports Research Mode
+# manifests into the extension's static metadata cache.  Run from anywhere.
+set -u
+
+readonly SOURCE_DIR='/Volumes/Zike/Ideiglenes'
+readonly DIST_DIR='/Volumes/Zike/mars-rovers-360/dist'
+readonly POLL_SECONDS=60
+readonly RANGE_SIZE=1000
+readonly ROVERS=(curiosity perseverance spirit opportunity)
+
+log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
+
+range_directory() {
+  local sol=$1 start end
+  start=$(( ((10#$sol - 1) / RANGE_SIZE) * RANGE_SIZE + 1 ))
+  end=$(( start + RANGE_SIZE - 1 ))
+  printf '%s-%s' "$start" "$end"
+}
+
+parse_manifest_name() {
+  local filename=$1
+  if [[ $filename =~ ^mars-rover-360-(curiosity|perseverance|spirit|opportunity)-sol-([1-9][0-9]*)-research-manifest\.json$ ]]; then
+    PARSED_ROVER=${BASH_REMATCH[1]}
+    PARSED_SOL=${BASH_REMATCH[2]}
+    return 0
+  fi
+  return 1
+}
+
+validate_manifest() {
+  local file=$1 rover=$2 sol=$3
+  jq -e --arg rover "$rover" --argjson sol "$sol" \
+    '.format == "mars-rover-360-export/v1" and .rover == $rover and .sol == $sol and (.images | type == "array")' \
+    "$file" >/dev/null 2>&1
+}
+
+import_manifest() {
+  local source=$1 filename rover sol range target_dir target temporary
+  filename=$(basename "$source")
+  if ! parse_manifest_name "$filename"; then
+    return 0
+  fi
+  rover=$PARSED_ROVER
+  sol=$PARSED_SOL
+  if ! validate_manifest "$source" "$rover" "$sol"; then
+    log "WAIT: incomplete or invalid manifest: $source"
+    return 0
+  fi
+  range=$(range_directory "$sol")
+  target_dir="$DIST_DIR/${rover}-metadata/$range"
+  target="$target_dir/${filename}.gz"
+  mkdir -p "$target_dir"
+  temporary="$target_dir/.${filename}.$$"
+  if ! cp -p -- "$source" "$temporary" || ! gzip -9 -- "$temporary"; then
+    rm -f -- "$temporary" "${temporary}.gz"
+    log "ERROR: unable to compress $source"
+    return 1
+  fi
+  mv -f -- "${temporary}.gz" "$target"
+  rm -f -- "$source"
+  log "IMPORTED: $filename -> ${rover}-metadata/$range/"
+}
+
+compress_existing_manifests() {
+  local rover file
+  for rover in "${ROVERS[@]}"; do
+    [ -d "$DIST_DIR/${rover}-metadata" ] || continue
+    while IFS= read -r -d '' file; do
+      import_manifest "$file"
+    done < <(find "$DIST_DIR/${rover}-metadata" -type f -name "mars-rover-360-${rover}-sol-*-research-manifest.json" -print0)
+  done
+}
+
+process_downloads() {
+  local file
+  while IFS= read -r -d '' file; do
+    import_manifest "$file"
+  done < <(find "$SOURCE_DIR" -maxdepth 1 -type f -name 'mars-rover-360-*-sol-*-research-manifest.json' -print0)
+}
+
+run_once() {
+  [ -d "$SOURCE_DIR" ] || { log "ERROR: source directory does not exist: $SOURCE_DIR"; return 1; }
+  [ -d "$DIST_DIR" ] || { log "ERROR: dist directory does not exist: $DIST_DIR"; return 1; }
+  compress_existing_manifests
+  process_downloads
+}
+
+if [[ ${1:-} == '--once' ]]; then
+  run_once
+  exit $?
+fi
+
+if [[ $# -gt 0 ]]; then
+  printf 'Usage: %s [--once]\n' "$0" >&2
+  exit 64
+fi
+
+while true; do
+  run_once || true
+  sleep "$POLL_SECONDS"
+done

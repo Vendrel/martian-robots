@@ -240,6 +240,15 @@ fallback paths.
    necessary for accurate wide-angle overlap; a dense mesh only improves the
    approximation, it does not replace lens inversion.
 
+For `CAHVORE3`, `cahvore_model_parameter` is the lens *linearity* \(l\):
+the radial mapping is \(\rho=\tan(l\theta)/l\), so inverse projection must
+use \(\theta=\arctan(l\rho)/l\) (and its \(l\to0\) limit is equidistant
+fisheye, \(\theta=\rho\)).  Do not invert the factors as
+`l * atan(rho / l)`: that incorrectly compresses wide rays.  Curiosity rear
+Hazcam product `RLB_840121453EDR_F1240744RHAZ00337M_` is CAHVORE3 with
+`l=0.37`; at normalized radius 1 the incorrect expression is about 29.1°
+too small, visibly producing the double-fisheye effect.
+
 ### Authoritative Mars 2020 archive
 
 - Camera archive/bundle specification (SIS):
