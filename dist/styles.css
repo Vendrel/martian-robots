@@ -678,7 +678,7 @@ body.has-help-modal { overflow: hidden }
 
 .controller-map-label--left-stick {top: 262px;left: 258px;text-align: center;width: 110px;}
 .controller-map-label--right-stick {top: 262px;left: 374px;text-align: center;width: 120px;}
-.controller-map-label--l1 {display:none;top:100px;left:10px}
+.controller-map-label--l1 {top:58px;left:8px;width:110px;text-align:center}
 .controller-map-label--l2 {top: 10px;left:50px}
 .controller-map-label--r1 {top: 59px;left: 587px;width: 100px;}
 .controller-map-label--r2 {top: 9px;left: 587px;}
@@ -858,6 +858,30 @@ select,
 .panorama-wrap:active {
 	cursor: grabbing
 }
+
+/* Gamepad-only overlay. It is rendered from the same ROVER_FILTERS model as
+   the HTML checkboxes, so every rover always gets its fixed instrument count. */
+.instrument-wheel { --instrument-wheel-size: min(68vmin, 540px); position: absolute; z-index: 12; top: 50%; left: 50%; width: var(--instrument-wheel-size); aspect-ratio: 1; opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, -50%) scale(.72); transition: opacity .16s ease-out, transform .2s cubic-bezier(.2,.85,.25,1), visibility 0s linear .2s; filter: drop-shadow(0 0 26px color-mix(in srgb, var(--accent) 38%, transparent)) }
+.instrument-wheel.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); transition-delay: 0s }
+.instrument-wheel::before, .instrument-wheel::after { position: absolute; inset: 8%; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 50%; content: '' }
+.instrument-wheel::before { background: radial-gradient(circle, color-mix(in srgb, var(--surface) 87%, transparent) 0 23%, color-mix(in srgb, var(--accent) 13%, transparent) 24% 53%, color-mix(in srgb, var(--surface) 44%, transparent) 54% 100%); box-shadow: inset 0 0 42px color-mix(in srgb, var(--accent) 18%, transparent), 0 0 40px color-mix(in srgb, #000 44%, transparent) }
+.instrument-wheel::after { inset: 21%; border-style: dashed; border-color: color-mix(in srgb, var(--accent) 48%, transparent); opacity: .7 }
+.instrument-wheel-core { position: absolute; z-index: 2; top: 50%; left: 50%; display: grid; width: 34%; aspect-ratio: 1; place-content: center; gap: 7px; padding: 10px; border: 1px solid color-mix(in srgb, var(--accent) 72%, var(--line)); border-radius: 50%; background: color-mix(in srgb, var(--surface) 91%, transparent); box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 24%, transparent); color: var(--accent); text-align: center; transform: translate(-50%, -50%) }
+.instrument-wheel-title { font-size: clamp(.61rem, 1.55vmin, .88rem); letter-spacing: .11em; text-transform: uppercase }
+.instrument-wheel-hint { color: var(--muted); font: 700 clamp(.43rem, 1.05vmin, .62rem)/1.35 system-ui; letter-spacing: .04em }
+.instrument-wheel-items { position: absolute; inset: 0; z-index: 3; margin: 0; padding: 0; list-style: none }
+.instrument-wheel-item { position: absolute; top: 50%; left: 50%; display: grid; width: clamp(72px, 16vmin, 132px); gap: 3px; padding: 8px 9px; border: 1px solid color-mix(in srgb, var(--line) 82%, transparent); border-radius: 9px; background: color-mix(in srgb, var(--surface) 84%, transparent); box-shadow: 0 5px 15px color-mix(in srgb, #000 20%, transparent); color: var(--ink); font: 800 clamp(.58rem, 1.45vmin, .82rem)/1 system-ui; letter-spacing: .06em; text-align: center; text-transform: uppercase; transform: translate(-50%, -50%) rotate(var(--instrument-angle)) translateY(max(-27vmin, -205px)) rotate(var(--instrument-counter-angle)) scale(1); transform-origin: center; transition: border-color .12s ease, background .12s ease, box-shadow .12s ease, color .12s ease, transform .12s cubic-bezier(.2,.85,.25,1) }
+.instrument-wheel-item > span:last-child { color: var(--muted); font-size: .72em; letter-spacing: .12em }
+.instrument-wheel-item.is-enabled > span:last-child { color: #71e9b1 }
+.instrument-wheel-item.is-disabled { opacity: .72; filter: saturate(.3) }
+.instrument-wheel-item.is-disabled > span:last-child { color: #ff9c91 }
+.instrument-wheel-item.is-selected { z-index: 1; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 20%, var(--surface)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 22px var(--glow); color: var(--accent); transform: translate(-50%, -50%) rotate(var(--instrument-angle)) translateY(max(-27vmin, -205px)) rotate(var(--instrument-counter-angle)) scale(1.13) }
+.instrument-wheel-selector { --selector-angle: 0deg; --selector-counter-angle: 0deg; position: absolute; z-index: 4; top: 50%; left: 50%; width: clamp(22px, 4.5vmin, 34px); aspect-ratio: 1; border: 1px solid color-mix(in srgb, #c9fbff 78%, var(--accent)); border-radius: 50%; background: radial-gradient(circle at 34% 29%, #fff 0 7%, #7effff 8% 17%, color-mix(in srgb, var(--accent) 82%, #041019) 18% 62%, #02070e 63%); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent), 0 0 20px #4dffff, inset 0 0 8px #caffff; opacity: 0; transform: translate(-50%, -50%) scale(.55); transition: transform .12s cubic-bezier(.2,.85,.25,1), opacity .12s ease, scale .12s cubic-bezier(.2,.85,.25,1) }
+.instrument-wheel-selector::before, .instrument-wheel-selector::after { position: absolute; top: 50%; left: 50%; width: 42%; height: 1px; background: #dcffff; box-shadow: 0 0 5px #73ffff; content: ''; transform: translate(-50%, -50%) }
+.instrument-wheel-selector::after { transform: translate(-50%, -50%) rotate(90deg) }
+.instrument-wheel-selector.is-at-rest { opacity: .72; scale: .82 }
+.instrument-wheel-selector.is-active { opacity: 1; transform: translate(-50%, -50%) rotate(var(--selector-angle)) translateY(max(-27vmin, -205px)) rotate(var(--selector-counter-angle)); scale: 1 }
+@media (prefers-reduced-motion: reduce) { .instrument-wheel, .instrument-wheel-item { transition-duration: .001ms !important } }
 
 canvas {
 	display: block;

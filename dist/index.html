@@ -116,6 +116,11 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" tabindex="0" aria-label="Interactive Mars panorama"></canvas>
+            <section id="instrumentWheel" class="instrument-wheel" aria-hidden="true" aria-label="Instrument wheel">
+              <div class="instrument-wheel-core"><strong class="instrument-wheel-title">Instrument Wheel</strong><span class="instrument-wheel-hint">Hold L1 · select with the right stick · X toggles</span></div>
+              <ol class="instrument-wheel-items"></ol>
+              <div class="instrument-wheel-selector" aria-hidden="true"></div>
+            </section>
             <ol id="nasaRequestTasks" class="nasa-request-tasks nasa-request-tasks--overlay" hidden aria-live="polite"></ol>
             <div class="fullscreen-panorama-hud" id="fullscreenPanoramaHud" aria-live="polite" aria-atomic="true">
               <strong id="fullscreenRoverName">Curiosity</strong>
@@ -216,7 +221,7 @@
                 <img class="controller-map-image" src="./controller-map.png" alt="" />
                 <span class="controller-map-label controller-map-label--left-stick" data-i18n="helpPadLeftStick">Left stick · move camera</span>
                 <span class="controller-map-label controller-map-label--right-stick" data-i18n="helpPadRightStick">Right stick · look</span>
-                <span class="controller-map-label controller-map-label--l1" data-i18n="helpPadL1">L1 · —</span>
+                <span class="controller-map-label controller-map-label--l1" data-i18n="helpPadL1">L1 · Instrument Wheel</span>
                 <span class="controller-map-label controller-map-label--l2" data-i18n="helpPadL2">L2 · analog zoom</span>
                 <span class="controller-map-label controller-map-label--r1" data-i18n="helpPadR1">R1 · move up</span>
                 <span class="controller-map-label controller-map-label--r2" data-i18n="helpPadR2">R2 · move down</span>
@@ -311,7 +316,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026092802"></script>
+    <script type="module" src="./app.js?2026102703"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
