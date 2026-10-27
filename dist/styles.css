@@ -687,6 +687,7 @@ body.has-help-modal { overflow: hidden }
 .controller-map-label--dpad {top: 162px;left: 31px;width: 125px;}
 .controller-map-label--circle {display:none;top:100px;left:10px}
 .controller-map-label--square {top: 169px;left: 587px;width: 101px;}
+.controller-map-label--triangle {top: 112px;left: 538px;width: 152px;text-align: center;}
 
 [data-theme="light"] .controller-map-image {
   filter: invert(100%) hue-rotate(180deg);

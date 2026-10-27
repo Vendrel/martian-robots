@@ -131,6 +131,11 @@
               <div class="fullscreen-location-indicator-track"><i id="fullscreenLocationIndicatorFill"></i></div>
               <output id="fullscreenLocationIndicatorValue">Permissive</output>
             </div>
+            <div class="fullscreen-location-indicator" id="fullscreenLayerSeparationIndicator" aria-live="polite" aria-atomic="true" hidden>
+              <span data-i18n="parallaxLayerLabel">Layer spacing</span>
+              <div class="fullscreen-location-indicator-track"><i id="fullscreenLayerSeparationIndicatorFill"></i></div>
+              <output id="fullscreenLayerSeparationIndicatorValue">0.5</output>
+            </div>
             <div class="fullscreen-location-change" id="fullscreenLocationChange" aria-live="polite" aria-atomic="true" hidden>
               <span id="fullscreenLocationChangeValue">Location 1 / Sol 0</span>
             </div>
@@ -230,10 +235,12 @@
                 <span class="controller-map-label controller-map-label--dpad" data-i18n="helpPadDpad">D-pad · location & resolution</span>
                 <span class="controller-map-label controller-map-label--circle" data-i18n="helpPadCircle">Circle · Escape</span>
                 <span class="controller-map-label controller-map-label--square" data-i18n="helpPadSquare">Square · Fullscreen</span>
+                <span class="controller-map-label controller-map-label--triangle" data-i18n="helpPadTriangle">Triangle + D-pad ↑/↓ · layer spacing</span>
               </div>
               <dl class="help-controller-details">
                 <div><dt data-i18n="helpPadDpadHorizontalKey">D-pad left / right</dt><dd data-i18n="helpPadDpadHorizontalValue">Decrease / increase location resolution.</dd></div>
                 <div><dt data-i18n="helpPadDpadVerticalKey">D-pad up / down</dt><dd data-i18n="helpPadDpadVerticalValue">Next / previous mapped location.</dd></div>
+                <div><dt data-i18n="helpPadTriangleKey">Triangle + D-pad up / down</dt><dd data-i18n="helpPadTriangleValue">Increase / decrease layer spacing.</dd></div>
               </dl>
             </section>
           </div>
@@ -316,7 +323,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026102705"></script>
+    <script type="module" src="./app.js?2026102709"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

@@ -32,6 +32,7 @@ window.localeDictionaries.hu = {
 window.localeDictionaries.hu.imageLookupSourceOnly = 'A kép az Infópanelben megnyílt, de a NASA nem adott panorámaelhelyezéshez szükséges kamerageometriát.';
 Object.assign(window.localeDictionaries.hu, {
   helpPadL1: 'L1 · Instrument Wheel', instrumentWheelAriaLabel: 'Instrument Wheel', instrumentWheelTitle: 'Instrument Wheel', instrumentWheelHint: 'L1 nyomva · kiválasztás jobb karral · X kapcsol', instrumentWheelEnabled: 'BE', instrumentWheelDisabled: 'KI',
+  helpPadTriangle: 'Háromszög + iránygomb fel/le · rétegtávolság', helpPadTriangleKey: 'Háromszög + iránygomb fel/le', helpPadTriangleValue: 'Rétegtávolság növelése / csökkentése.',
   stateExport: 'Megosztási állapot exportálása', stateImport: 'Megosztási állapot importálása',
   stateExportTooltip: 'Az aktuális {item} mentése és másolása', stateImportTooltip: 'Megosztott állapot megnyitása: {item} vagy TXT-fájl',
   stateExportCopied: 'A(z) {item} a vágólapra került és TXT-fájlként is le lett mentve.', stateExportCopyUnavailable: 'A(z) {item} TXT-fájlként le lett mentve, de a vágólap nem volt elérhető.',

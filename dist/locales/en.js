@@ -32,6 +32,7 @@ window.localeDictionaries.en = {
 window.localeDictionaries.en.imageLookupSourceOnly = 'Image opened in the Info Panel; NASA supplied no camera geometry for panorama placement.';
 Object.assign(window.localeDictionaries.en, {
   helpPadL1: 'L1 · Instrument Wheel', instrumentWheelAriaLabel: 'Instrument wheel', instrumentWheelTitle: 'Instrument Wheel', instrumentWheelHint: 'Hold L1 · select with the right stick · X toggles', instrumentWheelEnabled: 'ON', instrumentWheelDisabled: 'OFF',
+  helpPadTriangle: 'Triangle + D-pad ↑/↓ · layer spacing', helpPadTriangleKey: 'Triangle + D-pad up / down', helpPadTriangleValue: 'Increase / decrease layer spacing.',
   stateExport: 'Export shared state', stateImport: 'Import shared state',
   stateExportTooltip: 'Save and copy the current {item}', stateImportTooltip: 'Open shared state from a {item} or TXT file',
   stateExportCopied: '{item} copied to the clipboard and saved as a TXT file.', stateExportCopyUnavailable: '{item} saved as a TXT file. Clipboard access was unavailable.',
