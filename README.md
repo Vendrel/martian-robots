@@ -1,19 +1,20 @@
 # Martian Robots
 
-An interactive 360° explorer for imagery returned by NASA's Curiosity, Perseverance, Spirit, and Opportunity Mars rovers.
+Martian Robots is an interactive 360° explorer for imagery returned by NASA's Curiosity, Perseverance, Spirit, and Opportunity Mars rovers.
 
-Visit the published app at [vendrel.github.io/martian-robots](https://vendrel.github.io/martian-robots/).
+Try the web edition at [vendrel.github.io/martian-robots](https://vendrel.github.io/martian-robots/). A Chrome extension edition uses the same explorer and is prepared for Chrome Web Store distribution.
 
 ## Features
 
-- Places rover images using their available camera geometry and metadata.
+- Places rover images from their available camera geometry and metadata.
 - Supports Curiosity, Perseverance, Spirit, and Opportunity image sources.
-- Provides rover-specific image-layer filters, image inspection, circular selection, and a world-coordinate grid.
-- Lets you explore panoramas with projection-locked drag navigation.
+- Provides rover-specific image filters, image inspection, circular selection, and a world-coordinate grid.
+- Supports projection-locked drag navigation, fullscreen viewing, and gamepad controls.
+- Uses packaged metadata where available and falls back to public NASA and JPL PDS services for other Sols.
 
-## Development
+## Run locally
 
-This is a static browser application. Serve the `dist` directory with a local HTTP server, then open the displayed URL in a browser.
+This is a static browser application. Serve the `dist` directory with any static HTTP server, then open its URL in a browser. For example:
 
 ```bash
 python3 -m http.server 4173 --directory dist
@@ -21,30 +22,16 @@ python3 -m http.server 4173 --directory dist
 
 ## Chrome extension
 
-The same `dist` directory is also a Manifest V3 Chrome extension package. No separate build or copy is needed: the web app continues to use relative asset paths, while Chrome uses `manifest.json` and `extension-background.js` only when the directory is loaded as an extension.
+The `dist` directory is also a Manifest V3 Chrome extension package. It uses the same relative asset paths as the web edition; `manifest.json` and `extension-background.js` are used only by Chrome.
+
+For local extension development:
 
 1. Open `chrome://extensions` in Chrome.
 2. Enable **Developer mode**.
-3. Select **Load unpacked** and choose the `dist` directory.
-4. Click the Martian Robots toolbar icon to open the full explorer in a new tab.
+3. Choose **Load unpacked** and select the `dist` directory.
+4. Use the Martian Robots toolbar icon to open the explorer.
 
-The extension requests access only to the NASA and JPL PDS hosts that the explorer calls for rover metadata and archive products. Local cached metadata, scripts, styles, and images are loaded from the same directory in both modes.
-
-## Research metadata import
-
-Research Mode downloads manifest JSON files to `/Volumes/Zike/Ideiglenes`. Run the importer to place them into the extension cache:
-
-```bash
-./dist/mars-data-dump
-```
-
-It watches that directory once a minute, validates manifests for Curiosity, Perseverance, Spirit, and Opportunity, compresses them to `.json.gz`, and writes them to the matching `dist/<rover>-metadata/<start>-<end>/` directory. It also refreshes each rover's `latest.json` cache index, which makes the first Curiosity load use a locally available Sol before any live request. The original downloaded JSON is removed only after a successful compressed import. Use `./dist/mars-data-dump --once` for one pass.
-
-The application calculates these 1000-Sol directories directly, so adding new cache files does not require a code build or metadata index update. Reload an unpacked extension after importing; for Chrome Web Store distribution, publish a new package with an incremented extension version.
-
-## Deployment
-
-The GitHub Actions workflow deploys `dist` to GitHub Pages whenever `master` changes. The published project URL is `https://vendrel.github.io/martian-robots/`.
+The extension requests access only to NASA and JPL PDS hosts used to retrieve rover metadata and archive products.
 
 ## Data attribution
 
