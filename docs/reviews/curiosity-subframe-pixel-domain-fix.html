@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Curiosity rész-kép vetítési hiba — megállapítás és javítás</title>
+  <style>
+    :root{color-scheme:dark;--bg:#091018;--panel:#101c28;--line:#284154;--text:#e8f2f8;--muted:#9db1c1;--cyan:#58d7ed;--good:#70dda4;--warn:#ffc56d;--code:#071018}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -20%,#17384b 0,transparent 34rem),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1100px;margin:auto;padding:48px 24px 72px}header{border-bottom:1px solid var(--line);padding-bottom:28px}h1{font-size:clamp(1.9rem,5vw,3.25rem);line-height:1.12;margin:0 0 12px}h2{margin:40px 0 12px;font-size:1.45rem}h3{margin:0 0 8px;font-size:1rem;color:var(--cyan)}p,li{color:var(--muted)}strong{color:var(--text)}.lede{font-size:1.18rem;max-width:76ch}.badge{display:inline-block;margin:0 0 14px;padding:4px 10px;border:1px solid #31768a;border-radius:999px;color:var(--cyan);font-size:.82rem;font-weight:700;letter-spacing:.05em}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{padding:18px;border:1px solid var(--line);border-radius:13px;background:color-mix(in srgb,var(--panel) 90%,transparent)}.value{font-size:1.6rem;font-weight:750;color:var(--good)}.formula,pre{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--code);padding:16px;color:#cfe7f1;font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}.flow{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:20px 0}.flow .card{min-height:122px}.arrow{color:var(--cyan);font-size:1.7rem;text-align:center}.warning{border-left:4px solid var(--warn);padding:12px 16px;background:#2c2418;color:#f9d79a}.good{border-left:4px solid var(--good);padding:12px 16px;background:#11251e;color:#c9f0d9}table{width:100%;border-collapse:collapse;overflow:hidden;border:1px solid var(--line);border-radius:10px}th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line)}th{background:#142737;color:var(--text)}td{color:var(--muted)}tbody tr:last-child td{border-bottom:0}code{color:#bceafa}@media(max-width:620px){main{padding:28px 16px}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="badge">MEGVALÓSÍTVA · 2026-10-29</div>
+    <h1>Curiosity rész-kép vetítési hiba</h1>
+    <p class="lede">A 1024×512, 1024×384 és más nem teljes magasságú Navcam-képek nem hibás NASA-irányszöget kaptak. A kliens a NASA által már a rész-kép koordinátarendszerére átírt kalibrációjához még egyszer hozzáadta az eredeti kivágás kezdőpontját. Ez a crop-eredetet kétszer alkalmazta, és a képet lefelé tolta.</p>
+  </header>
+
+  <section aria-labelledby="result"><h2 id="result">Eredmény</h2>
+    <div class="grid">
+      <article class="card"><h3>Érintett termék</h3><div class="value">S1012616NCAM00593M</div><p>Forrás-kivágás: <code>(1, 321, 1024, 384)</code>.</p></article>
+      <article class="card"><h3>Helyes pixel-domain</h3><div class="value">1…384</div><p>A letöltött 384 sor saját, egybázisú képpont-koordinátája.</p></article>
+      <article class="card"><h3>Képi validáció</h3><div class="value">≤ 0,49 px</div><p>Két független teljes Navcam-referenciához viszonyított medián függőleges maradvány.</p></article>
+    </div>
+    <p class="good"><strong>Javítás:</strong> az <code>mslRaw</code> rekordoknál a vetítő rács a kézbesített kép <code>(1, 1)</code> eredetét használja. A <code>subframe_rect</code> szélessége és magassága megmarad, de a forrásbeli bal/felső koordináta nem kerül másodszor a CAHVOR-vetítésbe.</p>
+  </section>
+
+  <section aria-labelledby="math"><h2 id="math">Miért matematikailag ez a helyes értelmezés?</h2>
+    <p>A CAHV vetítésben egy térirány képkoordinátája többek között a <code>V</code> kamera-vektorral számolódik. Az optikai tengelyen a függőleges főpont egyszerűen <code>v₀ = V·A</code>, ahol <code>A</code> az egységnyi optikai tengely.</p>
+    <div class="formula">teljes kép:        V_full · A = v_full
+rész-kép (fent t sor levágva): V_sub = V_full − t·A
+ezért:            V_sub · A = v_full − t
+
+helyes bemenet:   v = 1 … magasság
+hibás bemenet:    v = t + 1 … t + magasság
+→ a t eltolás másodszor is érvényesül</div>
+    <p>A célterméknél <code>V·A ≈ 182</code>, a forrásbeli felső kivágás pedig <code>321</code>. Összegük <code>503</code>, ami egy teljes 1024 soros Navcam-kép normális, körülbelül 502–503. sorbeli főpontja. Ez közvetlen bizonyíték arra, hogy a publikált <code>V</code> vektor már a 384 soros kézbesített képre van újrabázisozva.</p>
+    <p>Ugyanez megjelenik a 1024×512 termékekben is: egy <code>t=257</code> kivágásnál <code>V·A≈261</code>, tehát <code>261+257≈518</code>. A felhasználói megfigyelés — a keskenyebb kép a teljes kép felső részéhez látszik illeszkedni — pontosan a másodszor hozzáadott <code>t</code> vizuális következménye.</p>
+  </section>
+
+  <section aria-labelledby="flow"><h2 id="flow">A régi és az új adatfolyam</h2>
+    <div class="flow"><article class="card"><h3>Régi</h3><p>rész-kép <code>y</code> + forrás <code>top=321</code></p><p>miközben <code>V</code> ezt már tartalmazza</p></article><div class="arrow" aria-hidden="true">→</div><article class="card"><h3>Eredmény</h3><p><strong>kétszeres crop-eltolás</strong></p><p>a teljes téglalap lefelé kerül</p></article></div>
+    <div class="flow"><article class="card"><h3>Új</h3><p>rész-kép <code>y=1…384</code></p><p><code>V</code> a kézbesített domainben marad</p></article><div class="arrow" aria-hidden="true">→</div><article class="card"><h3>Eredmény</h3><p><strong>azonos világirány</strong></p><p>a horizont és a tájelemek folytatólagosak</p></article></div>
+  </section>
+
+  <section aria-labelledby="validation"><h2 id="validation">Független validáció</h2>
+    <p>A diagnosztika CAHVOR-visszavetítéssel, lokális képkorrelációval és körbejárási ellenőrzéssel hasonlította a célképet két teljes magasságú, azonos bal Navcam-referenciához. Nem kapott termék-specifikus forgatási kompenzációt.</p>
+    <table><thead><tr><th>Referencia</th><th>Elfogadott illesztések</th><th>Medián Δx</th><th>Medián Δy</th><th>Függőleges szögmaradvány</th></tr></thead><tbody>
+      <tr><td><code>NLB_740786377…F1012616NCAM00281M</code></td><td>9</td><td>−1,92 px</td><td>−0,32 px</td><td>−0,015°</td></tr>
+      <tr><td><code>NLB_740786401…F1012616NCAM00281M</code></td><td>8</td><td>−0,22 px</td><td>−0,49 px</td><td>−0,023°</td></tr>
+    </tbody></table>
+    <p>A maradvány az alpixel–félpixel tartományban van, ezért nem indokol sem általános, sem képenkénti szögkorrekciót. A korábban próbált célképre szabott korrekciót eltávolítottuk: az a renderer hibáját kompenzálta volna, nem a fizikai kamerát.</p>
+  </section>
+
+  <section aria-labelledby="scope"><h2 id="scope">Hatókör és védelem</h2>
+    <p class="warning"><strong>Hatókör:</strong> a változás kizárólag a Curiosity <code>mslRaw</code> adapter explicit <code>normalized-delivered</code> pixel-domainjére vonatkozik. A más adatforrásoknál megmarad az eredeti modell-domain és skálázás, mert náluk ezt az invariánst nem mértük ki.</p>
+    <p>A manifest-export most a pixel-domaint is rögzíti. A <code>tools/curiosity-subframe-alignment-diagnostic.mjs</code> diagnosztikai eszköz ugyanazt a delivered-subframe szabályt alkalmazza, így új esetekben is ellenőrizhető, hogy valódi kamera-maradványról vagy koordináta-domain hibáról van-e szó.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panoráma iránystabilizálás – műszaki vizsgálat</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10151c; --card:#18212c; --line:#2b3b4c; --text:#e7edf5; --muted:#a9b7c8; --cyan:#66d9ef; --good:#79d49a; --warn:#ffc66d; --bad:#ff8d8d; }
+    * { box-sizing:border-box } body { margin:0; font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:linear-gradient(145deg,#111a25,#0d1117); }
+    main { max-width:1050px; padding:clamp(24px,5vw,64px); margin:auto } h1 { font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; margin:.2rem 0 .8rem } h2 { margin-top:2.5rem; font-size:1.35rem } h3 { margin:.2rem 0 .65rem; font-size:1.05rem } p,li { color:var(--muted) } a { color:var(--cyan) } .lead { font-size:1.14rem; max-width:76ch } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px } .card { padding:19px; border:1px solid var(--line); border-radius:14px; background:rgba(24,33,44,.86) } .good { border-left:4px solid var(--good) } .warn { border-left:4px solid var(--warn) } .bad { border-left:4px solid var(--bad) } code,pre { font-family:ui-monospace,SFMono-Regular,Menlo,monospace } code { color:#d8efff } pre { overflow:auto; padding:16px; border-radius:12px; background:#0b1016; border:1px solid var(--line); color:#cfe5ff } table { width:100%; border-collapse:collapse; margin:1rem 0 } th,td { padding:10px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line) } th { color:var(--text) } .tag { display:inline-block; padding:.2rem .55rem; border-radius:999px; background:#203248; color:#b8ddff; font-size:.82rem; font-weight:650 } .formula { color:#d9f6ff; font-size:1.08rem } details { border:1px solid var(--line); padding:14px 16px; border-radius:12px; background:#151e28 } summary { cursor:pointer; color:var(--text); font-weight:650 }
+  </style>
+</head>
+<body>
+<main>
+  <span class="tag">2026-10-29 · vizsgálat és megvalósítás</span>
+  <h1>Panoráma iránystabilizálás</h1>
+  <p class="lead"><strong>A felvetés helyes.</strong> A kamera látósugarait a roverhez kötött koordinátarendszerből felszínhez kötött koordinátarendszerbe kell forgatni. A jelenlegi renderer ezt a Curiosity képekhez már megkísérli az <code>attitude</code> kvaternióval, de a koordinátakeret eredete nincs explicit módon modellezve vagy validálva. Emiatt a viselkedés nem bizonyíthatóan egységes minden képnél és minden rover-missziónál.</p>
+
+  <section>
+    <h2>Rövid döntés</h2>
+    <div class="grid">
+      <article class="card good"><h3>Matematikailag megoldható</h3><p>A képsugár a rover saját koordinátájából a felszíni (helyi észak/kelet/nadír) keretbe forgatható. Így a nézet <code>yaw</code> értéke a rover fordulásától független marad.</p></article>
+      <article class="card good"><h3>A szükséges Curiosity-adat elérhető</h3><p>A browse metadata <code>attitude</code> mezője és a PDS-képcímkék rover-orientációs kvaterniója a megfelelő adatcsatorna.</p></article>
+      <article class="card good"><h3>Megvalósított védelem</h3><p>A renderer explicit orientációs szerződést használ, és hiányzó attitude esetén Curiosity/Mars 2020 képet nem helyez automatikusan geostabil panorámába.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Megvalósítás állapota</h2>
+    <p>A <code>dist/app.js</code> minden Curiosity és Mars 2020 képnél explicit <code>{ q, order: 'wxyz', from: 'ROVER_NAV_FRAME', to: 'SITE_FRAME' }</code> orientációt épít. A <code>ray()</code>, az optikai tengely alapú csoportosítás, láthatósági vizsgálat, renderelés és találatvizsgálat ugyanazon, egyszer alkalmazott <code>toPanoramaFrame()</code> transzformációból indul. Az exportált manifest a nézet és a kamera keretét is rögzíti.</p>
+  </section>
+
+  <section>
+    <h2>Koordinátakeretek és a helyes képlet</h2>
+    <p>A kamera CAHV/CAHVOR modellje a Curiosity termékcímkéi szerint <code>ROVER_NAV_FRAME</code>-ben van. Ez a keret a roverrel együtt fordul: +X előre, +Y jobbra, +Z lefelé. A képcímke rover-koordináta-rendszerének referencia-kerete <code>SITE_FRAME</code>; ez a Mars felszínéhez rögzített helyi észak/kelet/nadír rendszer.</p>
+    <pre>pixel → CAHVOR inverz vetítés → d_rover
+d_site = normalize(Q_rover→site ⊗ d_rover ⊗ Q⁻¹_rover→site)
+panoráma-kamera iránya = (yaw, pitch) a SITE keretben</pre>
+    <p class="formula">Ha a rover elfordul Δψ-vel, akkor Q változik; ugyanaz a <code>yaw</code> továbbra is ugyanarra a felszíni irányra mutat. Nincs szükség külön „ellenforgatásra” a felhasználói nézeten.</p>
+    <p>Ez egy irányvektor-transzformáció: a kamera eltolása és a rover mozgása nem helyettesítheti. Más helyre gurulva a látvány parallaxisa természetesen megváltozik, de az irány nem fordulhat el pusztán a rover testfordulása miatt.</p>
+  </section>
+
+  <section>
+    <h2>Konkrét, helyi metadata-ellenőrzés</h2>
+    <p>A repository cache-ében lévő Curiosity rekordok két eltérő roverhelyzetet mutatnak. A kvaternióval elforgatott rover +X tengely vízszintes iránya kb. 20,30°-kal változik; ez valódi roverfordulás. A nyers kameramodell tengelye ezért önmagában nem lehet stabil panoráma-referencia.</p>
+    <table>
+      <thead><tr><th>Minta</th><th>RMC / helyzet</th><th><code>attitude</code> (w,x,y,z)</th><th>Elforgatott rover +X azimutja</th></tr></thead>
+      <tbody>
+        <tr><td>Sol 2617</td><td>site 78 / drive 858<br><code>(-29.06,-53.88,-8.59)</code></td><td><code>(0.228561, 0.001642, -0.021096, -0.973300)</code></td><td>−153,58°</td></tr>
+        <tr><td>Sol 2620</td><td>site 78 / drive 1002<br><code>(-46.68,-65.09,-9.70)</code></td><td><code>(0.393156, 0.067665, -0.023858, -0.916668)</code></td><td>−133,28°</td></tr>
+      </tbody>
+    </table>
+    <p>A jelenlegi <code>dist/app.js</code> <code>ray()</code> függvénye CAHVOR-ból kiszámolja a <code>d_rover</code> sugarat, majd egyszer meghívja a <code>rotateQuaternion()</code> transzformációt. A <code>s.yaw</code> Sol-váltáskor nem nullázódik. Ez a helyes alapelv.</p>
+  </section>
+
+  <section>
+    <h2>Talált hiányok és kockázatok</h2>
+    <div class="grid">
+      <article class="card good"><h3>Hiányzó attitude kezelése</h3><p>A panorámára alkalmassági vizsgálat Curiosity és Mars 2020 esetén már kötelezővé teszi az orientációt. Az irányadat nélküli rekord galériában maradhat, de nem kerül automatikus panoráma-pozicionálásba.</p></article>
+      <article class="card warn"><h3>Implicit szerződés</h3><p>A kód scalar-first <code>(w,x,y,z)</code> sorrendet és rover→site forgatást feltételez, de a normalizált adatmodell nem tárolja a forrás- és célkeretet, az irányt vagy a bizonyítékot.</p></article>
+      <article class="card warn"><h3>Site-váltás</h3><p>A <code>SITE_FRAME</code> helyi felszíni keret. Küldetés-szintű, szigorúan globális azimuthoz a SITE→globális transformációt is kezelni kell. Rövid távon a site-keretek észak/kelet orientációja ezt jól közelíti; hosszú travershez PLACES/SPICE szükséges.</p></article>
+      <article class="card warn"><h3>Helyválasztás</h3><p>A Sol nem egyetlen állomást jelent. A betöltő ±1 Sol képeiből fizikai helyeket képez. Két külön állomás panorámája akkor is más tájat mutat, ha a földrajzi nézési irány változatlan.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ajánlott, kis kockázatú megvalósítás</h2>
+    <ol>
+      <li><strong>Kész:</strong> explicit <code>orientation</code> struktúra: <code>{ q, order: 'wxyz', from: 'ROVER_NAV_FRAME', to: 'SITE_FRAME' }</code>.</li>
+      <li><strong>Kész:</strong> geostabil panorámában csak teljes CAHV(OR/E) modellel és ellenőrzött orientációval rendelkező Curiosity/Mars 2020 rekord renderelhető.</li>
+      <li><strong>Kész:</strong> a sugárforgatás közös <code>toPanoramaFrame(ray, orientation)</code> függvény; render, csoportosítás, láthatóság és találatvizsgálat ugyanazt a világkeretet használja.</li>
+      <li><strong>Kész:</strong> az exportált manifest rögzíti a <code>SITE_FRAME</code> nézet- és képorientációs keretet. Nincs második, kézzel kalibrált yaw-offset.</li>
+      <li><strong>Jövőbeli bővítés:</strong> küldetésszinten globális módhoz PLACES-adat kell <code>site/drive</code> vagy időbélyeg alapján, majd SITE→globális transzformáció. A jelenlegi helyi mód offline és gyors fallback marad.</li>
+    </ol>
+    <p><strong>Fontos:</strong> a helyes javítás nem az, hogy Sol-váltáskor a nézet <code>s.yaw</code> értékét egy becsült rover-elfordulással módosítjuk. Az csak a jelenlegi képkészletet igazítaná, és hibás lenne eltérő kamerákra, mast-söprésekre és vegyes keretekre. A képsugarakat kell a közös világkeretbe tenni.</p>
+  </section>
+
+  <section>
+    <h2>Elfogadási kritériumok</h2>
+    <ul>
+      <li>Két olyan egymást követő állomás tesztje, ahol a rover azimutja legalább 15°-kal eltér: egy rögzített helyi északi/keleti irányra nézve a panoráma nem ugrik el a rover fordulásával.</li>
+      <li>A center-ray ellenőrzés a CAHVOR-projekció után és a transzformáció előtt/után is dokumentált; a kvaternió pontosan egyszer hat.</li>
+      <li>Hiányzó vagy ismeretlen keretű attitude esetén a kép nem kerül automatikus panoráma-pozicionálásba.</li>
+      <li>Az exportált manifest tartalmazza a képenkénti orientáció kereteit és az alkalmazott panoráma-keretet.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Elsődleges források</h2>
+    <ul>
+      <li><a href="https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-2-EDR-V1.0/DOCUMENT/RAD_EDR_SIS.HTM">MSL PDS koordinátakeret-leírás</a> – ROVER_NAV, SITE és LOCAL_LEVEL definíciók.</li>
+      <li><a href="https://pds.nasa.gov/ds-view/pds/viewProfile.jsp?dsid=MSL-M-ROVER-6-RDR-PLACES-V1.0">MSL Rover PLACES PDS adatcsomag</a> – roverpozíció és -orientáció, lokalizált nézetek.</li>
+      <li><a href="https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMOS_1XXX/DOCUMENT/MSL_CAMERA_SIS.PDF">MSL Camera SIS</a> – kameramodell és rover-koordináta-rendszer mezői.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

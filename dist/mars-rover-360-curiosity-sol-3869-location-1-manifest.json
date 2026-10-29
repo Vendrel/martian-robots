@@ -1,0 +1,5624 @@
+{
+  "format": "mars-rover-360-export/v1",
+  "exportedAt": "2026-10-29T18:51:25.200Z",
+  "rover": "curiosity",
+  "sol": 3869,
+  "location": 0,
+  "view": {
+    "yawDegrees": 2828.5204625198976,
+    "pitchDegrees": 16.046371440401792,
+    "fovDegrees": 75,
+    "frame": "SITE_FRAME"
+  },
+  "images": [
+    {
+      "id": 1224398,
+      "camera_vector": "(-0.23767516291491647,-0.9651175319194972,0.1098119597994072)",
+      "site": 101,
+      "imageid": "NRB_740786377EDR_F1012616NCAM00281M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3867,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.979087,0.394679,-1.92733);(-0.239585,-0.964142,0.11407);(1062.07,-785.995,53.1802);(-85.5064,-364.83,1270.93);(-0.240071,-0.963583,0.117717);(1.32771e-05,0.0018413,-0.00582336)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "spacecraft_clock": 740786377.368,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(0.979087,0.394679,-1.92733)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T03:38:10.842Z",
+      "updated_at": "2023-07-05T06:11:12.419Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03867M13:19:12.031",
+        "bucket": "msl-raws",
+        "mast_az": "256.142",
+        "mast_el": "-6.28112",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786377EDR_F1012616NCAM00281M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-23T10:55:38.000Z",
+      "date_received": "2023-06-24T04:58:49.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3867: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3867 (2023-06-23 10:55:38 UTC).",
+      "link": "/raw_images/1224398",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.23958706844926395,
+          -0.9641503238884331,
+          0.11407098481961533
+        ],
+        "H": [
+          1062.07,
+          -785.995,
+          53.1802
+        ],
+        "V": [
+          -85.5064,
+          -364.83,
+          1270.93
+        ],
+        "C": [
+          0.979087,
+          0.394679,
+          -1.92733
+        ],
+        "O": [
+          -0.24007297160509455,
+          -0.9635909135137181,
+          0.11771796676165348
+        ],
+        "R": [
+          0.0000132771,
+          0.0018413,
+          -0.00582336
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.979087,
+          0.394679,
+          -1.92733
+        ],
+        "A": [
+          -0.23958706844926395,
+          -0.9641503238884331,
+          0.11407098481961533
+        ],
+        "H": [
+          1062.07,
+          -785.995,
+          53.1802
+        ],
+        "V": [
+          -85.5064,
+          -364.83,
+          1270.93
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1224397,
+      "camera_vector": "(-0.2362407180660558,-0.9653621052377792,0.11075345998440644)",
+      "site": 101,
+      "imageid": "NLB_740786377EDR_F1012616NCAM00281M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3867,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.568511,0.49725,-1.92756);(-0.240584,-0.965131,0.103075);(1066.46,-785.254,52.9331);(-91.1067,-362.334,1270.11);(-0.240587,-0.96513,0.103075);(0.0,0.000126479,0.00638277)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "spacecraft_clock": 740786377.368,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(0.568511,0.49725,-1.92756)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T03:38:10.740Z",
+      "updated_at": "2023-07-05T06:11:12.313Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03867M13:19:12.031",
+        "bucket": "msl-raws",
+        "mast_az": "256.225",
+        "mast_el": "-6.33536",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786377EDR_F1012616NCAM00281M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-23T10:55:38.000Z",
+      "date_received": "2023-06-24T04:59:17.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3867: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3867 (2023-06-23 10:55:38 UTC).",
+      "link": "/raw_images/1224397",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.24058604933970287,
+          -0.9651392211671465,
+          0.10307587801221142
+        ],
+        "H": [
+          1066.46,
+          -785.254,
+          52.9331
+        ],
+        "V": [
+          -91.1067,
+          -362.334,
+          1270.11
+        ],
+        "C": [
+          0.568511,
+          0.49725,
+          -1.92756
+        ],
+        "O": [
+          -0.24058910791939558,
+          -0.965138456052265,
+          0.10307590309863668
+        ],
+        "R": [
+          0,
+          0.000126479,
+          0.00638277
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_740786377EDR_F1012616NCAM00281M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.568511,
+          0.49725,
+          -1.92756
+        ],
+        "A": [
+          -0.24058604933970287,
+          -0.9651392211671465,
+          0.10307587801221142
+        ],
+        "H": [
+          1066.46,
+          -785.254,
+          52.9331
+        ],
+        "V": [
+          -91.1067,
+          -362.334,
+          1270.11
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      },
+      "projectedRayMeshCache": {}
+    },
+    {
+      "id": 1224399,
+      "camera_vector": "(0.2599336713880323,-0.960732297686995,0.09709757288318757)",
+      "site": 101,
+      "imageid": "NLB_740786401EDR_F1012616NCAM00281M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3867,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.627841,0.391266,-1.92917);(0.256001,-0.962525,0.0894009);(1313.3,-172.93,45.9896);(99.7828,-378.07,1264.86);(0.255999,-0.962526,0.089401);(0.0,0.000126207,0.00638309)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "spacecraft_clock": 740786401.275,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(0.627841,0.391266,-1.92917)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T03:38:11.167Z",
+      "updated_at": "2023-07-05T06:11:12.765Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03867M13:19:35.298",
+        "bucket": "msl-raws",
+        "mast_az": "285.116",
+        "mast_el": "-5.54866",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786401EDR_F1012616NCAM00281M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-23T10:56:02.000Z",
+      "date_received": "2023-06-24T04:58:59.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3867: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3867 (2023-06-23 10:56:02 UTC).",
+      "link": "/raw_images/1224399",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NLB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.25600312374073103,
+          -0.9625329849436024,
+          0.08940164165465261
+        ],
+        "H": [
+          1313.3,
+          -172.93,
+          45.9896
+        ],
+        "V": [
+          99.7828,
+          -378.07,
+          1264.86
+        ],
+        "C": [
+          0.627841,
+          0.391266,
+          -1.92917
+        ],
+        "O": [
+          0.25600100609856025,
+          -0.9625335426936152,
+          0.08940170057780453
+        ],
+        "R": [
+          0,
+          0.000126207,
+          0.00638309
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.627841,
+          0.391266,
+          -1.92917
+        ],
+        "A": [
+          0.25600312374073103,
+          -0.9625329849436024,
+          0.08940164165465261
+        ],
+        "H": [
+          1313.3,
+          -172.93,
+          45.9896
+        ],
+        "V": [
+          99.7828,
+          -378.07,
+          1264.86
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      },
+      "projectedRayMeshCache": {}
+    },
+    {
+      "id": 1224400,
+      "camera_vector": "(0.2585642925715784,-0.9611972194046439,0.09614786537277017)",
+      "site": 101,
+      "imageid": "NRB_740786401EDR_F1012616NCAM00281M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3867,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.03688,0.499828,-1.92895);(0.256438,-0.961322,0.100412);(1309.81,-175.694,46.2112);(105.897,-377.569,1265.66);(0.255755,-0.961116,0.104065);(1.32771e-05,0.0018413,-0.00582336)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "spacecraft_clock": 740786401.275,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.03688,0.499828,-1.92895)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T03:38:11.269Z",
+      "updated_at": "2023-07-05T06:11:12.879Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03867M13:19:35.298",
+        "bucket": "msl-raws",
+        "mast_az": "285.033",
+        "mast_el": "-5.49401",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786401EDR_F1012616NCAM00281M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-23T10:56:02.000Z",
+      "date_received": "2023-06-24T04:58:48.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3867: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3867 (2023-06-23 10:56:02 UTC).",
+      "link": "/raw_images/1224400",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03867/opgs/edr/ncam/NRB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.2564401790748041,
+          -0.9613301688070754,
+          0.10041285324818953
+        ],
+        "H": [
+          1309.81,
+          -175.694,
+          46.2112
+        ],
+        "V": [
+          105.897,
+          -377.569,
+          1265.66
+        ],
+        "C": [
+          1.03688,
+          0.499828,
+          -1.92895
+        ],
+        "O": [
+          0.25575703203528827,
+          -0.9611236362989114,
+          0.1040658268215764
+        ],
+        "R": [
+          0.0000132771,
+          0.0018413,
+          -0.00582336
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740786401EDR_F1012616NCAM00281M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.03688,
+          0.499828,
+          -1.92895
+        ],
+        "A": [
+          0.2564401790748041,
+          -0.9613301688070754,
+          0.10041285324818953
+        ],
+        "H": [
+          1309.81,
+          -175.694,
+          46.2112
+        ],
+        "V": [
+          105.897,
+          -377.569,
+          1265.66
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1224649,
+      "camera_vector": "(0.0015500611047744208,-0.9798859312097251,-0.19955239694832363)",
+      "site": 101,
+      "imageid": "NRB_740891896EDR_S1012616NCAM00598M_",
+      "subframe_rect": "(1,1,1024,768)",
+      "sol": 3868,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01355,0.453826,-1.96242);(4.90856e-05,-0.980613,-0.195912);(1220.29,-499.256,-104.665);(4.91229,-745.499,1095.05);(-0.000576624,-0.981287,-0.192506);(1.19925e-05,0.00192152,-0.00634139)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891896EDR_S1012616NCAM00598M_.JPG",
+      "spacecraft_clock": 740891896.646,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01355,0.453826,-1.96242)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T18:27:56.327Z",
+      "updated_at": "2023-06-26T11:09:59.688Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03868M17:50:49.038",
+        "bucket": "msl-raws",
+        "mast_az": "270.067",
+        "mast_el": "11.5342",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891896EDR_S1012616NCAM00598M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,768)"
+      },
+      "date_taken": "2023-06-24T16:14:19.000Z",
+      "date_received": "2023-06-24T18:19:48.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3868: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3868 (2023-06-24 16:14:19 UTC).",
+      "link": "/raw_images/1224649",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891896EDR_S1012616NCAM00598M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00004908600815375935,
+          -0.9806211539368452,
+          -0.19591362903620005
+        ],
+        "H": [
+          1220.29,
+          -499.256,
+          -104.665
+        ],
+        "V": [
+          4.91229,
+          -745.499,
+          1095.05
+        ],
+        "C": [
+          1.01355,
+          0.453826,
+          -1.96242
+        ],
+        "O": [
+          -0.0005766288815012218,
+          -0.9812953072395346,
+          -0.19250762968983984
+        ],
+        "R": [
+          0.0000119925,
+          0.00192152,
+          -0.00634139
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740891896EDR_S1012616NCAM00598M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01355,
+          0.453826,
+          -1.96242
+        ],
+        "A": [
+          0.00004908600815375935,
+          -0.9806211539368452,
+          -0.19591362903620005
+        ],
+        "H": [
+          1220.29,
+          -499.256,
+          -104.665
+        ],
+        "V": [
+          4.91229,
+          -745.499,
+          1095.05
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 768
+        }
+      }
+    },
+    {
+      "id": 1224650,
+      "camera_vector": "(0.001565833875750847,-0.9798831528438162,-0.1995659162711313)",
+      "site": 101,
+      "imageid": "NRB_740891910EDR_S1012616NCAM00598M_",
+      "subframe_rect": "(1,1,1024,768)",
+      "sol": 3868,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01356,0.453826,-1.96242);(4.92657e-05,-0.980613,-0.195911);(1220.29,-499.237,-104.661);(4.9124,-745.516,1095.05);(-0.000575907,-0.981288,-0.1925);(1.20227e-05,0.00191941,-0.00632776)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891910EDR_S1012616NCAM00598M_.JPG",
+      "spacecraft_clock": 740891910.216,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01356,0.453826,-1.96242)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T18:27:56.539Z",
+      "updated_at": "2023-06-26T11:09:59.934Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03868M17:51:02.245",
+        "bucket": "msl-raws",
+        "mast_az": "270.068",
+        "mast_el": "11.535",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891910EDR_S1012616NCAM00598M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,768)"
+      },
+      "date_taken": "2023-06-24T16:14:32.000Z",
+      "date_received": "2023-06-24T18:20:32.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3868: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3868 (2023-06-24 16:14:32 UTC).",
+      "link": "/raw_images/1224650",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891910EDR_S1012616NCAM00598M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00004926611930284096,
+          -0.9806213460463727,
+          -0.19591266740833635
+        ],
+        "H": [
+          1220.29,
+          -499.237,
+          -104.661
+        ],
+        "V": [
+          4.9124,
+          -745.516,
+          1095.05
+        ],
+        "C": [
+          1.01356,
+          0.453826,
+          -1.96242
+        ],
+        "O": [
+          -0.0005759119757244843,
+          -0.9812964781374907,
+          -0.19250166316256487
+        ],
+        "R": [
+          0.0000120227,
+          0.00191941,
+          -0.00632776
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740891910EDR_S1012616NCAM00598M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01356,
+          0.453826,
+          -1.96242
+        ],
+        "A": [
+          0.00004926611930284096,
+          -0.9806213460463727,
+          -0.19591266740833635
+        ],
+        "H": [
+          1220.29,
+          -499.237,
+          -104.661
+        ],
+        "V": [
+          4.9124,
+          -745.516,
+          1095.05
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 768
+        }
+      }
+    },
+    {
+      "id": 1224651,
+      "camera_vector": "(0.0015731956649893033,-0.9798816929371689,-0.19957302648902175)",
+      "site": 101,
+      "imageid": "NRB_740891923EDR_S1012616NCAM00598M_",
+      "subframe_rect": "(1,1,1024,768)",
+      "sol": 3868,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01356,0.453827,-1.96242);(4.93557e-05,-0.980613,-0.195911);(1220.29,-499.228,-104.66);(4.91246,-745.525,1095.05);(-0.000575563,-0.981289,-0.192497);(1.20377e-05,0.00191836,-0.00632094)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891923EDR_S1012616NCAM00598M_.JPG",
+      "spacecraft_clock": 740891923.181,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01356,0.453827,-1.96242)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T18:27:56.748Z",
+      "updated_at": "2023-06-26T11:10:00.188Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03868M17:51:14.864",
+        "bucket": "msl-raws",
+        "mast_az": "270.068",
+        "mast_el": "11.5354",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891923EDR_S1012616NCAM00598M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,768)"
+      },
+      "date_taken": "2023-06-24T16:14:45.000Z",
+      "date_received": "2023-06-24T18:20:36.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3868: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3868 (2023-06-24 16:14:45 UTC).",
+      "link": "/raw_images/1224651",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891923EDR_S1012616NCAM00598M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00004935612006861643,
+          -0.9806213460420207,
+          -0.19591266740746688
+        ],
+        "H": [
+          1220.29,
+          -499.228,
+          -104.66
+        ],
+        "V": [
+          4.91246,
+          -745.525,
+          1095.05
+        ],
+        "C": [
+          1.01356,
+          0.453827,
+          -1.96242
+        ],
+        "O": [
+          -0.0005755677404521923,
+          -0.9812970820928228,
+          -0.19249858544386222
+        ],
+        "R": [
+          0.0000120377,
+          0.00191836,
+          -0.00632094
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740891923EDR_S1012616NCAM00598M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01356,
+          0.453827,
+          -1.96242
+        ],
+        "A": [
+          0.00004935612006861643,
+          -0.9806213460420207,
+          -0.19591266740746688
+        ],
+        "H": [
+          1220.29,
+          -499.228,
+          -104.66
+        ],
+        "V": [
+          4.91246,
+          -745.525,
+          1095.05
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 768
+        }
+      }
+    },
+    {
+      "id": 1224652,
+      "camera_vector": "(0.0015731956649893033,-0.9798816929371689,-0.19957302648902175)",
+      "site": 101,
+      "imageid": "NRB_740891936EDR_S1012616NCAM00598M_",
+      "subframe_rect": "(1,1,1024,768)",
+      "sol": 3868,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01356,0.453827,-1.96242);(4.93557e-05,-0.980613,-0.195911);(1220.29,-499.228,-104.66);(4.91246,-745.525,1095.05);(-0.000575563,-0.981289,-0.192497);(1.20377e-05,0.00191836,-0.00632094)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891936EDR_S1012616NCAM00598M_.JPG",
+      "spacecraft_clock": 740891936.181,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01356,0.453827,-1.96242)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-24T18:27:56.971Z",
+      "updated_at": "2023-06-26T11:10:00.407Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03868M17:51:27.516",
+        "bucket": "msl-raws",
+        "mast_az": "270.068",
+        "mast_el": "11.5354",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891936EDR_S1012616NCAM00598M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,768)"
+      },
+      "date_taken": "2023-06-24T16:14:58.000Z",
+      "date_received": "2023-06-24T18:20:36.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3868: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3868 (2023-06-24 16:14:58 UTC).",
+      "link": "/raw_images/1224652",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03868/opgs/edr/ncam/NRB_740891936EDR_S1012616NCAM00598M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00004935612006861643,
+          -0.9806213460420207,
+          -0.19591266740746688
+        ],
+        "H": [
+          1220.29,
+          -499.228,
+          -104.66
+        ],
+        "V": [
+          4.91246,
+          -745.525,
+          1095.05
+        ],
+        "C": [
+          1.01356,
+          0.453827,
+          -1.96242
+        ],
+        "O": [
+          -0.0005755677404521923,
+          -0.9812970820928228,
+          -0.19249858544386222
+        ],
+        "R": [
+          0.0000120377,
+          0.00191836,
+          -0.00632094
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740891936EDR_S1012616NCAM00598M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01356,
+          0.453827,
+          -1.96242
+        ],
+        "A": [
+          0.00004935612006861643,
+          -0.9806213460420207,
+          -0.19591266740746688
+        ],
+        "H": [
+          1220.29,
+          -499.228,
+          -104.66
+        ],
+        "V": [
+          4.91246,
+          -745.525,
+          1095.05
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 768
+        }
+      }
+    },
+    {
+      "id": 1225103,
+      "camera_vector": "(0.003036083639126434,-0.99853083744418,0.05410128343358414)",
+      "site": 101,
+      "imageid": "NRB_740962021EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01366,0.453927,-1.96256);(0.000126394,-0.980359,-0.197176);(1220.33,-498.464,-105.214);(4.92946,-433.735,1157.08);(-0.000484016,-0.981069,-0.193615);(1.28973e-05,0.00185819,-0.00593242)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962021.037,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01366,0.453927,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:56.266Z",
+      "updated_at": "2023-06-26T20:37:56.401Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:48:17.848",
+        "bucket": "msl-raws",
+        "mast_az": "270.098",
+        "mast_el": "11.634",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962021EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:04.000Z",
+      "date_received": "2023-06-25T19:59:41.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:04 UTC).",
+      "link": "/raw_images/1225103",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012639512746015467,
+          -0.9803677450014222,
+          -0.19717775884997274
+        ],
+        "H": [
+          1220.33,
+          -498.464,
+          -105.214
+        ],
+        "V": [
+          4.92946,
+          -433.735,
+          1157.08
+        ],
+        "C": [
+          1.01366,
+          0.453927,
+          -1.96256
+        ],
+        "O": [
+          -0.00048402002095071115,
+          -0.981077150205971,
+          -0.19361660845172876
+        ],
+        "R": [
+          0.0000128973,
+          0.00185819,
+          -0.00593242
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01366,
+          0.453927,
+          -1.96256
+        ],
+        "A": [
+          0.00012639512746015467,
+          -0.9803677450014222,
+          -0.19717775884997274
+        ],
+        "H": [
+          1220.33,
+          -498.464,
+          -105.214
+        ],
+        "V": [
+          4.92946,
+          -433.735,
+          1157.08
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225102,
+      "camera_vector": "(0.0034725495795582617,-0.9985818133253198,0.05312535642547333)",
+      "site": 101,
+      "imageid": "NLB_740962021EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.590503,0.454459,-1.96266);(-0.000602478,-0.97812,-0.208);(1224.42,-496.451,-104.856);(-0.873272,-433.404,1160.06);(-0.000605478,-0.97812,-0.208);(0.0,0.000129266,0.00637913)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962021.037,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(0.590503,0.454459,-1.96266)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:56.150Z",
+      "updated_at": "2023-06-26T20:37:56.279Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:48:17.848",
+        "bucket": "msl-raws",
+        "mast_az": "270.195",
+        "mast_el": "11.5902",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962021EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:04.000Z",
+      "date_received": "2023-06-25T19:58:00.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:04 UTC).",
+      "link": "/raw_images/1225102",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0006024830917929729,
+          -0.9781282665002583,
+          -0.20800175789479175
+        ],
+        "H": [
+          1224.42,
+          -496.451,
+          -104.856
+        ],
+        "V": [
+          -0.873272,
+          -433.404,
+          1160.06
+        ],
+        "C": [
+          0.590503,
+          0.454459,
+          -1.96266
+        ],
+        "O": [
+          -0.0006054831160501108,
+          -0.9781282647279246,
+          -0.20800175751789995
+        ],
+        "R": [
+          0,
+          0.000129266,
+          0.00637913
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NLB_740962021EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.590503,
+          0.454459,
+          -1.96266
+        ],
+        "A": [
+          -0.0006024830917929729,
+          -0.9781282665002583,
+          -0.20800175789479175
+        ],
+        "H": [
+          1224.42,
+          -496.451,
+          -104.856
+        ],
+        "V": [
+          -0.873272,
+          -433.404,
+          1160.06
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225104,
+      "camera_vector": "(0.003059149024923465,-0.9985318193742279,0.054081857442562005)",
+      "site": 101,
+      "imageid": "NRB_740962034EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01366,0.453928,-1.96256);(0.000126664,-0.98036,-0.197175);(1220.33,-498.436,-105.209);(4.92954,-433.76,1157.08);(-0.000482985,-0.981071,-0.193606);(1.29425e-05,0.00185502,-0.00591197)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962034EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962034.147,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01366,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:56.505Z",
+      "updated_at": "2023-06-26T20:37:56.707Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:48:30.608",
+        "bucket": "msl-raws",
+        "mast_az": "270.1",
+        "mast_el": "11.6352",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962034EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:17.000Z",
+      "date_received": "2023-06-25T20:00:07.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:17 UTC).",
+      "link": "/raw_images/1225104",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962034EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012666503066052586,
+          -0.9803679771549385,
+          -0.19717660440606
+        ],
+        "H": [
+          1220.33,
+          -498.436,
+          -105.209
+        ],
+        "V": [
+          4.92954,
+          -433.76,
+          1157.08
+        ],
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.0004829889065383824,
+          -0.981078935218521,
+          -0.19360756594774178
+        ],
+        "R": [
+          0.0000129425,
+          0.00185502,
+          -0.00591197
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962034EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012666503066052586,
+          -0.9803679771549385,
+          -0.19717660440606
+        ],
+        "H": [
+          1220.33,
+          -498.436,
+          -105.209
+        ],
+        "V": [
+          4.92954,
+          -433.76,
+          1157.08
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225105,
+      "camera_vector": "(0.0030664005912349373,-0.9985321840106942,0.054074713889643605)",
+      "site": 101,
+      "imageid": "NRB_740962047EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01366,0.453928,-1.96256);(0.000126755,-0.98036,-0.197175);(1220.33,-498.427,-105.207);(4.92957,-433.769,1157.08);(-0.000482641,-0.981071,-0.193603);(1.29576e-05,0.00185397,-0.00590516)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962047EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962047.218,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01366,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:56.752Z",
+      "updated_at": "2023-06-26T20:37:56.984Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:48:43.329",
+        "bucket": "msl-raws",
+        "mast_az": "270.1",
+        "mast_el": "11.6356",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962047EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:30.000Z",
+      "date_received": "2023-06-25T19:59:35.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:30 UTC).",
+      "link": "/raw_images/1225105",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962047EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012675603139952806,
+          -0.9803679771436341,
+          -0.1971766044037864
+        ],
+        "H": [
+          1220.33,
+          -498.427,
+          -105.207
+        ],
+        "V": [
+          4.92957,
+          -433.769,
+          1157.08
+        ],
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048264518416761716,
+          -0.9810795052150736,
+          -0.19360467840569529
+        ],
+        "R": [
+          0.0000129576,
+          0.00185397,
+          -0.00590516
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962047EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012675603139952806,
+          -0.9803679771436341,
+          -0.1971766044037864
+        ],
+        "H": [
+          1220.33,
+          -498.427,
+          -105.207
+        ],
+        "V": [
+          4.92957,
+          -433.769,
+          1157.08
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225106,
+      "camera_vector": "(0.0030664005912349373,-0.9985321840106942,0.054074713889643605)",
+      "site": 101,
+      "imageid": "NRB_740962060EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01366,0.453928,-1.96256);(0.000126755,-0.98036,-0.197175);(1220.33,-498.427,-105.207);(4.92957,-433.769,1157.08);(-0.000482641,-0.981071,-0.193603);(1.29576e-05,0.00185397,-0.00590516)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962060EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962060.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01366,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:56.973Z",
+      "updated_at": "2023-06-26T20:37:57.282Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:48:55.912",
+        "bucket": "msl-raws",
+        "mast_az": "270.1",
+        "mast_el": "11.6356",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962060EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:43.000Z",
+      "date_received": "2023-06-25T20:00:27.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:43 UTC).",
+      "link": "/raw_images/1225106",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962060EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012675603139952806,
+          -0.9803679771436341,
+          -0.1971766044037864
+        ],
+        "H": [
+          1220.33,
+          -498.427,
+          -105.207
+        ],
+        "V": [
+          4.92957,
+          -433.769,
+          1157.08
+        ],
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048264518416761716,
+          -0.9810795052150736,
+          -0.19360467840569529
+        ],
+        "R": [
+          0.0000129576,
+          0.00185397,
+          -0.00590516
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962060EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012675603139952806,
+          -0.9803679771436341,
+          -0.1971766044037864
+        ],
+        "H": [
+          1220.33,
+          -498.427,
+          -105.207
+        ],
+        "V": [
+          4.92957,
+          -433.769,
+          1157.08
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225107,
+      "camera_vector": "(0.0030744957755250166,-0.9985325020906789,0.05406838026291032)",
+      "site": 101,
+      "imageid": "NRB_740962073EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01366,0.453928,-1.96256);(0.000126845,-0.98036,-0.197174);(1220.33,-498.417,-105.205);(4.9296,-433.777,1157.08);(-0.000482297,-0.981072,-0.1936);(1.29727e-05,0.00185291,-0.00589834)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962073EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962073.185,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01366,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:57.229Z",
+      "updated_at": "2023-06-26T20:37:57.523Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:49:08.601",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.636",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962073EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:43:56.000Z",
+      "date_received": "2023-06-25T20:00:45.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:43:56 UTC).",
+      "link": "/raw_images/1225107",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962073EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0001268460571416237,
+          -0.9803681704392148,
+          -0.19717564327204468
+        ],
+        "H": [
+          1220.33,
+          -498.417,
+          -105.205
+        ],
+        "V": [
+          4.9296,
+          -433.777,
+          1157.08
+        ],
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048230098821294253,
+          -0.9810801126858512,
+          -0.1936016009181597
+        ],
+        "R": [
+          0.0000129727,
+          0.00185291,
+          -0.00589834
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962073EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01366,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.0001268460571416237,
+          -0.9803681704392148,
+          -0.19717564327204468
+        ],
+        "H": [
+          1220.33,
+          -498.417,
+          -105.205
+        ],
+        "V": [
+          4.9296,
+          -433.777,
+          1157.08
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225108,
+      "camera_vector": "(0.003081748819935155,-0.9985328433098094,0.054061665307668344)",
+      "site": 101,
+      "imageid": "NRB_740962086EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000126935,-0.98036,-0.197174);(1220.33,-498.408,-105.203);(4.92962,-433.786,1157.07);(-0.000481954,-0.981073,-0.193597);(1.29878e-05,0.00185186,-0.00589153)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962086EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962086.209,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:57.440Z",
+      "updated_at": "2023-06-26T20:37:57.771Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:49:21.277",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6364",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962086EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:44:09.000Z",
+      "date_received": "2023-06-25T20:00:45.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:44:09 UTC).",
+      "link": "/raw_images/1225108",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962086EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.000481957792536536,
+          -0.9810807201458998,
+          -0.19359852343106554
+        ],
+        "R": [
+          0.0000129878,
+          0.00185186,
+          -0.00589153
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962086EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225109,
+      "camera_vector": "(0.003081748819935155,-0.9985328433098094,0.054061665307668344)",
+      "site": 101,
+      "imageid": "NRB_740962099EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000126935,-0.98036,-0.197174);(1220.33,-498.408,-105.203);(4.92962,-433.786,1157.07);(-0.000481954,-0.981073,-0.193597);(1.29878e-05,0.00185186,-0.00589153)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962099EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962099.187,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:57.651Z",
+      "updated_at": "2023-06-26T20:37:58.014Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:49:33.907",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6364",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962099EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:44:22.000Z",
+      "date_received": "2023-06-25T20:00:38.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:44:22 UTC).",
+      "link": "/raw_images/1225109",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962099EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.000481957792536536,
+          -0.9810807201458998,
+          -0.19359852343106554
+        ],
+        "R": [
+          0.0000129878,
+          0.00185186,
+          -0.00589153
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962099EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225110,
+      "camera_vector": "(0.003081748819935155,-0.9985328433098094,0.054061665307668344)",
+      "site": 101,
+      "imageid": "NRB_740962112EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000126935,-0.98036,-0.197174);(1220.33,-498.408,-105.203);(4.92962,-433.786,1157.07);(-0.000481954,-0.981073,-0.193597);(1.29878e-05,0.00185186,-0.00589153)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962112EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962112.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:57.866Z",
+      "updated_at": "2023-06-26T20:37:58.252Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:49:46.522",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6364",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962112EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:44:35.000Z",
+      "date_received": "2023-06-25T20:00:48.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:44:35 UTC).",
+      "link": "/raw_images/1225110",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962112EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.000481957792536536,
+          -0.9810807201458998,
+          -0.19359852343106554
+        ],
+        "R": [
+          0.0000129878,
+          0.00185186,
+          -0.00589153
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962112EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012693605789024494,
+          -0.9803681704280186,
+          -0.19717564326979287
+        ],
+        "H": [
+          1220.33,
+          -498.408,
+          -105.203
+        ],
+        "V": [
+          4.92962,
+          -433.786,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225111,
+      "camera_vector": "(0.00308986295821385,-0.9985332051901067,0.05405451766200194)",
+      "site": 101,
+      "imageid": "NRB_740962125EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127022,-0.98036,-0.197174);(1220.33,-498.398,-105.202);(4.92965,-433.795,1157.07);(-0.000481619,-0.981073,-0.193594);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962125EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962125.151,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:58.075Z",
+      "updated_at": "2023-06-26T20:37:58.480Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:49:59.177",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6368",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962125EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:44:48.000Z",
+      "date_received": "2023-06-25T20:00:01.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:44:48 UTC).",
+      "link": "/raw_images/1225111",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962125EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.0004816230697027879,
+          -0.9810812901121492,
+          -0.19359563587823883
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962125EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225112,
+      "camera_vector": "(0.00308986295821385,-0.9985332051901067,0.05405451766200194)",
+      "site": 101,
+      "imageid": "NRB_740962138EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127022,-0.98036,-0.197174);(1220.33,-498.398,-105.202);(4.92965,-433.795,1157.07);(-0.000481619,-0.981073,-0.193594);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962138EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962138.17,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:58.287Z",
+      "updated_at": "2023-06-26T20:37:58.716Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:50:11.848",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6368",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962138EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:45:01.000Z",
+      "date_received": "2023-06-25T20:01:01.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:45:01 UTC).",
+      "link": "/raw_images/1225112",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962138EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.0004816230697027879,
+          -0.9810812901121492,
+          -0.19359563587823883
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962138EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225113,
+      "camera_vector": "(0.003097139943017753,-0.9985335255135724,0.05404818359213686)",
+      "site": 101,
+      "imageid": "NRB_740962151EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127097,-0.98036,-0.197173);(1220.33,-498.389,-105.2);(4.92969,-433.803,1157.07);(-0.00048132,-0.981074,-0.193591);(1.30359e-05,0.00184974,-0.00587789)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962151EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962151.147,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:58.496Z",
+      "updated_at": "2023-06-26T20:37:58.952Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:50:24.478",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6372",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962151EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:45:14.000Z",
+      "date_received": "2023-06-25T20:00:45.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:45:14 UTC).",
+      "link": "/raw_images/1225113",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962151EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048132387457027696,
+          -0.9810818975321198,
+          -0.19359255838513773
+        ],
+        "R": [
+          0.0000130359,
+          0.00184974,
+          -0.00587789
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962151EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225114,
+      "camera_vector": "(0.00308986295821385,-0.9985332051901067,0.05405451766200194)",
+      "site": 101,
+      "imageid": "NRB_740962164EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127022,-0.98036,-0.197174);(1220.33,-498.398,-105.202);(4.92965,-433.795,1157.07);(-0.000481619,-0.981073,-0.193594);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962164EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962164.149,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:58.708Z",
+      "updated_at": "2023-06-26T20:37:59.191Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:50:37.132",
+        "bucket": "msl-raws",
+        "mast_az": "270.101",
+        "mast_el": "11.6368",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962164EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:45:27.000Z",
+      "date_received": "2023-06-25T20:03:01.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:45:27 UTC).",
+      "link": "/raw_images/1225114",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962164EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.0004816230697027879,
+          -0.9810812901121492,
+          -0.19359563587823883
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962164EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.00012702305861390925,
+          -0.9803681704171883,
+          -0.1971756432676146
+        ],
+        "H": [
+          1220.33,
+          -498.398,
+          -105.202
+        ],
+        "V": [
+          4.92965,
+          -433.795,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225115,
+      "camera_vector": "(0.003097139943017753,-0.9985335255135724,0.05404818359213686)",
+      "site": 101,
+      "imageid": "NRB_740962177EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127097,-0.98036,-0.197173);(1220.33,-498.389,-105.2);(4.92969,-433.803,1157.07);(-0.00048132,-0.981074,-0.193591);(1.30359e-05,0.00184974,-0.00587789)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962177EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962177.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:58.952Z",
+      "updated_at": "2023-06-26T20:37:59.449Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:50:49.784",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6372",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962177EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:45:40.000Z",
+      "date_received": "2023-06-25T20:00:51.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:45:40 UTC).",
+      "link": "/raw_images/1225115",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962177EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048132387457027696,
+          -0.9810818975321198,
+          -0.19359255838513773
+        ],
+        "R": [
+          0.0000130359,
+          0.00184974,
+          -0.00587789
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962177EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225116,
+      "camera_vector": "(0.003097139943017753,-0.9985335255135724,0.05404818359213686)",
+      "site": 101,
+      "imageid": "NRB_740962190EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127097,-0.98036,-0.197173);(1220.33,-498.389,-105.2);(4.92969,-433.803,1157.07);(-0.00048132,-0.981074,-0.193591);(1.30359e-05,0.00184974,-0.00587789)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962190EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962190.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:59.189Z",
+      "updated_at": "2023-06-26T20:37:59.702Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:51:02.435",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6372",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962190EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:45:53.000Z",
+      "date_received": "2023-06-25T20:00:26.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:45:53 UTC).",
+      "link": "/raw_images/1225116",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962190EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048132387457027696,
+          -0.9810818975321198,
+          -0.19359255838513773
+        ],
+        "R": [
+          0.0000130359,
+          0.00184974,
+          -0.00587789
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962190EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225117,
+      "camera_vector": "(0.003097139943017753,-0.9985335255135724,0.05404818359213686)",
+      "site": 101,
+      "imageid": "NRB_740962203EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453928,-1.96256);(0.000127097,-0.98036,-0.197173);(1220.33,-498.389,-105.2);(4.92969,-433.803,1157.07);(-0.00048132,-0.981074,-0.193591);(1.30359e-05,0.00184974,-0.00587789)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962203EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962203.196,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453928,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:59.427Z",
+      "updated_at": "2023-06-26T20:37:59.940Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:51:15.135",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6372",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962203EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:46:06.000Z",
+      "date_received": "2023-06-25T20:01:58.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:46:06 UTC).",
+      "link": "/raw_images/1225117",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962203EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "O": [
+          -0.00048132387457027696,
+          -0.9810818975321198,
+          -0.19359255838513773
+        ],
+        "R": [
+          0.0000130359,
+          0.00184974,
+          -0.00587789
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962203EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453928,
+          -1.96256
+        ],
+        "A": [
+          0.0001270980842985498,
+          -0.9803683637137484,
+          -0.19717468213567554
+        ],
+        "H": [
+          1220.33,
+          -498.389,
+          -105.2
+        ],
+        "V": [
+          4.92969,
+          -433.803,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225118,
+      "camera_vector": "(0.0031043915643573397,-0.9985338898334637,0.05404103632488535)",
+      "site": 101,
+      "imageid": "NRB_740962216EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127172,-0.98036,-0.197173);(1220.33,-498.38,-105.198);(4.92972,-433.812,1157.07);(-0.000481021,-0.981074,-0.193588);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962216EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962216.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:59.633Z",
+      "updated_at": "2023-06-26T20:38:00.207Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:51:27.740",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6376",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962216EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:46:19.000Z",
+      "date_received": "2023-06-25T20:03:03.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:46:19 UTC).",
+      "link": "/raw_images/1225118",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962216EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.00048102515160140244,
+          -0.9810824674644024,
+          -0.1935896708214658
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962216EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225119,
+      "camera_vector": "(0.0031043915643573397,-0.9985338898334637,0.05404103632488535)",
+      "site": 101,
+      "imageid": "NRB_740962229EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127172,-0.98036,-0.197173);(1220.33,-498.38,-105.198);(4.92972,-433.812,1157.07);(-0.000481021,-0.981074,-0.193588);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962229EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962229.165,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:07:59.837Z",
+      "updated_at": "2023-06-26T20:38:00.450Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:51:40.409",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6376",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962229EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:46:32.000Z",
+      "date_received": "2023-06-25T20:01:05.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:46:32 UTC).",
+      "link": "/raw_images/1225119",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962229EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.00048102515160140244,
+          -0.9810824674644024,
+          -0.1935896708214658
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962229EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225120,
+      "camera_vector": "(0.0031043915643573397,-0.9985338898334637,0.05404103632488535)",
+      "site": 101,
+      "imageid": "NRB_740962242EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127172,-0.98036,-0.197173);(1220.33,-498.38,-105.198);(4.92972,-433.812,1157.07);(-0.000481021,-0.981074,-0.193588);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962242EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962242.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:08:00.081Z",
+      "updated_at": "2023-06-26T20:38:00.776Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:51:53.045",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6376",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962242EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:46:45.000Z",
+      "date_received": "2023-06-25T20:03:05.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:46:45 UTC).",
+      "link": "/raw_images/1225120",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962242EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.00048102515160140244,
+          -0.9810824674644024,
+          -0.1935896708214658
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962242EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225121,
+      "camera_vector": "(0.0031043915643573397,-0.9985338898334637,0.05404103632488535)",
+      "site": 101,
+      "imageid": "NRB_740962255EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127172,-0.98036,-0.197173);(1220.33,-498.38,-105.198);(4.92972,-433.812,1157.07);(-0.000481021,-0.981074,-0.193588);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962255EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962255.179,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:08:00.298Z",
+      "updated_at": "2023-06-26T20:38:01.019Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:52:05.728",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6376",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962255EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:46:58.000Z",
+      "date_received": "2023-06-25T20:02:18.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:46:58 UTC).",
+      "link": "/raw_images/1225121",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962255EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.00048102515160140244,
+          -0.9810824674644024,
+          -0.1935896708214658
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962255EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225122,
+      "camera_vector": "(0.0031043915643573397,-0.9985338898334637,0.05404103632488535)",
+      "site": 101,
+      "imageid": "NRB_740962268EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127172,-0.98036,-0.197173);(1220.33,-498.38,-105.198);(4.92972,-433.812,1157.07);(-0.000481021,-0.981074,-0.193588);(1.3066e-05,0.00184869,-0.00587108)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962268EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962268.211,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:08:00.508Z",
+      "updated_at": "2023-06-26T20:38:01.297Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:52:18.411",
+        "bucket": "msl-raws",
+        "mast_az": "270.102",
+        "mast_el": "11.6376",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962268EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:47:11.000Z",
+      "date_received": "2023-06-25T20:02:26.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:47:11 UTC).",
+      "link": "/raw_images/1225122",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962268EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.00048102515160140244,
+          -0.9810824674644024,
+          -0.1935896708214658
+        ],
+        "R": [
+          0.000013066,
+          0.00184869,
+          -0.00587108
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962268EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012717308493718222,
+          -0.9803683637044002,
+          -0.1971746821337954
+        ],
+        "H": [
+          1220.33,
+          -498.38,
+          -105.198
+        ],
+        "V": [
+          4.92972,
+          -433.812,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225123,
+      "camera_vector": "(0.003112486784704294,-0.9985342075935951,0.05403469895767021)",
+      "site": 101,
+      "imageid": "NRB_740962281EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.01367,0.453929,-1.96256);(0.000127247,-0.98036,-0.197172);(1220.33,-498.37,-105.196);(4.92975,-433.82,1157.07);(-0.000480722,-0.981075,-0.193585);(1.30962e-05,0.00184763,-0.00586426)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962281.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.01367,0.453929,-1.96256)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:08:00.827Z",
+      "updated_at": "2023-06-26T20:38:01.742Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:52:31.002",
+        "bucket": "msl-raws",
+        "mast_az": "270.103",
+        "mast_el": "11.638",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962281EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:47:24.000Z",
+      "date_received": "2023-06-25T20:02:30.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:47:24 UTC).",
+      "link": "/raw_images/1225123",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NRB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          0.00012724811066607125,
+          -0.9803685570000832,
+          -0.19717372100128563
+        ],
+        "H": [
+          1220.33,
+          -498.37,
+          -105.196
+        ],
+        "V": [
+          4.92975,
+          -433.82,
+          1157.07
+        ],
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "O": [
+          -0.0004807259566448154,
+          -0.9810830748651242,
+          -0.1935865933264685
+        ],
+        "R": [
+          0.0000130962,
+          0.00184763,
+          -0.00586426
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.01367,
+          0.453929,
+          -1.96256
+        ],
+        "A": [
+          0.00012724811066607125,
+          -0.9803685570000832,
+          -0.19717372100128563
+        ],
+        "H": [
+          1220.33,
+          -498.37,
+          -105.196
+        ],
+        "V": [
+          4.92975,
+          -433.82,
+          1157.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      }
+    },
+    {
+      "id": 1225124,
+      "camera_vector": "(0.003449907401275894,-0.998580826164294,0.05314538320454978)",
+      "site": 101,
+      "imageid": "NLB_740962281EDR_S1012616NCAM00593M_",
+      "subframe_rect": "(1,321,1024,384)",
+      "sol": 3869,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.590498,0.454458,-1.96266);(-0.000602614,-0.97812,-0.208);(1224.42,-496.479,-104.861);(-0.873306,-433.378,1160.07);(-0.000605614,-0.97812,-0.208);(0.0,0.000128405,0.0063804)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "spacecraft_clock": 740962281.148,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(0.590498,0.454458,-1.96266)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-25T20:08:00.930Z",
+      "updated_at": "2023-06-26T20:38:01.874Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03869M12:52:31.002",
+        "bucket": "msl-raws",
+        "mast_az": "270.194",
+        "mast_el": "11.589",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962281EDR_S1012616NCAM00593M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,321,1024,384)"
+      },
+      "date_taken": "2023-06-25T11:47:24.000Z",
+      "date_received": "2023-06-25T20:03:16.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3869: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3869 (2023-06-25 11:47:24 UTC).",
+      "link": "/raw_images/1225124",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03869/opgs/edr/ncam/NLB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0006026190928929824,
+          -0.9781282664201029,
+          -0.2080017578777465
+        ],
+        "H": [
+          1224.42,
+          -496.479,
+          -104.861
+        ],
+        "V": [
+          -0.873306,
+          -433.378,
+          1160.07
+        ],
+        "C": [
+          0.590498,
+          0.454458,
+          -1.96266
+        ],
+        "O": [
+          -0.000605619117149381,
+          -0.9781282646473702,
+          -0.20800175750076985
+        ],
+        "R": [
+          0,
+          0.000128405,
+          0.0063804
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "parallaxLayer": 0,
+      "parallaxDepth": 1,
+      "downloadFile": "NLB_740962281EDR_S1012616NCAM00593M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.590498,
+          0.454458,
+          -1.96266
+        ],
+        "A": [
+          -0.0006026190928929824,
+          -0.9781282664201029,
+          -0.2080017578777465
+        ],
+        "H": [
+          1224.42,
+          -496.479,
+          -104.861
+        ],
+        "V": [
+          -0.873306,
+          -433.378,
+          1160.07
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 321,
+          "w": 1024,
+          "h": 384
+        }
+      },
+      "projectedRayMeshCache": {}
+    },
+    {
+      "id": 1225615,
+      "camera_vector": "(-0.003500592007553325,-0.9969115213981671,-0.07845485554883613)",
+      "site": 101,
+      "imageid": "NRB_741045156EDR_S1012616NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.013,0.457665,-1.97112);(-0.00587903,-0.960614,-0.277795);(1217.26,-495.807,-146.196);(1.21951,-589.543,1099.39);(-0.00650003,-0.9616,-0.274348);(1.26409e-05,0.00187613,-0.0060483)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045156EDR_S1012616NCAM00594M_.JPG",
+      "spacecraft_clock": 741045156.294,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.013,0.457665,-1.97112)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-27T04:28:01.382Z",
+      "updated_at": "2023-07-05T06:11:31.403Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M11:16:49.528",
+        "bucket": "msl-raws",
+        "mast_az": "269.734",
+        "mast_el": "16.3834",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045156EDR_S1012616NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2023-06-26T10:48:40.000Z",
+      "date_received": "2023-06-27T04:22:30.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 10:48:40 UTC).",
+      "link": "/raw_images/1225615",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045156EDR_S1012616NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0058790773796321884,
+          -0.960621741674731,
+          -0.27779723877492096
+        ],
+        "H": [
+          1217.26,
+          -495.807,
+          -146.196
+        ],
+        "V": [
+          1.21951,
+          -589.543,
+          1099.39
+        ],
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "O": [
+          -0.0065000831855427325,
+          -0.9616078681510534,
+          -0.27435024481229736
+        ],
+        "R": [
+          0.0000126409,
+          0.00187613,
+          -0.0060483
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_741045156EDR_S1012616NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "A": [
+          -0.0058790773796321884,
+          -0.960621741674731,
+          -0.27779723877492096
+        ],
+        "H": [
+          1217.26,
+          -495.807,
+          -146.196
+        ],
+        "V": [
+          1.21951,
+          -589.543,
+          1099.39
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 1225616,
+      "camera_vector": "(-0.003500592007553325,-0.9969115213981671,-0.07845485554883613)",
+      "site": 101,
+      "imageid": "NRB_741045168EDR_S1012616NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.013,0.457665,-1.97112);(-0.00587903,-0.960614,-0.277795);(1217.26,-495.807,-146.196);(1.21951,-589.543,1099.39);(-0.00650003,-0.9616,-0.274348);(1.26409e-05,0.00187613,-0.0060483)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045168EDR_S1012616NCAM00594M_.JPG",
+      "spacecraft_clock": 741045168.43,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.013,0.457665,-1.97112)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-27T04:28:01.614Z",
+      "updated_at": "2023-07-05T06:11:31.627Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M11:17:01.340",
+        "bucket": "msl-raws",
+        "mast_az": "269.734",
+        "mast_el": "16.3834",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045168EDR_S1012616NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2023-06-26T10:48:52.000Z",
+      "date_received": "2023-06-27T04:22:59.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 10:48:52 UTC).",
+      "link": "/raw_images/1225616",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045168EDR_S1012616NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.0058790773796321884,
+          -0.960621741674731,
+          -0.27779723877492096
+        ],
+        "H": [
+          1217.26,
+          -495.807,
+          -146.196
+        ],
+        "V": [
+          1.21951,
+          -589.543,
+          1099.39
+        ],
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "O": [
+          -0.0065000831855427325,
+          -0.9616078681510534,
+          -0.27435024481229736
+        ],
+        "R": [
+          0.0000126409,
+          0.00187613,
+          -0.0060483
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_741045168EDR_S1012616NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "A": [
+          -0.0058790773796321884,
+          -0.960621741674731,
+          -0.27779723877492096
+        ],
+        "H": [
+          1217.26,
+          -495.807,
+          -146.196
+        ],
+        "V": [
+          1.21951,
+          -589.543,
+          1099.39
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 1225617,
+      "camera_vector": "(-0.0034930994023349717,-0.9969110409566778,-0.07846129412161441)",
+      "site": 101,
+      "imageid": "NRB_741045181EDR_S1012616NCAM00594M_",
+      "subframe_rect": "(1,257,1024,512)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(1.013,0.457665,-1.97112);(-0.00587894,-0.960614,-0.277794);(1217.26,-495.798,-146.193);(1.21949,-589.551,1099.39);(-0.00649969,-0.961601,-0.274345);(1.2656e-05,0.00187508,-0.00604148)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045181EDR_S1012616NCAM00594M_.JPG",
+      "spacecraft_clock": 741045181.431,
+      "attitude": "(0.902835,-0.084376,-0.0550501,0.418018)",
+      "camera_position": "(1.013,0.457665,-1.97112)",
+      "camera_model_type": "CAHVOR",
+      "drive": 2616,
+      "xyz": "(-70.0098,115.128,-11.7508)",
+      "created_at": "2023-06-27T04:28:01.855Z",
+      "updated_at": "2023-07-05T06:11:31.844Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M11:17:13.993",
+        "bucket": "msl-raws",
+        "mast_az": "269.735",
+        "mast_el": "16.3838",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045181EDR_S1012616NCAM00594M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,257,1024,512)"
+      },
+      "date_taken": "2023-06-26T10:49:05.000Z",
+      "date_received": "2023-06-27T04:23:25.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 10:49:05 UTC).",
+      "link": "/raw_images/1225617",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741045181EDR_S1012616NCAM00594M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.005878989015194908,
+          -0.9606220090428618,
+          -0.27779631608539196
+        ],
+        "H": [
+          1217.26,
+          -495.798,
+          -146.193
+        ],
+        "V": [
+          1.21949,
+          -589.551,
+          1099.39
+        ],
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "O": [
+          -0.006499742296499617,
+          -0.9616087370407401,
+          -0.27434720737961155
+        ],
+        "R": [
+          0.000012656,
+          0.00187508,
+          -0.00604148
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.9028350413340417,
+          -0.08437600386294405,
+          -0.055050102520331094,
+          0.41801801913790826
+        ]
+      },
+      "downloadFile": "NRB_741045181EDR_S1012616NCAM00594M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.9028350413340417,
+            -0.08437600386294405,
+            -0.055050102520331094,
+            0.41801801913790826
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          1.013,
+          0.457665,
+          -1.97112
+        ],
+        "A": [
+          -0.005878989015194908,
+          -0.9606220090428618,
+          -0.27779631608539196
+        ],
+        "H": [
+          1217.26,
+          -495.798,
+          -146.193
+        ],
+        "V": [
+          1.21949,
+          -589.551,
+          1099.39
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 257,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 1225574,
+      "camera_vector": "(-0.9808028929168163,0.18204386300289946,0.06989790546923288)",
+      "site": 102,
+      "imageid": "NLB_741055887EDR_F1020000NCAM00284M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.730079,0.791384,-1.93211);(-0.980515,0.186305,0.0621607);(-725.6,-1108.77,30.7576);(-418.037,78.7288,1253.71);(-0.980514,0.186308,0.0621609);(0.0,0.000125119,0.00638436)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "spacecraft_clock": 741055887.978,
+      "attitude": "(0.405056,-0.12564,0.0187787,0.905424)",
+      "camera_position": "(0.730079,0.791384,-1.93211)",
+      "camera_model_type": "CAHVOR",
+      "drive": 0,
+      "xyz": "(0.0,0.0,0.0)",
+      "created_at": "2023-06-27T04:18:23.185Z",
+      "updated_at": "2023-07-05T06:12:28.201Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M14:10:54.177",
+        "bucket": "msl-raws",
+        "mast_az": "169.462",
+        "mast_el": "-3.98476",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055887EDR_F1020000NCAM00284M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-26T13:47:31.000Z",
+      "date_received": "2023-06-27T04:15:20.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 13:47:31 UTC).",
+      "link": "/raw_images/1225574",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.980523250709139,
+          0.18630656769490128,
+          0.06216122306171305
+        ],
+        "H": [
+          -725.6,
+          -1108.77,
+          30.7576
+        ],
+        "V": [
+          -418.037,
+          78.7288,
+          1253.71
+        ],
+        "C": [
+          0.730079,
+          0.791384,
+          -1.93211
+        ],
+        "O": [
+          -0.9805226519009913,
+          0.18630964395242688,
+          0.062161448497984044
+        ],
+        "R": [
+          0,
+          0.000125119,
+          0.00638436
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.4050557909739112,
+          -0.12563993516442715,
+          0.018778690309393727,
+          0.9054235327627848
+        ]
+      },
+      "downloadFile": "NLB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.730079,
+          0.791384,
+          -1.93211
+        ],
+        "A": [
+          -0.980523250709139,
+          0.18630656769490128,
+          0.06216122306171305
+        ],
+        "H": [
+          -725.6,
+          -1108.77,
+          30.7576
+        ],
+        "V": [
+          -418.037,
+          78.7288,
+          1253.71
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1225573,
+      "camera_vector": "(-0.9806242335224853,0.1833934590912719,0.0688690916955955)",
+      "site": 102,
+      "imageid": "NRB_741055887EDR_F1020000NCAM00284M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.650828,0.375657,-1.93239);(-0.979918,0.185434,0.0731987);(-726.483,-1104.44,30.9264);(-420.348,73.0205,1254.48);(-0.979534,0.185973,0.0768783);(1.34883e-05,0.00183391,-0.00577565)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "spacecraft_clock": 741055887.978,
+      "attitude": "(0.405056,-0.12564,0.0187787,0.905424)",
+      "camera_position": "(0.650828,0.375657,-1.93239)",
+      "camera_model_type": "CAHVOR",
+      "drive": 0,
+      "xyz": "(0.0,0.0,0.0)",
+      "created_at": "2023-06-27T04:18:23.076Z",
+      "updated_at": "2023-07-05T06:12:28.078Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M14:10:54.177",
+        "bucket": "msl-raws",
+        "mast_az": "169.383",
+        "mast_el": "-3.92571",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055887EDR_F1020000NCAM00284M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-26T13:47:31.000Z",
+      "date_received": "2023-06-27T04:15:03.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 13:47:31 UTC).",
+      "link": "/raw_images/1225573",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.9799262780789622,
+          0.18543556649566012,
+          0.07319931836257579
+        ],
+        "H": [
+          -726.483,
+          -1104.44,
+          30.9264
+        ],
+        "V": [
+          -420.348,
+          73.0205,
+          1254.48
+        ],
+        "C": [
+          0.650828,
+          0.375657,
+          -1.93239
+        ],
+        "O": [
+          -0.9795422835853366,
+          0.1859745727103049,
+          0.0768789501335927
+        ],
+        "R": [
+          0.0000134883,
+          0.00183391,
+          -0.00577565
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.4050557909739112,
+          -0.12563993516442715,
+          0.018778690309393727,
+          0.9054235327627848
+        ]
+      },
+      "downloadFile": "NRB_741055887EDR_F1020000NCAM00284M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.650828,
+          0.375657,
+          -1.93239
+        ],
+        "A": [
+          -0.9799262780789622,
+          0.18543556649566012,
+          0.07319931836257579
+        ],
+        "H": [
+          -726.483,
+          -1104.44,
+          30.9264
+        ],
+        "V": [
+          -420.348,
+          73.0205,
+          1254.48
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1225575,
+      "camera_vector": "(-0.9484457225650251,-0.3141630093166594,0.04186066083099948)",
+      "site": 102,
+      "imageid": "NRB_741055964EDR_F1020000NCAM00284M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.759588,0.324483,-1.93544);(-0.948923,-0.312084,0.0461803);(-102.382,-1318.24,17.7703);(-435.517,-149.334,1242.47);(-0.948943,-0.311457,0.0498609);(1.34279e-05,0.00183602,-0.00578928)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "spacecraft_clock": 741055964.665,
+      "attitude": "(0.405056,-0.12564,0.0187787,0.905424)",
+      "camera_position": "(0.759588,0.324483,-1.93544)",
+      "camera_model_type": "CAHVOR",
+      "drive": 0,
+      "xyz": "(0.0,0.0,0.0)",
+      "created_at": "2023-06-27T04:18:23.510Z",
+      "updated_at": "2023-07-05T06:12:28.556Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M14:12:08.813",
+        "bucket": "msl-raws",
+        "mast_az": "198.303",
+        "mast_el": "-2.37577",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055964EDR_F1020000NCAM00284M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-26T13:48:48.000Z",
+      "date_received": "2023-06-27T04:15:16.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 13:48:48 UTC).",
+      "link": "/raw_images/1225575",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NRB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.9489306374548026,
+          -0.31208651182387254,
+          0.046180671684482325
+        ],
+        "H": [
+          -102.382,
+          -1318.24,
+          17.7703
+        ],
+        "V": [
+          -435.517,
+          -149.334,
+          1242.47
+        ],
+        "C": [
+          0.759588,
+          0.324483,
+          -1.93544
+        ],
+        "O": [
+          -0.9489504068493069,
+          -0.31145943103649487,
+          0.049861289182672304
+        ],
+        "R": [
+          0.0000134279,
+          0.00183602,
+          -0.00578928
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.4050557909739112,
+          -0.12563993516442715,
+          0.018778690309393727,
+          0.9054235327627848
+        ]
+      },
+      "downloadFile": "NRB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.759588,
+          0.324483,
+          -1.93544
+        ],
+        "A": [
+          -0.9489306374548026,
+          -0.31208651182387254,
+          0.046180671684482325
+        ],
+        "H": [
+          -102.382,
+          -1318.24,
+          17.7703
+        ],
+        "V": [
+          -435.517,
+          -149.334,
+          1242.47
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1225576,
+      "camera_vector": "(-0.9479674829789065,-0.31546861829782324,0.04286259539387688)",
+      "site": 102,
+      "imageid": "NLB_741055964EDR_F1020000NCAM00284M_",
+      "subframe_rect": "(1,1,1024,1024)",
+      "sol": 3870,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.627896,0.726678,-1.93536);(-0.94958,-0.311523,0.0351269);(-99.4783,-1321.58,17.6466);(-436.269,-143.225,1241.73);(-0.949581,-0.31152,0.035127);(0.0,0.000125663,0.00638373)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "spacecraft_clock": 741055964.665,
+      "attitude": "(0.405056,-0.12564,0.0187787,0.905424)",
+      "camera_position": "(0.627896,0.726678,-1.93536)",
+      "camera_model_type": "CAHVOR",
+      "drive": 0,
+      "xyz": "(0.0,0.0,0.0)",
+      "created_at": "2023-06-27T04:18:23.626Z",
+      "updated_at": "2023-07-05T06:12:28.672Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03870M14:12:08.813",
+        "bucket": "msl-raws",
+        "mast_az": "198.383",
+        "mast_el": "-2.43322",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055964EDR_F1020000NCAM00284M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "full",
+        "subframeRect": "(1,1,1024,1024)"
+      },
+      "date_taken": "2023-06-26T13:48:48.000Z",
+      "date_received": "2023-06-27T04:15:34.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 1,
+      "is_thumbnail": false,
+      "title": "Sol 3870: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3870 (2023-06-26 13:48:48 UTC).",
+      "link": "/raw_images/1225576",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03870/opgs/edr/ncam/NLB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.9495882353241983,
+          -0.31152570171328403,
+          0.03512720464143051
+        ],
+        "H": [
+          -99.4783,
+          -1321.58,
+          17.6466
+        ],
+        "V": [
+          -436.269,
+          -143.225,
+          1241.73
+        ],
+        "C": [
+          0.627896,
+          0.726678,
+          -1.93536
+        ],
+        "O": [
+          -0.9495892177379169,
+          -0.31152269591505716,
+          0.03512730399142338
+        ],
+        "R": [
+          0,
+          0.000125663,
+          0.00638373
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.4050557909739112,
+          -0.12563993516442715,
+          0.018778690309393727,
+          0.9054235327627848
+        ]
+      },
+      "downloadFile": "NLB_741055964EDR_F1020000NCAM00284M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.4050557909739112,
+            -0.12563993516442715,
+            0.018778690309393727,
+            0.9054235327627848
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.627896,
+          0.726678,
+          -1.93536
+        ],
+        "A": [
+          -0.9495882353241983,
+          -0.31152570171328403,
+          0.03512720464143051
+        ],
+        "H": [
+          -99.4783,
+          -1321.58,
+          17.6466
+        ],
+        "V": [
+          -436.269,
+          -143.225,
+          1241.73
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 1024
+        }
+      }
+    },
+    {
+      "id": 1225948,
+      "camera_vector": "(-0.9951576755846814,-0.09626312502155722,-0.019864830378790645)",
+      "site": 102,
+      "imageid": "NRB_741152838EDR_S1020390NCAM00288M_",
+      "subframe_rect": "(1,1,1024,512)",
+      "sol": 3871,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.710694,0.340484,-1.94261);(-0.995416,-0.0942642,-0.0156469);(-392.045,-1262.85,-13.9785);(-533.196,-56.5664,1211.64);(-0.995523,-0.0936664,-0.0119965);(1.30057e-05,0.0018508,-0.00588471)",
+      "instrument": "NAV_RIGHT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NRB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "spacecraft_clock": 741152838.149,
+      "attitude": "(0.421981,-0.100152,0.00789121,0.901021)",
+      "camera_position": "(0.710694,0.340484,-1.94261)",
+      "camera_model_type": "CAHVOR",
+      "drive": 390,
+      "xyz": "(-21.1522,37.0999,-6.43194)",
+      "created_at": "2023-06-28T07:28:06.469Z",
+      "updated_at": "2023-07-07T13:43:02.845Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03871M16:23:31.271",
+        "bucket": "msl-raws",
+        "mast_az": "185.502",
+        "mast_el": "1.16163",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NRB_741152838EDR_S1020390NCAM00288M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,512)"
+      },
+      "date_taken": "2023-06-27T16:43:23.000Z",
+      "date_received": "2023-06-28T07:23:49.000Z",
+      "instrument_sort": 8,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3871: Right Navigation Camera",
+      "description": "This image was taken by Right Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3871 (2023-06-27 16:43:23 UTC).",
+      "link": "/raw_images/1225948",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NRB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.9954241734926765,
+          -0.09426497401583697,
+          -0.015647028478769236
+        ],
+        "H": [
+          -392.045,
+          -1262.85,
+          -13.9785
+        ],
+        "V": [
+          -533.196,
+          -56.5664,
+          1211.64
+        ],
+        "C": [
+          0.710694,
+          0.340484,
+          -1.94261
+        ],
+        "O": [
+          -0.995531285826336,
+          -0.09366717959376519,
+          -0.011996599847934842
+        ],
+        "R": [
+          0.0000130057,
+          0.0018508,
+          -0.00588471
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.42198110526293314,
+            -0.10015202498286246,
+            0.007891211968458083,
+            0.9010212247592031
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.42198110526293314,
+          -0.10015202498286246,
+          0.007891211968458083,
+          0.9010212247592031
+        ]
+      },
+      "downloadFile": "NRB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.42198110526293314,
+            -0.10015202498286246,
+            0.007891211968458083,
+            0.9010212247592031
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.710694,
+          0.340484,
+          -1.94261
+        ],
+        "A": [
+          -0.9954241734926765,
+          -0.09426497401583697,
+          -0.015647028478769236
+        ],
+        "H": [
+          -392.045,
+          -1262.85,
+          -13.9785
+        ],
+        "V": [
+          -533.196,
+          -56.5664,
+          1211.64
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    },
+    {
+      "id": 1225949,
+      "camera_vector": "(-0.9950071312405467,-0.09795148603632978,-0.019139361633354505)",
+      "site": 102,
+      "imageid": "NLB_741152838EDR_S1020390NCAM00288M_",
+      "subframe_rect": "(1,1,1024,512)",
+      "sol": 3871,
+      "scale_factor": 1,
+      "camera_model_component_list": "(0.671353,0.761797,-1.94241);(-0.995252,-0.0935061,-0.0266978);(-389.576,-1266.72,-13.9957);(-532.87,-50.472,1210.98);(-0.995253,-0.0935031,-0.0266978);(0.0,0.000132713,0.00637406)",
+      "instrument": "NAV_LEFT_B",
+      "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NLB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "spacecraft_clock": 741152838.149,
+      "attitude": "(0.421981,-0.100152,0.00789121,0.901021)",
+      "camera_position": "(0.671353,0.761797,-1.94241)",
+      "camera_model_type": "CAHVOR",
+      "drive": 390,
+      "xyz": "(-21.1522,37.0999,-6.43194)",
+      "created_at": "2023-06-28T07:28:06.579Z",
+      "updated_at": "2023-07-07T13:43:03.003Z",
+      "mission": "mslRaw",
+      "extended": {
+        "lmst": "Sol-03871M16:23:31.271",
+        "bucket": "msl-raws",
+        "mast_az": "185.599",
+        "mast_el": "1.12006",
+        "url_list": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NLB_741152838EDR_S1020390NCAM00288M_.JPG",
+        "contributor": "Team MSLICE",
+        "filter_name": null,
+        "sample_type": "subframe",
+        "subframeRect": "(1,1,1024,512)"
+      },
+      "date_taken": "2023-06-27T16:43:23.000Z",
+      "date_received": "2023-06-28T07:23:50.000Z",
+      "instrument_sort": 7,
+      "sample_type_sort": 2,
+      "is_thumbnail": false,
+      "title": "Sol 3871: Left Navigation Camera",
+      "description": "This image was taken by Left Navigation Camera onboard NASA's Mars rover Curiosity on Sol 3871 (2023-06-27 16:43:23 UTC).",
+      "link": "/raw_images/1225949",
+      "image_credit": "NASA/JPL-Caltech",
+      "https_url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/03871/opgs/edr/ncam/NLB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "geometry_scale": 1,
+      "geometryPixelDomain": "normalized-delivered",
+      "geometry_attitude": null,
+      "model": {
+        "A": [
+          -0.9952606056744526,
+          -0.093506908521918,
+          -0.026698030848644767
+        ],
+        "H": [
+          -389.576,
+          -1266.72,
+          -13.9957
+        ],
+        "V": [
+          -532.87,
+          -50.472,
+          1210.98
+        ],
+        "C": [
+          0.671353,
+          0.761797,
+          -1.94241
+        ],
+        "O": [
+          -0.9952608943195741,
+          -0.09350384166403172,
+          -0.026698011766219366
+        ],
+        "R": [
+          0,
+          0.000132713,
+          0.00637406
+        ],
+        "lensType": null,
+        "lensParameter": null,
+        "type": "CAHVOR",
+        "orientation": {
+          "q": [
+            0.42198110526293314,
+            -0.10015202498286246,
+            0.007891211968458083,
+            0.9010212247592031
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "attitude": [
+          0.42198110526293314,
+          -0.10015202498286246,
+          0.007891211968458083,
+          0.9010212247592031
+        ]
+      },
+      "downloadFile": "NLB_741152838EDR_S1020390NCAM00288M_.JPG",
+      "cameraGeometry": {
+        "type": "CAHVOR",
+        "pixelDomain": "normalized-delivered",
+        "sourceScaleFactor": 1,
+        "orientation": {
+          "q": [
+            0.42198110526293314,
+            -0.10015202498286246,
+            0.007891211968458083,
+            0.9010212247592031
+          ],
+          "order": "wxyz",
+          "from": "ROVER_NAV_FRAME",
+          "to": "SITE_FRAME"
+        },
+        "C": [
+          0.671353,
+          0.761797,
+          -1.94241
+        ],
+        "A": [
+          -0.9952606056744526,
+          -0.093506908521918,
+          -0.026698030848644767
+        ],
+        "H": [
+          -389.576,
+          -1266.72,
+          -13.9957
+        ],
+        "V": [
+          -532.87,
+          -50.472,
+          1210.98
+        ],
+        "subframe": {
+          "l": 1,
+          "top": 1,
+          "w": 1024,
+          "h": 512
+        }
+      }
+    }
+  ]
+}
