@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="hu" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controller map – polyline szerkesztő</title>
+  <!-- A preview ugyanazt a controller-map és label CSS-t használja, mint az alkalmazás. -->
+  <link rel="stylesheet" href="../dist/styles.css" />
+  <style>
+    :root { color-scheme: dark; }
+    body { min-width: 320px; min-height: 100vh; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .editor-shell { width: min(1960px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 42px; }
+    .editor-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    h1 { margin: 0; font-size: clamp(1.45rem, 2.8vw, 2.25rem); letter-spacing: -.035em; }
+    .editor-header p { max-width: 730px; margin: 8px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+    .badge { padding: 5px 8px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: 999px; color: var(--accent); font: 750 .66rem/1 system-ui; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    .editor-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--surface) 90%, transparent); box-shadow: var(--shadow); }
+    .preview-panel { padding: 0; overflow: visible; border: 0; background: transparent; box-shadow: none; }
+    .preview-note { margin: 0 0 11px; color: var(--muted); font-size: .72rem; line-height: 1.45; }
+    .preview-note code { color: var(--accent); }
+    .preview-help-card { width: min(1480px, calc(100vw - 44px)); height: min(820px, calc(100vh - 44px)); margin: 0 auto; transform: translateY(0) scale(1); }
+    .preview-help-card .help-modal-body { overflow-y: scroll; }
+    .controller-map-connectors { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+    .controller-map-connector-canvas { display: block; width: 100%; height: 100%; overflow: visible; }
+    .controller-map-connector { transform-box: view-box; transform-origin: 0 0; transform: translate(var(--connector-left), var(--connector-top)) rotate(var(--connector-angle, 0deg)); }
+    .connector-outline, .connector-line { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .connector-outline { stroke: #000; stroke-width: 8px; }
+    .connector-line { stroke: #fff; stroke-width: 3px; }
+    .controller-map-label { z-index: 2; }
+    .control-panel { padding: 17px; }
+    .control-panel h2, .output-card h2 { margin: 0; font-size: .9rem; letter-spacing: -.01em; }
+    .control-panel > p { margin: 7px 0 16px; color: var(--muted); font-size: .75rem; line-height: 1.45; }
+    .import-status { min-height: 1.3em; margin: -8px 0 12px; color: var(--muted); font: 650 .68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .connector-list { display: grid; gap: 7px; max-height: 230px; margin: 0 0 15px; overflow: auto; }
+    .connector-list:empty::before { content: "Még nincs hozzáadott polyline."; padding: 10px; border: 1px dashed var(--line); border-radius: 8px; color: var(--muted); font-size: .75rem; }
+    .connector-choice { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); color: var(--ink); cursor: pointer; font: 700 .76rem/1 system-ui; text-align: left; }
+    .connector-choice:hover, .connector-choice[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+    .connector-choice small { color: var(--muted); font: 600 .66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 16px; }
+    button { border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); color: var(--ink); cursor: pointer; font: 750 .75rem/1 system-ui; }
+    button:hover, button:focus-visible { border-color: var(--accent); color: var(--accent); outline: 0; }
+    #add-connector { min-height: 37px; background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
+    #remove-connector { width: 38px; color: #ffaaa3; }
+    #remove-connector:disabled { opacity: .42; cursor: not-allowed; }
+    .fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; padding: 0; border: 0; }
+    .fields:disabled { opacity: .45; }
+    .fields label { display: grid; gap: 5px; color: var(--muted); font: 750 .66rem/1 system-ui; letter-spacing: .045em; text-transform: uppercase; }
+    input[type="number"] { width: 100%; min-width: 0; padding: 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); font: 700 .78rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    input[type="number"]:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+    .outputs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .output-card { padding: 16px; }
+    .output-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .copy-output { padding: 6px 8px; font-size: .66rem; }
+    textarea { display: block; width: 100%; min-height: 310px; resize: vertical; padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: #050914; color: #c8f8ff; font: 500 .72rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; tab-size: 2; }
+    textarea:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+    @media (min-width: 1900px) { .editor-layout { grid-template-columns: minmax(0, 1480px) 320px; justify-content: center; } .preview-help-card { width: 100%; } .control-panel { position: sticky; top: 18px; } }
+    @media (max-width: 980px) { .editor-layout, .outputs { grid-template-columns: 1fr; } }
+    @media (max-width: 620px) { .editor-shell { width: min(100% - 20px, 1960px); padding-top: 18px; } .editor-header { align-items: start; flex-direction: column; gap: 12px; } .fields { grid-template-columns: 1fr; } .controller-map { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <header class="editor-header">
+      <div>
+        <h1>Controller map · polyline szerkesztő</h1>
+        <p>Új, két stroke-rétegű SVG-konnektorokat helyezhetsz el. A szög bármely 45°-os többszöröse lehet; a Top/Left mezőkben a keresztirányú nyilakkal két dimenzióban pozicionálhatsz.</p>
+      </div>
+      <span class="badge">Belső eszköz</span>
+    </header>
+
+    <section class="editor-layout" aria-label="Szerkesztő">
+      <section class="panel preview-panel" aria-label="Controller map előnézet">
+        <section class="help-modal-card preview-help-card">
+          <header class="help-modal-header"><div><p class="eyebrow">HELP</p><h2>Controls &amp; tools</h2></div><button class="help-modal-close" type="button" aria-label="Close preview">×</button></header>
+          <div class="help-modal-body">
+            <p class="preview-note">Valós Help modal-hierarchia és <code>../dist/styles.css</code>: a címkék ugyanabban a méretű és görgetős konténerben jelennek meg, mint a webappban.</p>
+            <section class="help-controller-section"><div class="help-controller-copy"><p class="eyebrow">GAMEPAD</p><h3>Controller mapping</h3><p>Standard Gamepad mapping is supported. Analog sticks and triggers use exponential response after their dead zones.</p></div>
+        <div class="controller-map" id="preview-map" aria-label="Controller mapping diagram">
+          <img class="controller-map-image" src="../dist/controller-map.png" alt="" />
+          <div class="controller-map-connectors" id="connector-layer" aria-hidden="true"></div>
+          <span class="controller-map-label controller-map-label--left-stick">Left stick · move camera</span>
+          <span class="controller-map-label controller-map-label--right-stick">Right stick · look</span>
+          <span class="controller-map-label controller-map-label--l1">L1 · Instrument Wheel</span>
+          <span class="controller-map-label controller-map-label--l2">L2 · analog zoom</span>
+          <span class="controller-map-label controller-map-label--r1">R1 · move up</span>
+          <span class="controller-map-label controller-map-label--r2">R2 · move down</span>
+          <span class="controller-map-label controller-map-label--l3">L3 · reset camera</span>
+          <span class="controller-map-label controller-map-label--r3">R3 · reveal image beneath</span>
+          <span class="controller-map-label controller-map-label--dpad">D-pad · location &amp; resolution</span>
+          <span class="controller-map-label controller-map-label--circle">Circle · Escape</span>
+          <span class="controller-map-label controller-map-label--square">Square · Fullscreen</span>
+          <span class="controller-map-label controller-map-label--triangle">Triangle + D-pad ↑/↓ · layer spacing</span>
+        </div>
+              <dl class="help-controller-details">
+                <div><dt>D-pad left / right</dt><dd>Decrease / increase location resolution.</dd></div>
+                <div><dt>D-pad up / down</dt><dd>Next / previous mapped location.</dd></div>
+                <div><dt>Triangle + D-pad up / down</dt><dd>Increase / decrease layer spacing.</dd></div>
+              </dl>
+            </section>
+          </div>
+        </section>
+      </section>
+
+      <aside class="panel control-panel">
+        <h2>Polyline-ok</h2>
+        <p>Minden elem egy abszolút pozicionált, egyenes SVG-szakasz. A <code>top</code>/<code>left</code> a kezdőpont, a hossz csak a vonal másik végét mozgatja.</p>
+        <p class="import-status" id="import-status" aria-live="polite">A meglévő connectorok importálása…</p>
+        <div class="connector-list" id="connector-list" aria-label="Polyline lista"></div>
+        <div class="actions">
+          <button type="button" id="add-connector">+ Új polyline</button>
+          <button type="button" id="remove-connector" aria-label="Kijelölt polyline törlése" disabled>×</button>
+        </div>
+        <fieldset class="fields" id="connector-fields" disabled>
+          <label>Top <input id="connector-top" type="number" step="1" inputmode="numeric" /></label>
+          <label>Left <input id="connector-left" type="number" step="1" inputmode="numeric" /></label>
+          <label>Hossz <input id="connector-length" type="number" min="12" step="1" inputmode="numeric" /></label>
+          <label>Szög <input id="connector-angle" type="number" step="45" inputmode="numeric" /></label>
+        </fieldset>
+      </aside>
+    </section>
+
+    <section class="outputs" aria-label="Generált kód">
+      <article class="panel output-card">
+        <div class="output-heading"><h2>Eredmény: .controller-map HTML</h2><button class="copy-output" type="button" data-copy="html-output">Másolás</button></div>
+        <textarea id="html-output" readonly spellcheck="false" aria-label="Generált HTML"></textarea>
+      </article>
+      <article class="panel output-card">
+        <div class="output-heading"><h2>Eredmény: bemásolandó CSS</h2><button class="copy-output" type="button" data-copy="css-output">Másolás</button></div>
+        <textarea id="css-output" readonly spellcheck="false" aria-label="Generált CSS"></textarea>
+      </article>
+    </section>
+  </main>
+
+  <style id="generated-css"></style>
+  <script>
+    (() => {
+      const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+      const CONNECTOR_BASE_CSS = `.controller-map-connectors {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.controller-map-connector-canvas { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.controller-map-connector {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  transform: translate(var(--connector-left), var(--connector-top)) rotate(var(--connector-angle, 0deg));
+}
+
+.connector-outline,
+.connector-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connector-outline { stroke: #000; stroke-width: 8px; }
+.connector-line { stroke: #fff; stroke-width: 3px; }`;
+
+      const connectorLayer = document.querySelector('#connector-layer');
+      const connectorList = document.querySelector('#connector-list');
+      const generatedCss = document.querySelector('#generated-css');
+      const htmlOutput = document.querySelector('#html-output');
+      const cssOutput = document.querySelector('#css-output');
+      const importStatus = document.querySelector('#import-status');
+      const fields = document.querySelector('#connector-fields');
+      const removeButton = document.querySelector('#remove-connector');
+      const inputs = {
+        top: document.querySelector('#connector-top'),
+        left: document.querySelector('#connector-left'),
+        length: document.querySelector('#connector-length'),
+        angle: document.querySelector('#connector-angle'),
+      };
+
+      let connectors = [];
+      let selectedId = null;
+      let nextId = 1;
+
+      const labelsHtml = `  <span class="controller-map-label controller-map-label--left-stick">Left stick · move camera</span>
+  <span class="controller-map-label controller-map-label--right-stick">Right stick · look</span>
+  <span class="controller-map-label controller-map-label--l1">L1 · Instrument Wheel</span>
+  <span class="controller-map-label controller-map-label--l2">L2 · analog zoom</span>
+  <span class="controller-map-label controller-map-label--r1">R1 · move up</span>
+  <span class="controller-map-label controller-map-label--r2">R2 · move down</span>
+  <span class="controller-map-label controller-map-label--l3">L3 · reset camera</span>
+  <span class="controller-map-label controller-map-label--r3">R3 · reveal image beneath</span>
+  <span class="controller-map-label controller-map-label--dpad">D-pad · location &amp; resolution</span>
+  <span class="controller-map-label controller-map-label--circle">Circle · Escape</span>
+  <span class="controller-map-label controller-map-label--square">Square · Fullscreen</span>
+  <span class="controller-map-label controller-map-label--triangle">Triangle + D-pad ↑/↓ · layer spacing</span>`;
+
+      function selectedConnector() {
+        return connectors.find((connector) => connector.id === selectedId) ?? null;
+      }
+
+      function connectorPoints(connector) {
+        return `0,0 ${connector.length},0`;
+      }
+
+      function makePolyline(className, connector) {
+        const polyline = document.createElementNS(SVG_NAMESPACE, 'polyline');
+        polyline.setAttribute('class', className);
+        polyline.setAttribute('points', connectorPoints(connector));
+        polyline.setAttribute('vector-effect', 'non-scaling-stroke');
+        return polyline;
+      }
+
+      function connectorHtml(connector, lineClass) {
+        return `      <polyline class="controller-map-connector controller-map-connector--${connector.id} ${lineClass}" points="${connectorPoints(connector)}" vector-effect="non-scaling-stroke" />`;
+      }
+
+      function connectorCss(connector) {
+        return `.controller-map-connector--${connector.id} {
+  --connector-top: ${connector.top}px;
+  --connector-left: ${connector.left}px;
+  --connector-length: ${connector.length}px;
+  --connector-angle: ${connector.angle}deg;
+}`;
+      }
+
+      function buildHtmlOutput() {
+        const outlineHtml = connectors.map((connector) => connectorHtml(connector, 'connector-outline')).join('\n');
+        const lineHtml = connectors.map((connector) => connectorHtml(connector, 'connector-line')).join('\n');
+        return `<div class="controller-map" aria-label="Controller mapping diagram">
+  <img class="controller-map-image" src="./controller-map.png" alt="" />${connectors.length ? `\n  <div class="controller-map-connectors" aria-hidden="true">\n    <svg class="controller-map-connector-canvas">\n      <g class="controller-map-connector-outlines">\n${outlineHtml}\n      </g>\n      <g class="controller-map-connector-lines">\n${lineHtml}\n      </g>\n    </svg>\n  </div>` : ''}
+${labelsHtml}
+</div>`;
+      }
+
+      function buildCssOutput() {
+        const positionalRules = connectors.map(connectorCss).join('\n\n');
+        return `${CONNECTOR_BASE_CSS}${positionalRules ? `\n\n${positionalRules}` : ''}`;
+      }
+
+      function updateFields() {
+        const connector = selectedConnector();
+        fields.disabled = !connector;
+        removeButton.disabled = !connector;
+        if (!connector) {
+          inputs.top.value = '';
+          inputs.left.value = '';
+          inputs.length.value = '';
+          inputs.angle.value = '';
+          return;
+        }
+        inputs.top.value = connector.top;
+        inputs.left.value = connector.left;
+        inputs.length.value = connector.length;
+        inputs.angle.value = connector.angle;
+      }
+
+      function renderConnectorList() {
+        connectorList.replaceChildren();
+        connectors.forEach((connector) => {
+          const choice = document.createElement('button');
+          choice.type = 'button';
+          choice.className = 'connector-choice';
+          choice.setAttribute('aria-pressed', String(connector.id === selectedId));
+          choice.innerHTML = `<span>Polyline #${connector.id}</span><small>${connector.top}px · ${connector.left}px · ${connector.length}px · ${connector.angle}°</small>`;
+          choice.addEventListener('click', () => {
+            selectedId = connector.id;
+            render();
+          });
+          connectorList.append(choice);
+        });
+      }
+
+      function renderPreview() {
+        connectorLayer.replaceChildren();
+        const canvas = document.createElementNS(SVG_NAMESPACE, 'svg');
+        canvas.setAttribute('class', 'controller-map-connector-canvas');
+        canvas.setAttribute('aria-hidden', 'true');
+        const outlines = document.createElementNS(SVG_NAMESPACE, 'g');
+        outlines.setAttribute('class', 'controller-map-connector-outlines');
+        const lines = document.createElementNS(SVG_NAMESPACE, 'g');
+        lines.setAttribute('class', 'controller-map-connector-lines');
+        connectors.forEach((connector) => {
+          outlines.append(makePolyline(`controller-map-connector controller-map-connector--${connector.id} connector-outline`, connector));
+          lines.append(makePolyline(`controller-map-connector controller-map-connector--${connector.id} connector-line`, connector));
+        });
+        canvas.append(outlines, lines);
+        connectorLayer.append(canvas);
+      }
+
+      function render() {
+        const css = buildCssOutput();
+        generatedCss.textContent = css;
+        cssOutput.value = css;
+        htmlOutput.value = buildHtmlOutput();
+        renderPreview();
+        renderConnectorList();
+        updateFields();
+      }
+
+      function readCssNumber(rule, propertyNames) {
+        for (const propertyName of propertyNames) {
+          const declaration = rule.match(new RegExp(`${propertyName}\\s*:\\s*(-?[\\d.]+)px`, 'i'));
+          if (declaration) return Number(declaration[1]);
+        }
+        return null;
+      }
+
+      function readAngle(rule) {
+        const declaration = rule.match(/--connector-angle\s*:\s*(-?[\d.]+)deg/i);
+        return declaration ? Number(declaration[1]) : 0;
+      }
+
+      function lengthFromPoints(points) {
+        const coordinates = [...points.matchAll(/(-?[\d.]+)\s*,\s*(-?[\d.]+)/g)];
+        if (coordinates.length < 2) return null;
+        const [startX, startY] = coordinates[0].slice(1).map(Number);
+        const [endX, endY] = coordinates.at(-1).slice(1).map(Number);
+        return Math.hypot(endX - startX, endY - startY);
+      }
+
+      async function importExistingConnectors() {
+        try {
+          const [htmlResponse, cssResponse] = await Promise.all([
+            fetch('../dist/index.html', { cache: 'no-store' }),
+            fetch('../dist/styles.css', { cache: 'no-store' }),
+          ]);
+          if (!htmlResponse.ok || !cssResponse.ok) {
+            importStatus.textContent = 'Az importforrások nem érhetők el a futó szerveren.';
+            return;
+          }
+
+          const importedDocument = new DOMParser().parseFromString(await htmlResponse.text(), 'text/html');
+          const cssText = await cssResponse.text();
+          const imported = new Map();
+
+          importedDocument.querySelectorAll('[class*="controller-map-connector--"]').forEach((element) => {
+            const idMatch = [...element.classList].join(' ').match(/controller-map-connector--(\d+)/);
+            if (!idMatch || imported.has(Number(idMatch[1]))) return;
+
+            const id = Number(idMatch[1]);
+            const line = element.matches('polyline')
+              ? element
+              : element.querySelector('.connector-line, polyline');
+            const points = line?.getAttribute('points') ?? '';
+            const ruleMatch = cssText.match(new RegExp(`\\.controller-map-connector--${id}\\s*\\{([^}]*)\\}`, 'i'));
+            const rule = ruleMatch?.[1] ?? element.getAttribute('style') ?? '';
+            const top = readCssNumber(rule, ['--connector-top', 'top']);
+            const left = readCssNumber(rule, ['--connector-left', 'left']);
+            const length = readCssNumber(rule, ['--connector-length']) ?? lengthFromPoints(points);
+
+            if (top === null || left === null || length === null) return;
+            imported.set(id, { id, top, left, length: Math.max(12, length), angle: readAngle(rule) });
+          });
+
+          if (imported.size) {
+            connectors = [...imported.values()].sort((first, second) => first.id - second.id);
+            selectedId = connectors[0].id;
+            nextId = Math.max(...connectors.map((connector) => connector.id)) + 1;
+            render();
+            importStatus.textContent = `${connectors.length} meglévő connector importálva a dist fájlokból.`;
+          } else {
+            importStatus.textContent = 'Nem található importálható connector a dist fájlokban.';
+          }
+        } catch (error) {
+          console.warn('A meglévő controller-map connectorok importja nem sikerült.', error);
+          importStatus.textContent = 'Az import nem sikerült; ellenőrizd a futó szerver projektgyökerét.';
+        }
+      }
+
+      function isValidAngle(value) {
+        const angle = Number(value);
+        return Number.isInteger(angle) && angle % 45 === 0;
+      }
+
+      function nudgeSelected(property, amount, focusInput) {
+        const connector = selectedConnector();
+        if (!connector) return;
+        connector[property] += amount;
+        render();
+        focusInput.focus();
+      }
+
+      document.querySelector('#add-connector').addEventListener('click', () => {
+        const connector = { id: nextId++, top: 150, left: 250, length: 120, angle: 0 };
+        connectors.push(connector);
+        selectedId = connector.id;
+        render();
+      });
+
+      removeButton.addEventListener('click', () => {
+        connectors = connectors.filter((connector) => connector.id !== selectedId);
+        selectedId = connectors.at(-1)?.id ?? null;
+        render();
+      });
+
+      Object.entries(inputs).forEach(([property, input]) => {
+        input.addEventListener('input', () => {
+          const connector = selectedConnector();
+          if (!connector || input.value === '') return;
+          if (property === 'angle' && !isValidAngle(input.value)) {
+            input.setAttribute('aria-invalid', 'true');
+            return;
+          }
+          input.removeAttribute('aria-invalid');
+          connector[property] = property === 'angle'
+            ? Number(input.value)
+            : property === 'length'
+              ? Math.max(12, Number(input.value))
+              : Number(input.value);
+          render();
+          input.focus();
+        });
+        input.addEventListener('change', () => {
+          if (property === 'angle' && input.value !== '' && !isValidAngle(input.value)) {
+            input.value = selectedConnector()?.angle ?? '';
+            input.removeAttribute('aria-invalid');
+          }
+        });
+      });
+
+      inputs.top.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          const step = event.shiftKey ? 10 : 1;
+          nudgeSelected('left', event.key === 'ArrowLeft' ? -step : step, inputs.top);
+        }
+      });
+
+      inputs.left.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          const step = event.shiftKey ? 10 : 1;
+          nudgeSelected('top', event.key === 'ArrowUp' ? step : -step, inputs.left);
+        }
+      });
+
+      document.querySelectorAll('[data-copy]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const textarea = document.querySelector(`#${button.dataset.copy}`);
+          try {
+            await navigator.clipboard.writeText(textarea.value);
+            button.textContent = 'Másolva';
+          } catch {
+            textarea.focus();
+            textarea.select();
+            document.execCommand('copy');
+            button.textContent = 'Kijelölve';
+          }
+          window.setTimeout(() => { button.textContent = 'Másolás'; }, 1200);
+        });
+      });
+
+      render();
+      void importExistingConnectors();
+    })();
+  </script>
+</body>
+</html>

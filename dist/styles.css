@@ -678,16 +678,16 @@ body.has-help-modal { overflow: hidden }
 
 .controller-map-label--left-stick {top: 262px;left: 258px;text-align: center;width: 110px;}
 .controller-map-label--right-stick {top: 262px;left: 374px;text-align: center;width: 120px;}
-.controller-map-label--l1 {top:58px;left:8px;width:110px;text-align:center}
+.controller-map-label--l1 {top:55px;left:50px;width:107px;text-align:center}
 .controller-map-label--l2 {top: 10px;left:50px}
 .controller-map-label--r1 {top: 59px;left: 587px;width: 100px;}
 .controller-map-label--r2 {top: 9px;left: 587px;}
 .controller-map-label--l3 {top: 302px;left: 258px;text-align: center;}
-.controller-map-label--r3 {top: 302px;left: 374px;}
+.controller-map-label--r3 {top: 302px;left: 374px;width: 120px}
 .controller-map-label--dpad {top: 162px;left: 31px;width: 125px;}
 .controller-map-label--circle {display:none;top:100px;left:10px}
 .controller-map-label--square {top: 169px;left: 587px;width: 101px;}
-.controller-map-label--triangle {top: 112px;left: 538px;width: 152px;text-align: center;}
+.controller-map-label--triangle {top: 98px;left: 587px;width: 152px;text-align: center;}
 
 [data-theme="light"] .controller-map-image {
   filter: invert(100%) hue-rotate(180deg);
@@ -1146,4 +1146,123 @@ kbd {
 	.language-select {
 		display: none
 	}
+}
+
+
+
+
+.controller-map-connectors {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.controller-map-connector-canvas { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.controller-map-connector {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  transform: translate(var(--connector-left), var(--connector-top)) rotate(var(--connector-angle, 0deg));
+}
+
+.connector-outline,
+.connector-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connector-outline { stroke: #000; stroke-width: 8px; }
+.connector-line { stroke: #fff; stroke-width: 3px; }
+
+.controller-map-connector--1 {
+  --connector-top: 21px;
+  --connector-left: 230px;
+  --connector-length: 67px;
+  --connector-angle: 180deg;
+}
+
+.controller-map-connector--2 {
+  --connector-top: 21px;
+  --connector-left: 513px;
+  --connector-length: 66px;
+  --connector-angle: 0deg;
+}
+
+.controller-map-connector--3 {
+  --connector-top: 21px;
+  --connector-left: 231px;
+  --connector-length: 56px;
+  --connector-angle: 45deg;
+}
+
+.controller-map-connector--4 {
+  --connector-top: 21px;
+  --connector-left: 512px;
+  --connector-length: 57px;
+  --connector-angle: 135deg;
+}
+
+.controller-map-connector--5 {
+  --connector-top: 71px;
+  --connector-left: 251px;
+  --connector-length: 89px;
+  --connector-angle: 180deg;
+}
+
+.controller-map-connector--6 {
+  --connector-top: 71px;
+  --connector-left: 491px;
+  --connector-length: 89px;
+  --connector-angle: 0deg;
+}
+
+.controller-map-connector--7 {
+  --connector-top: 138px;
+  --connector-left: 253px;
+  --connector-length: 56px;
+  --connector-angle: 135deg;
+}
+
+.controller-map-connector--8 {
+  --connector-top: 140px;
+  --connector-left: 463px;
+  --connector-length: 65px;
+  --connector-angle: 45deg;
+}
+
+.controller-map-connector--9 {
+  --connector-top: 186px;
+  --connector-left: 509px;
+  --connector-length: 72px;
+  --connector-angle: 0deg;
+}
+
+.controller-map-connector--10 {
+  --connector-top: 115px;
+  --connector-left: 487px;
+  --connector-length: 93px;
+  --connector-angle: 0deg;
+}
+
+.controller-map-connector--11 {
+  --connector-top: 178px;
+  --connector-left: 212px;
+  --connector-length: 50px;
+  --connector-angle: 180deg;
+}
+
+.controller-map-connector--12 {
+  --connector-top: 189px;
+  --connector-left: 311px;
+  --connector-length: 66px;
+  --connector-angle: 90deg;
+}
+
+.controller-map-connector--13 {
+  --connector-top: 189px;
+  --connector-left: 430px;
+  --connector-length: 66px;
+  --connector-angle: 90deg;
 }

@@ -224,18 +224,52 @@
             <section class="help-controller-section"><div class="help-controller-copy"><p class="eyebrow" data-i18n="helpControllerEyebrow">GAMEPAD</p><h3 data-i18n="helpControllerTitle">Controller mapping</h3><p data-i18n="helpControllerIntro">Standard Gamepad mapping is supported. Analog sticks and triggers use exponential response after their dead zones.</p></div>
               <div class="controller-map" aria-label="Controller mapping diagram">
                 <img class="controller-map-image" src="./controller-map.png" alt="" />
-                <span class="controller-map-label controller-map-label--left-stick" data-i18n="helpPadLeftStick">Left stick · move camera</span>
-                <span class="controller-map-label controller-map-label--right-stick" data-i18n="helpPadRightStick">Right stick · look</span>
-                <span class="controller-map-label controller-map-label--l1" data-i18n="helpPadL1">L1 · Instrument Wheel</span>
-                <span class="controller-map-label controller-map-label--l2" data-i18n="helpPadL2">L2 · analog zoom</span>
-                <span class="controller-map-label controller-map-label--r1" data-i18n="helpPadR1">R1 · move up</span>
-                <span class="controller-map-label controller-map-label--r2" data-i18n="helpPadR2">R2 · move down</span>
-                <span class="controller-map-label controller-map-label--l3" data-i18n="helpPadL3">L3 · reset camera</span>
-                <span class="controller-map-label controller-map-label--r3" data-i18n="helpPadR3">R3 · reveal image beneath</span>
-                <span class="controller-map-label controller-map-label--dpad" data-i18n="helpPadDpad">D-pad · location & resolution</span>
-                <span class="controller-map-label controller-map-label--circle" data-i18n="helpPadCircle">Circle · Escape</span>
-                <span class="controller-map-label controller-map-label--square" data-i18n="helpPadSquare">Square · Fullscreen</span>
-                <span class="controller-map-label controller-map-label--triangle" data-i18n="helpPadTriangle">Triangle + D-pad ↑/↓ · layer spacing</span>
+                <div class="controller-map-connectors" aria-hidden="true">
+                  <svg class="controller-map-connector-canvas">
+                    <g class="controller-map-connector-outlines">
+                    <polyline class="controller-map-connector controller-map-connector--1 connector-outline" points="0,0 67,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--2 connector-outline" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--3 connector-outline" points="0,0 56,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--4 connector-outline" points="0,0 57,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--5 connector-outline" points="0,0 89,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--6 connector-outline" points="0,0 89,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--7 connector-outline" points="0,0 56,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--8 connector-outline" points="0,0 65,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--9 connector-outline" points="0,0 72,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--10 connector-outline" points="0,0 93,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--11 connector-outline" points="0,0 50,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--12 connector-outline" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--13 connector-outline" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    </g>
+                    <g class="controller-map-connector-lines">
+                    <polyline class="controller-map-connector controller-map-connector--1 connector-line" points="0,0 67,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--2 connector-line" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--3 connector-line" points="0,0 56,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--4 connector-line" points="0,0 57,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--5 connector-line" points="0,0 89,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--6 connector-line" points="0,0 89,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--7 connector-line" points="0,0 56,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--8 connector-line" points="0,0 65,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--9 connector-line" points="0,0 72,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--10 connector-line" points="0,0 93,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--11 connector-line" points="0,0 50,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--12 connector-line" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    <polyline class="controller-map-connector controller-map-connector--13 connector-line" points="0,0 66,0" vector-effect="non-scaling-stroke" />
+                    </g>
+                  </svg>
+                </div>
+                <span class="controller-map-label controller-map-label--left-stick">Left stick · move camera</span>
+                <span class="controller-map-label controller-map-label--right-stick">Right stick · look</span>
+                <span class="controller-map-label controller-map-label--l1">L1 · Instrument Wheel</span>
+                <span class="controller-map-label controller-map-label--l2">L2 · analog zoom</span>
+                <span class="controller-map-label controller-map-label--r1">R1 · move up</span>
+                <span class="controller-map-label controller-map-label--r2">R2 · move down</span>
+                <span class="controller-map-label controller-map-label--l3">L3 · reset camera</span>
+                <span class="controller-map-label controller-map-label--r3">R3 · reveal image beneath</span>
+                <span class="controller-map-label controller-map-label--dpad">D-pad · location &amp; resolution</span>
+                <span class="controller-map-label controller-map-label--circle">Circle · Escape</span>
+                <span class="controller-map-label controller-map-label--square">Square · Fullscreen</span>
+                <span class="controller-map-label controller-map-label--triangle">Triangle + D-pad ↑/↓ · layer spacing</span>
               </div>
               <dl class="help-controller-details">
                 <div><dt data-i18n="helpPadDpadHorizontalKey">D-pad left / right</dt><dd data-i18n="helpPadDpadHorizontalValue">Decrease / increase location resolution.</dd></div>
@@ -323,7 +357,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026102709"></script>
+    <script type="module" src="./app.js?2026102802"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
