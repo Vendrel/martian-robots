@@ -531,6 +531,16 @@ body {
 	border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
 	border-radius: 12px;
 	background: #fff;
+	cursor: pointer;
+	transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.support-callout-logo:hover,
+.support-callout-logo:focus-visible {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--glow) 42%, transparent);
+	outline: 0;
+	transform: translateY(-1px);
 }
 
 .support-callout-logo img {
