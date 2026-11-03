@@ -508,6 +508,48 @@ body {
 	text-align: center;
 }
 
+.support-callout {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	max-width: 880px;
+	margin: 28px auto 0;
+	padding: 18px 22px;
+	border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+	border-radius: 16px;
+	background: linear-gradient(120deg, color-mix(in srgb, var(--surface) 94%, var(--accent)), var(--surface));
+	box-shadow: 0 12px 30px color-mix(in srgb, var(--glow) 35%, transparent);
+}
+
+.support-callout-logo {
+	display: grid;
+	place-items: center;
+	flex: 0 0 82px;
+	width: 82px;
+	height: 80px;
+	padding: 9px;
+	border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+	border-radius: 12px;
+	background: #fff;
+}
+
+.support-callout-logo img {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.support-callout-copy { min-width: 0; }
+.support-callout h2 { margin: 0; color: var(--ink); font-size: .95rem; line-height: 1.35; }
+.support-callout p { margin: 5px 0 0; color: var(--muted); font: 500 .82rem/1.5 system-ui, sans-serif; }
+
+@media (max-width: 600px) {
+	.support-callout { align-items: flex-start; gap: 13px; margin-top: 20px; padding: 15px; }
+	.support-callout-logo { flex-basis: 64px; width: 64px; height: 50px; padding: 7px; }
+	.support-callout h2 { font-size: .88rem; }
+	.support-callout p { font-size: .76rem; }
+}
+
 .nasa-request-summary { display: grid; gap: 7px; min-width: 0 }
 .nasa-request-tasks { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; color: var(--muted); font: 600 .68rem/1.35 system-ui, sans-serif }
 .nasa-request-tasks[hidden] { display: none !important }
