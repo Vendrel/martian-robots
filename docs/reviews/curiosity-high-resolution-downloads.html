@@ -36,6 +36,10 @@
   <p>A 3456-os adat nem azért hiányzik, mert a NASA sosem szolgáltatta: az élő API ezt cáfolja. A meglévő, régebbi manifest olyan kiválogatásból származik, amely a panorámához használható geometriát részesítette előnyben. A Mastcam raw rekordoknál a jelenlegi raw API kamera-geometriája hiányzik, ezért kiestek ebből a történeti exportból.</p>
   <div class="next"><strong>Javasolt cache-migráció</strong><br>Az érintett régi Sol-tartományokat újra kell exportálni úgy, hogy minden nem-thumbnail Curiosity raw rekord megmaradjon, a panoráma-alkalmasságtól függetlenül. A panoráma továbbra is csak a geometriailag használható képeket olvassa, a kutatói letöltési lista viszont a teljes nyers metadata-készletből dolgozhat.</div>
 
+  <h2>Pontosítás: miért kicsik a tájképek?</h2>
+  <p>A 3454–3458-as Solok teljes termékcsalád-auditja kimutatta, hogy a kis <code>I</code> színes thumbnail minden esetben teljes méretű partnerrel rendelkezik. A 3456-os Sol 240 thumbnail-családjánál azonban nincs <code>E</code> vagy <code>F</code> teljes színes JPEG: mind a 240 partner <code>C</code> típusú veszteségmentes, Bayer-nyers kép. Ez valódi nagyfelbontású színforrás, de a színes kép előállításához demosaic feldolgozás kell. A <code>D</code> partner teljes méretű, de szürkeárnyalatos, ezért nem színes helyettesítő.</p>
+  <p>A letöltési felület ezért csak teljes méretű Mastcam-színforrást ad: közvetlenül megjeleníthető <code>E/F</code> JPEG-et, illetve szükség esetén <code>A/B/C</code> Bayer-nyers URL-t egyértelmű jelöléssel. A kis <code>I</code> thumbnail nem kerül a listába.</p>
+
   <h2>Letöltési szabály</h2>
   <ul>
     <li>A letöltési exportban meg kell őrizni minden eredeti NASA URL-t, beleértve a panorámából kizárt Mastcam-fájlokat is.</li>
@@ -48,6 +52,7 @@
     <li><a href="https://mars.nasa.gov/api/v1/raw_image_items/">NASA Curiosity raw-image API</a></li>
     <li><a href="https://mars.nasa.gov/msl-raw-images/msss/05040/mcam/5040ML1101300001506447E01_DXXX.jpg">Példa friss Mastcam E01 RGB-képre</a></li>
     <li>Audit parancs: <code>node tools/curiosity-api-instrument-audit.mjs 3456</code></li>
+    <li>Termékcsalád-audit: <code>node tools/curiosity-mastcam-product-audit.mjs 3454 3455 3456 3457 3458</code></li>
   </ul>
 </body>
 </html>

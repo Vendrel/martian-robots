@@ -182,6 +182,8 @@
 }
 .gallery-section > .download-all-button { margin: 4px 0 12px }
 .gallery-section > .download-all-button:disabled { border-color: var(--line); background: color-mix(in srgb, var(--surface2) 70%, transparent); color: var(--muted); cursor: default }
+.excluded-color-source { display:block; max-width:100%; margin-top:9px; padding:10px 12px; overflow-wrap:anywhere; border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line)); border-radius:8px; background:color-mix(in srgb,var(--surface2) 74%,transparent); color:var(--accent); font:700 .76rem/1.4 ui-monospace,monospace; text-decoration:none }
+.excluded-color-source:hover, .excluded-color-source:focus-visible { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,var(--surface2)); outline:0 }
 #locationControl > span { display: inline-flex; align-items: baseline; gap: 6px }
 .location-download-button { align-self: baseline }
 .location-download-button { display:inline-grid; place-items:center; width:22px; height:22px; margin-left:6px; padding:0; border:1px solid var(--line); border-radius:50%; background:var(--surface); color:var(--accent); vertical-align:middle; cursor:pointer; position:relative }.location-download-button svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.location-download-button:hover,.location-download-button:focus-visible{border-color:var(--accent);outline:0;box-shadow:0 0 10px var(--glow)}.location-download-button[data-tooltip]::after{content:attr(data-tooltip);position:absolute;z-index:31;top:calc(100% + 8px);left:0;width:max-content;max-width:min(250px,calc(100vw - 32px));padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow);color:var(--ink);font:600 .72rem/1.35 system-ui;opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity .15s ease,transform .15s ease}.location-download-button[data-tooltip]:hover::after,.location-download-button[data-tooltip]:focus-visible::after{opacity:1;transform:translateY(0)}
@@ -738,6 +740,14 @@ body {
 .research-fields label { display: grid; gap: 7px; color: var(--muted); font-size: .76rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase }
 .research-fields select, .research-fields input { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); color: var(--ink); font: 700 .92rem/1 system-ui }
 .research-fields select:focus-visible, .research-fields input:focus-visible { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 28%, transparent) }
+.research-deep-toggle { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:start; margin-top:16px; padding:12px; border:1px solid var(--line); border-radius:10px; background:color-mix(in srgb,var(--surface2) 64%,transparent); cursor:pointer }
+.research-deep-toggle input { position:absolute; inline-size:1px; block-size:1px; opacity:0; pointer-events:none }
+.research-deep-toggle-control { display:block; inline-size:18px; block-size:18px; margin-top:2px; border:1px solid var(--line); border-radius:5px; background:var(--surface); box-shadow:inset 0 0 0 3px var(--surface) }
+.research-deep-toggle input:checked + .research-deep-toggle-control { border-color:var(--accent); background:var(--accent); box-shadow:inset 0 0 0 3px var(--surface2) }
+.research-deep-toggle:focus-within { border-color:var(--accent); outline:2px solid color-mix(in srgb,var(--accent) 28%,transparent) }
+.research-deep-toggle strong { display:block; color:var(--ink); font-size:.82rem; letter-spacing:.02em }
+.research-deep-toggle small { display:block; margin-top:3px; color:var(--muted); font-size:.76rem; line-height:1.4 }
+.research-deep-toggle:has(input:disabled) { opacity:.52; cursor:not-allowed }
 .research-form-error { margin-top: 13px !important; color: #ff9b8d !important }
 .research-modal-actions { display: flex; justify-content: end; gap: 10px; margin-top: 22px }
 .research-modal-actions button:not(.load-button) { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font: 700 .84rem/1 system-ui }

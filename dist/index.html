@@ -324,6 +324,7 @@
               <label><span>Kezdő Sol</span><input id="researchStartSol" name="startSol" type="number" min="1" step="1" required inputmode="numeric"></label>
               <label><span>Végső Sol</span><input id="researchTargetSol" name="targetSol" type="number" min="1" step="1" required inputmode="numeric"></label>
             </div>
+            <label class="research-deep-toggle"><input id="researchDeepMetadata" name="deepMetadata" type="checkbox"><span class="research-deep-toggle-control" aria-hidden="true"></span><span><strong data-i18n="researchDeepMetadataLabel">Teljes Curiosity raw metadata</strong><small data-i18n="researchDeepMetadataDescription">Közvetlen NASA API-lekérés minden nyers rekordhoz és Mastcam nagyfelbontású párkapcsolatokkal. Lassabb, és több adatot exportál.</small></span></label>
             <p id="researchFormError" class="research-form-error" role="alert" hidden></p>
             <div class="research-modal-actions"><button id="openInvalidSolsModal" type="button" data-i18n="invalidSolsOpen">Invalid Sols</button><button id="cancelResearchModal" type="button">Mégse</button><button class="load-button" type="submit"><span>↻</span><span>Research indítása</span></button></div>
           </form>
