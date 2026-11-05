@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curiosity nagyfelbontású képforrások és metadata-cache</title>
+  <style>
+    :root{color-scheme:dark;--bg:#10151d;--surface:#18212d;--line:#324255;--ink:#eaf2ff;--muted:#a9b8ca;--accent:#68d9ff;--ok:#79e6ad;--warn:#ffd37a}*{box-sizing:border-box}body{max-width:1050px;margin:0 auto;padding:clamp(22px,5vw,64px);background:radial-gradient(circle at 82% 0,#18364a 0,transparent 35%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}h1{max-width:850px;font-size:clamp(2rem,5vw,3.35rem);line-height:1.05;letter-spacing:-.04em}h2{margin-top:2.4rem}p,li{color:var(--muted)}a{color:var(--accent)}.lead{font-size:1.16rem;max-width:840px}.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:22px 0}.card{padding:18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--surface) 88%,transparent)}.card strong{display:block;color:var(--ink);font-size:1.06rem}.ok{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}.warn{border-color:color-mix(in srgb,var(--warn) 55%,var(--line))}code{padding:.1em .35em;border-radius:4px;background:#0c1118;color:#d4eaff}table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--ink);background:#1b2938}td{color:var(--muted)}.next{padding:20px;border-left:4px solid var(--accent);background:#142431;border-radius:0 12px 12px 0}
+  </style>
+</head>
+<body>
+  <p class="eyebrow">Adatforrási vizsgálat · 2026-11-05</p>
+  <h1>A friss Curiosity RGB-képek nagy felbontásban közvetlenül elérhetők</h1>
+  <p class="lead">A nagyfelbontású letöltéshez nem kell megvárni a PDS-archívumi kiadást. A NASA raw-image szolgáltatása már tartalmazza a friss Mastcam JPEG-eket; a probléma a régebbi helyi metadata-manifesztek hiányos tartalma. A PDS továbbra is szükséges lehet a panoráma-geometriához, de nem előfeltétele a kutatói képletöltésnek.</p>
+
+  <section class="grid" aria-label="Megállapítások">
+    <article class="card ok"><strong>Friss képforrás</strong><p>A 5040-es Sol 2026-10-10-i Mastcam-termékei közvetlenül a <code>mars.nasa.gov/msl-raw-images</code> végpontról érhetők el.</p></article>
+    <article class="card ok"><strong>Nagyobb RGB létezik</strong><p>Az ugyanott lévő <code>E01_DXXX</code> RGB-fájlok a vizsgálatban 1600×1200, illetve 672×896 pixelesek voltak; az <code>I01_DXXX</code> változatok 160×144, illetve 80×112 pixelesek.</p></article>
+    <article class="card warn"><strong>A 3456-os cache hiányos</strong><p>A helyi manifest 295 rekordja egyetlen Mastcam-sorozatot sem tartalmaz, míg az élő API 480 Mastcam-terméket ad vissza.</p></article>
+  </section>
+
+  <h2>Bizonyíték: 3456-os Sol</h2>
+  <p>Az audit a repository <code>tools/curiosity-api-instrument-audit.mjs</code> eszközével, az élő NASA API-ból készült. A „színes browse” itt a Mastcam azonosító végén levő <code>Ixx_DXXX</code> vagy <code>Exx_DXXX</code> terméket jelenti; ez nem állítás minden ilyen fájl azonos fizikai felbontásáról.</p>
+  <table>
+    <thead><tr><th>Forrás</th><th>Összes rekord</th><th>Mastcam</th><th>RGB Mastcam</th><th>Következtetés</th></tr></thead>
+    <tbody>
+      <tr><td>Élő NASA raw API</td><td>770</td><td>274 bal + 206 jobb</td><td>137 bal + 103 jobb</td><td>A felvételek és a letölthető színes termékek rendelkezésre állnak.</td></tr>
+      <tr><td>Helyi <code>curiosity-metadata</code>, Sol 3456</td><td>295</td><td>0</td><td>0</td><td>A manifest csak Navcam/Hazcam rekordokat őriz.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Bizonyíték: friss, 5040-es Sol</h2>
+  <p>A helyi 5040-es manifest már tartalmaz Mastcam rekordokat, köztük mindkét RGB-változatot. Például ugyanazon felvételi időponthoz a <a href="https://mars.nasa.gov/msl-raw-images/msss/05040/mcam/5040MR1101310002601517E01_DXXX.jpg"><code>…E01_DXXX.jpg</code></a> teljesebb RGB JPEG-je és a <a href="https://mars.nasa.gov/msl-raw-images/msss/05040/mcam/5040MR1101310002601517I01_DXXX.jpg"><code>…I01_DXXX.jpg</code></a> kis browse-változata is elérhető. Ez 2026-10-10-i adat, tehát a nagyobb fájl jelenléte nem PDS-archiválási késleltetéshez kötött.</p>
+
+  <h2>A metadata-gyűjtésre gyakorolt következmény</h2>
+  <p>A 3456-os adat nem azért hiányzik, mert a NASA sosem szolgáltatta: az élő API ezt cáfolja. A meglévő, régebbi manifest olyan kiválogatásból származik, amely a panorámához használható geometriát részesítette előnyben. A Mastcam raw rekordoknál a jelenlegi raw API kamera-geometriája hiányzik, ezért kiestek ebből a történeti exportból.</p>
+  <div class="next"><strong>Javasolt cache-migráció</strong><br>Az érintett régi Sol-tartományokat újra kell exportálni úgy, hogy minden nem-thumbnail Curiosity raw rekord megmaradjon, a panoráma-alkalmasságtól függetlenül. A panoráma továbbra is csak a geometriailag használható képeket olvassa, a kutatói letöltési lista viszont a teljes nyers metadata-készletből dolgozhat.</div>
+
+  <h2>Letöltési szabály</h2>
+  <ul>
+    <li>A letöltési exportban meg kell őrizni minden eredeti NASA URL-t, beleértve a panorámából kizárt Mastcam-fájlokat is.</li>
+    <li>Az <code>E</code> és <code>I</code> képazonosítók nem cserélhetők fel vakon: ugyanazon felvételhez gyakran nagyobb és kisebb RGB-változatot jelölnek. A felhasználói listában mindkettő megtartható, vagy egy későbbi, dimenziót ellenőrző feldolgozás választhatja ki a legnagyobbat.</li>
+    <li>A PDS-adapter a pontos panoráma-elhelyezés későbbi feladata: onnan jönne a CAHV-kameramodell és az orientáció. Ez független a közvetlen raw-JPEG letöltéstől.</li>
+  </ul>
+
+  <h2>Források és reprodukció</h2>
+  <ul>
+    <li><a href="https://mars.nasa.gov/api/v1/raw_image_items/">NASA Curiosity raw-image API</a></li>
+    <li><a href="https://mars.nasa.gov/msl-raw-images/msss/05040/mcam/5040ML1101300001506447E01_DXXX.jpg">Példa friss Mastcam E01 RGB-képre</a></li>
+    <li>Audit parancs: <code>node tools/curiosity-api-instrument-audit.mjs 3456</code></li>
+  </ul>
+</body>
+</html>

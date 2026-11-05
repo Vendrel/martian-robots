@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curiosity Mastcam színes panorámák — adatforrási megállapítás</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10151d; --surface:#18212d; --line:#324255; --ink:#eaf2ff; --muted:#a9b8ca; --accent:#68d9ff; --warn:#ffd37a; --ok:#79e6ad; }
+    * { box-sizing:border-box } body { max-width:980px; margin:0 auto; padding:clamp(22px,5vw,64px); background:radial-gradient(circle at 82% 0,#18364a 0,transparent 35%),var(--bg); color:var(--ink); font:16px/1.6 system-ui,sans-serif }
+    h1 { max-width:800px; font-size:clamp(2rem,5vw,3.35rem); line-height:1.05; letter-spacing:-.04em } h2 { margin-top:2.4rem } p,li { color:var(--muted) } a { color:var(--accent) } .lead { font-size:1.16rem; max-width:780px } .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); margin:22px 0 } .card { padding:18px; border:1px solid var(--line); border-radius:14px; background:color-mix(in srgb,var(--surface) 88%,transparent) } .card strong { display:block; color:var(--ink); font-size:1.06rem } .good { border-color:color-mix(in srgb,var(--ok) 45%,var(--line)) } .warn { border-color:color-mix(in srgb,var(--warn) 55%,var(--line)) } code { padding:.1em .35em; border-radius:4px; background:#0c1118; color:#d4eaff } table { width:100%; border-collapse:collapse; overflow:hidden; border:1px solid var(--line); border-radius:12px } th,td { padding:12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top } th { color:var(--ink); background:#1b2938 } td { color:var(--muted) } .eyebrow { color:var(--accent); font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">Adatforrási vizsgálat · 2026-11-05</p>
+  <h1>Miért nincs Curiosity-színes panoráma?</h1>
+  <p class="lead">A hiány oka nem a Mastcam-szűrő és nem a renderer. A NASA Curiosity raw-image API valóban ad RGB Mastcam-browse képeket, de a hozzájuk szükséges térbeli kamera-geometriát nem adja vissza. A jelenlegi alkalmazás ezért helyesen nem vetíti őket találgatott pozícióba.</p>
+
+  <section class="grid" aria-label="Eredményösszegzés">
+    <article class="card good"><strong>Mastcam-szín elérhető</strong><p>A <code>MAST_LEFT</code> és <code>MAST_RIGHT</code> rekordok között az <code>Ixx_DXXX</code> és <code>Exx_DXXX</code> termékek RGB JPEG-ek; utóbbi lehet a nagyobb letölthető változat.</p></article>
+    <article class="card warn"><strong>API-geometria hiányzik</strong><p>Ezeknél a raw API <code>camera_model_component_list</code>, <code>camera_vector</code>, <code>camera_position</code> és <code>attitude</code> mezője is <code>null</code>.</p></article>
+    <article class="card good"><strong>PDS-ben megvan</strong><p>A Mastcam RDR címkék CAHV-modellt és rover-keretű kvaterniót is tartalmaznak, tehát a probléma megoldható, de új PDS-adaptert igényel.</p></article>
+  </section>
+
+  <h2>Reprodukálható API-audit</h2>
+  <p>A repository új, csak olvasó eszköze:</p>
+  <pre><code>node tools/curiosity-api-instrument-audit.mjs 1000 2619</code></pre>
+  <p>A vizsgált két Sol 880 rekordjából a Mastcam Left 438, a Mastcam Right 400 rekordot adott; közülük rendre 152 és 133 RGB browse-termék volt. Mind a 838 Mastcam rekordnál hiányzott a panoráma-geometria. A geometriával rendelkező, eddig külön nem választható <code>CHEMCAM_RMI</code> EDR-termékek számára ezért új szűrő került a Curiosity instrument-listába.</p>
+
+  <h2>Instrumentek és renderelhetőség</h2>
+  <table>
+    <thead><tr><th>Instrument</th><th>Raw API geometria</th><th>Döntés</th></tr></thead>
+    <tbody>
+      <tr><td>Navcam / Hazcam</td><td>Teljes modell és attitude</td><td>Maradnak a panorámában; a jobb sztereótagok továbbra is kizárva a duplikált textúra ellen.</td></tr>
+      <tr><td>ChemCam RMI</td><td>Az EDR-eknél teljes CAHV és attitude</td><td>Új, önálló <em>ChemCam RMI</em> kapcsoló; nem keveredik a Navcam/Mastcam/Hazcam kategóriákba.</td></tr>
+      <tr><td>Mastcam</td><td>Hiányzik a raw API-ból</td><td>Nem kerül becsült pozícióban a panorámába.</td></tr>
+      <tr><td>MAHLI / MARDI</td><td>A vizsgált raw rekordoknál hiányzik</td><td>Nem nyitunk félrevezető panoráma-kategóriát.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Javasolt következő fejlesztés: PDS Mastcam-adapter</h2>
+  <p>A színes Curiosity-panorama korrekt megoldása egy külön adapter: a raw API-ból az RGB Mastcam-browse fájl maradna a textúra, a PDS Mastcam RDR <code>.LBL</code> címke pedig a kamera CAHV-modell és a rover-orientáció forrása. A PDS nyilvánosan CORS-képes, és például egy <a href="https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMST_0025/DATA/RDR/SURFACE/2662/2662ML0139540001002122C00_DRCL.LBL">Mastcam RDR-címke</a> tartalmazza mindkettőt.</p>
+  <p>Ez azonban nem egyszerű instrument-címke-bővítés: a raw API-browse termék és a PDS RDR közti stabil termékazonosítást, a Sol→PDS-kötet feloldását, a címkeparszolást, a CORS-hibatűrést és a helyi cache-stratégiát is le kell rögzíteni. Ezek nélkül a színképek pontatlanul vagy inkonzisztensen kerülnének a panorámába. Emiatt ezt önálló, tesztelhető adapterfeladatként érdemes folytatni.</p>
+
+  <h2>Kapcsolódó források</h2>
+  <ul>
+    <li><a href="https://mars.nasa.gov/api/v1/raw_image_items/">NASA Curiosity raw-image API</a></li>
+    <li><a href="https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMST_0025/DOCUMENT/GEOMETRIC_CM.TXT">PDS Mastcam geometriai modell leírása</a></li>
+    <li><a href="https://planetarydata.jpl.nasa.gov/img/data/msl/MSLMST_0025/DOCUMENT/MSL_MMM_EDR_RDR_ARCHSIS.PDF">MSL Mastcam/MAHLI/MARDI archívum SIS</a></li>
+  </ul>
+</body>
+</html>

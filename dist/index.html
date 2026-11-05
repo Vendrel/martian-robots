@@ -85,7 +85,7 @@
         <div class="control-fields">
           <label><span data-i18n="roverLabel">Rover</span><select id="roverSelect"></select></label>
           <label><span data-i18n="solLabel">Sol</span><select id="solSelect"></select></label>
-          <label id="locationControl" hidden><span data-i18n="locationLabel">Location</span><select id="locationSelect"></select></label>
+          <label id="locationControl" hidden><span><span data-i18n="locationLabel">Location</span><button id="openLocationDownloadModal" class="location-download-button" type="button" data-i18n-aria-label="locationDownloadTooltip" data-i18n-tooltip="locationDownloadTooltip" aria-label="Download all images at this location" data-tooltip="Download all images at this location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg></button></span><select id="locationSelect"></select></label>
           <div id="locationResolution" class="location-resolution" hidden>
             <label><span data-i18n="locationResolutionLabel" data-i18n-tooltip="locationResolutionTooltip" data-tooltip="A rover may move within a single Sol, which can sometimes make a panorama appear chaotic. Use this slider together with Location motion to fine-tune how those cases are displayed." tabindex="0">Location resolution</span><input id="locationTolerance" type="range" min="0" max="100" value="100"><output id="locationToleranceValue" data-i18n="locationResolutionPermissive">Permissive</output></label>
             <div class="location-motion"><span data-i18n="locationMotionLabel">Location motion</span><div class="sol-stepper location-stepper" aria-label="Location navigation"><button id="previousLocationButton" type="button" class="sol-step-button" data-i18n-aria-label="previousLocation" data-i18n-tooltip="previousLocationTooltip" aria-label="Previous location" data-tooltip="Show the previous location in this panorama.">‹</button><button id="nextLocationButton" type="button" class="sol-step-button" data-i18n-aria-label="nextLocation" data-i18n-tooltip="nextLocationTooltip" aria-label="Next location" data-tooltip="Show the next location in this panorama.">›</button></div></div>
@@ -146,7 +146,7 @@
             <div class="drag-hint" id="dragHint"><span>↔</span><span data-i18n="dragHint">Drag to explore</span></div>
           </div>
           <div class="viewer-footer">
-            <span><span data-i18n="altHint">Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.</span><span class="selection-hint" data-i18n="selectionHint">Shift-Click: add/remove an alignment-correction image · Shift-Drag: circular selection · Esc: cancel selection</span></span>
+            <span><span data-i18n="altHint">Hold <kbd>Alt</kbd> over an overlap to reveal the image beneath.</span><span class="selection-hint" data-i18n="selectionHint">Shift-Click: select or remove one image · Shift-Drag: circular selection · Esc: cancel selection</span></span>
             <span id="imageCount">0 images</span>
           </div>
         </div>
@@ -204,6 +204,13 @@
         </section>
       </div>
 
+      <div id="locationDownloadModal" class="location-download-modal" hidden role="dialog" aria-modal="true" aria-labelledby="locationDownloadTitle" aria-describedby="locationDownloadDescription">
+        <section class="location-download-modal-card">
+          <header class="location-download-modal-header"><div><p class="eyebrow" data-i18n="locationDownloadEyebrow">LOCATION EXPORT</p><h2 id="locationDownloadTitle" data-i18n="locationDownloadTitle">Location image package</h2></div><button id="closeLocationDownloadModal" class="export-modal-close" type="button" data-i18n-aria-label="exportModalClose" aria-label="Close export">×</button></header>
+          <div class="location-download-modal-body"><p id="locationDownloadDescription" data-i18n="locationDownloadDescription">Choose image layers, then download or copy the source URLs and metadata.</p><div id="locationDownloadStepper" class="location-download-stepper"></div><fieldset id="locationDownloadFilters" class="location-download-filters"></fieldset><label class="export-modal-clipboard"><span data-i18n="locationDownloadUrls">Image URLs</span><textarea id="locationDownloadUrls" readonly spellcheck="false"></textarea></label><div class="location-download-modal-actions"><button id="copyLocationDownloadUrls" type="button" data-i18n="exportModalCopy">Copy</button><button id="downloadLocationUrls" class="download-all-button" type="button" data-i18n="locationDownloadUrlsFile">Download URL list</button><button id="downloadLocationMetadata" class="load-button" type="button" data-i18n="locationDownloadMetadata">Download metadata JSON</button></div></div>
+        </section>
+      </div>
+
       <div id="metadataApiToggleNotice" class="metadata-api-toggle-notice" hidden role="dialog" aria-modal="true" aria-live="assertive" aria-atomic="true">
         <div class="metadata-api-toggle-notice-card">
           <span class="metadata-api-toggle-notice-icon" aria-hidden="true">i</span>
@@ -225,7 +232,7 @@
                 <div><dt data-i18n="helpMouseWheelKey">Mouse wheel</dt><dd data-i18n="helpMouseWheelValue">Zoom in and out.</dd></div>
                 <div><dt><kbd>Alt</kbd> + <span data-i18n="helpMouseHoverKey">hover</span></dt><dd data-i18n="helpMouseHoverValue">Reveal the overlapping image beneath the pointer.</dd></div>
                 <div><dt data-i18n="helpMouseClickKey">Click an image</dt><dd data-i18n="helpMouseClickValue">Open its image information panel.</dd></div>
-                <div><dt><kbd>Shift</kbd> + <span data-i18n="helpMouseClickKey">click</span></dt><dd data-i18n="helpShiftClickValue">Add or remove an alignment-correction image.</dd></div>
+                <div><dt><kbd>Shift</kbd> + <span data-i18n="helpMouseClickKey">click</span></dt><dd data-i18n="helpShiftClickValue">Select or remove one image.</dd></div>
                 <div><dt><kbd>Shift</kbd> + <span data-i18n="helpMouseDragKey">drag</span></dt><dd data-i18n="helpShiftDragValue">Draw a circular image selection.</dd></div>
               </dl></section>
               <section class="help-section"><h3 data-i18n="helpKeyboardTitle">Keyboard</h3><dl>

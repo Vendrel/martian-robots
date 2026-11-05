@@ -128,6 +128,11 @@
 	background: color-mix(in srgb, var(--accent) 11%, transparent);
 	color: var(--accent)
 }
+.location-download-filters label { position: relative; cursor: pointer }
+.location-download-filters input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none }
+.location-download-filters span { display: inline-flex; align-items: center; min-height: 30px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--surface2) 78%, transparent); color: var(--muted); font: 700 .74rem/1 system-ui; letter-spacing: .04em; text-transform: uppercase; transition: border-color .15s ease, background .15s ease, color .15s ease }
+.location-download-filters input:checked + span { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, var(--surface2)); color: var(--accent) }
+.location-download-filters label:hover span, .location-download-filters input:focus-visible + span { border-color: var(--accent); color: var(--accent) }
 
 .perseverance-image-filters label:hover span,
 .perseverance-image-filters input:focus-visible + span,
@@ -175,8 +180,15 @@
 	opacity: .6;
 	cursor: wait
 }
+.gallery-section > .download-all-button { margin: 4px 0 12px }
+.gallery-section > .download-all-button:disabled { border-color: var(--line); background: color-mix(in srgb, var(--surface2) 70%, transparent); color: var(--muted); cursor: default }
+#locationControl > span { display: inline-flex; align-items: baseline; gap: 6px }
+.location-download-button { align-self: baseline }
+.location-download-button { display:inline-grid; place-items:center; width:22px; height:22px; margin-left:6px; padding:0; border:1px solid var(--line); border-radius:50%; background:var(--surface); color:var(--accent); vertical-align:middle; cursor:pointer; position:relative }.location-download-button svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.location-download-button:hover,.location-download-button:focus-visible{border-color:var(--accent);outline:0;box-shadow:0 0 10px var(--glow)}.location-download-button[data-tooltip]::after{content:attr(data-tooltip);position:absolute;z-index:31;top:calc(100% + 8px);left:0;width:max-content;max-width:min(250px,calc(100vw - 32px));padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow);color:var(--ink);font:600 .72rem/1.35 system-ui;opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity .15s ease,transform .15s ease}.location-download-button[data-tooltip]:hover::after,.location-download-button[data-tooltip]:focus-visible::after{opacity:1;transform:translateY(0)}
+.location-download-modal[hidden]{display:none}.location-download-modal{position:fixed;z-index:121;inset:0;display:grid;place-items:center;padding:22px;background:color-mix(in srgb,var(--bg) 58%,transparent);backdrop-filter:blur(10px)}.location-download-modal-card{width:min(100%,760px);max-height:calc(100vh - 44px);overflow:auto;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 96%,var(--accent)),var(--surface));box-shadow:0 28px 80px rgba(4,10,22,.4),0 0 45px var(--glow)}.location-download-modal-header{display:flex;justify-content:space-between;gap:20px;align-items:start;padding:22px 24px 18px;border-bottom:1px solid var(--line)}.location-download-modal-header .eyebrow{margin:0 0 7px}.location-download-modal-header h2{margin:0;font-size:1.35rem}.location-download-modal-body{display:grid;gap:16px;padding:22px 24px 24px}.location-download-modal-body>p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}.location-download-stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface2) 70%,transparent)}.location-download-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:12px;border:1px solid var(--line);border-radius:10px}.location-download-filters legend{padding:0 5px;color:var(--accent);font:800 .74rem/1 system-ui;letter-spacing:.06em;text-transform:uppercase}.location-download-filters label{display:flex;gap:6px;align-items:center;color:var(--ink);font-size:.84rem}.location-download-modal-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px}.location-download-modal-actions .download-all-button,.location-download-modal-actions .load-button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;margin:0}.location-download-modal-actions button:not(.load-button):not(.download-all-button){min-height:38px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;font:700 .84rem/1 system-ui}body.has-location-download-modal{overflow:hidden}
 
 .selection-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px }
+.location-download-modal-card { background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); }
 .selection-actions .download-all-button { margin: 0 }
 
 #image-gallery { margin: 18px 0 28px; padding: 12px; max-height: 72vh; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted) }
@@ -929,7 +941,7 @@ select,
 }
 
 /* Gamepad-only overlay. It is rendered from the same ROVER_FILTERS model as
-   the HTML checkboxes, so every rover always gets its fixed instrument count. */
+   the HTML checkboxes, so it automatically follows each rover's categories. */
 .instrument-wheel { --instrument-wheel-size: min(68vmin, 540px); position: absolute; z-index: 12; top: 50%; left: 50%; width: var(--instrument-wheel-size); aspect-ratio: 1; opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, -50%) scale(.72); transition: opacity .16s ease-out, transform .2s cubic-bezier(.2,.85,.25,1), visibility 0s linear .2s; filter: drop-shadow(0 0 26px color-mix(in srgb, var(--accent) 38%, transparent)) }
 .instrument-wheel.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); transition-delay: 0s }
 .instrument-wheel::before, .instrument-wheel::after { position: absolute; inset: 8%; border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--line)); border-radius: 50%; content: '' }
