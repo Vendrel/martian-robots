@@ -5,7 +5,8 @@
 set -u
 
 readonly SOURCE_DIR='/Volumes/Zike/Ideiglenes'
-readonly DIST_DIR='/Volumes/Zike/mars-rovers-360/dist'
+readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+readonly DIST_DIR="$SCRIPT_DIR"
 readonly POLL_SECONDS=60
 readonly RANGE_SIZE=1000
 readonly ROVERS=(curiosity perseverance spirit opportunity)
