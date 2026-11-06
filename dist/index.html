@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026110601" />
+    <link rel="stylesheet" href="./styles.css?2026110624" />
   </head>
   <body>
     <main class="app-shell">
@@ -116,6 +116,7 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" tabindex="0" aria-label="Interactive Mars panorama"></canvas>
+            <button id="flatfieldHideImageButton" class="flatfield-image-hide" type="button" hidden data-i18n-aria-label="flatfieldHideImage" aria-label="Hide this image">×</button>
             <section id="instrumentWheel" class="instrument-wheel" aria-hidden="true" aria-label="Instrument wheel">
               <div class="instrument-wheel-core"><strong class="instrument-wheel-title">Instrument Wheel</strong><span class="instrument-wheel-hint">Hold L1 · select with the right stick · X toggles</span></div>
               <ol class="instrument-wheel-items"></ol>
@@ -165,15 +166,14 @@
         </aside>
         <aside class="image-panel flatfield-panel" id="flatfieldPanel" hidden aria-live="polite">
           <div class="panel-heading"><div><p class="eyebrow" data-i18n="flatfieldLegend">FLATFIELD CORRECTION</p><h2 data-i18n="flatfieldTitle">Vignetting correction</h2></div><button id="closeFlatfieldPanel" type="button" data-i18n-aria-label="flatfieldClose" aria-label="Close flatfield correction">×</button></div>
-          <fieldset class="flatfield-control" id="flatfieldControls">
-            <legend data-i18n="flatfieldLegend">Flatfield correction</legend>
-            <label class="flatfield-toggle"><input id="flatfieldEnabled" type="checkbox"><span data-i18n="flatfieldEnabled">Correct vignetting</span></label>
-            <label><span data-i18n="flatfieldEdgeLift">Edge lift</span><input id="flatfieldEdgeLift" type="range" min="0" max="0.6" step="0.01" value="0.6"><output id="flatfieldEdgeLiftValue">2.50×</output></label>
-            <label><span data-i18n="flatfieldFalloff">Falloff</span><input id="flatfieldFalloff" type="range" min="0.5" max="4" step="0.1" value="2.4"><output id="flatfieldFalloffValue">2.4</output></label>
-            <label><span data-i18n="flatfieldCenterX">Centre X</span><input id="flatfieldCenterX" type="range" min="0" max="1" step="0.01" value="0.5"><output id="flatfieldCenterXValue">0.50</output></label>
-            <label><span data-i18n="flatfieldCenterY">Centre Y</span><input id="flatfieldCenterY" type="range" min="0" max="1" step="0.01" value="0.5"><output id="flatfieldCenterYValue">0.50</output></label>
-            <button id="flatfieldReset" type="button" data-i18n="flatfieldReset">Reset</button>
-          </fieldset>
+          <p id="flatfieldExtensionNotice" class="flatfield-extension-notice" role="button" tabindex="0"></p>
+          <div id="flatfieldEditor" class="flatfield-editor" hidden>
+            <p id="flatfieldSelectedImage" class="flatfield-selected-image"></p>
+            <section class="flatfield-sculpture"><header><div><h3 data-i18n="flatfieldSurfaceTitle">Local light surface</h3><p data-i18n="flatfieldSurfaceHint">Drag the nine luminous nodes vertically. Drag the centre ring to set falloff.</p></div><button id="resetFlatfieldSurface" class="flatfield-sculpture-reset" type="button" data-i18n-aria-label="flatfieldSurfaceResetTooltip" data-i18n-tooltip="flatfieldSurfaceResetTooltip" aria-label="Reset local light surface" data-tooltip="Reset local light surface">↺</button></header><svg id="flatfieldSurface" class="flatfield-surface" viewBox="0 0 320 220" role="img" data-i18n-aria-label="flatfieldSurfaceTitle" aria-label="Local light surface"></svg></section>
+            <section class="flatfield-sculpture"><header><div><h3 data-i18n="flatfieldGradientTitle">Directional gradient</h3><p data-i18n="flatfieldGradientHint">Drag either glowing edge vertically to set that end of the gradient.</p></div><button id="resetFlatfieldGradient" class="flatfield-sculpture-reset" type="button" data-i18n-aria-label="flatfieldGradientResetTooltip" data-i18n-tooltip="flatfieldGradientResetTooltip" aria-label="Reset directional gradient" data-tooltip="Reset directional gradient">↺</button></header><svg id="flatfieldGradient" class="flatfield-surface" viewBox="0 0 320 220" role="img" data-i18n-aria-label="flatfieldGradientTitle" aria-label="Directional gradient"></svg><label class="flatfield-gradient-angle"><span class="visually-hidden" data-i18n="flatfieldGradientAngle">Gradient direction</span><input id="flatfieldGradientAngle" type="range" min="-180" max="180" step="1" value="0" data-i18n-aria-label="flatfieldGradientAngle" aria-label="Gradient direction"></label></section>
+            <fieldset class="flatfield-crop"><legend data-i18n="flatfieldCropTitle">Edge crop</legend><p data-i18n="flatfieldCropHint">Hide up to five unreliable edge pixels.</p><div class="flatfield-crop-layout"><label><span data-i18n="flatfieldCropLeft">Left</span><input data-flatfield-crop="left" type="number" min="0" max="5" step="1" value="0"></label><div><label><span data-i18n="flatfieldCropTop">Top</span><input data-flatfield-crop="top" type="number" min="0" max="5" step="1" value="0"></label><label><span data-i18n="flatfieldCropBottom">Bottom</span><input data-flatfield-crop="bottom" type="number" min="0" max="5" step="1" value="0"></label></div><label><span data-i18n="flatfieldCropRight">Right</span><input data-flatfield-crop="right" type="number" min="0" max="5" step="1" value="0"></label></div></fieldset>
+            <div class="flatfield-file-actions"><button id="exportImageFlatfield" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 11v7m0 0-3-3m3 3 3-3"/></svg><span data-i18n="flatfieldExportImage">Export image configuration</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 18v-7m0 0-3 3m3-3 3 3"/></svg><span data-i18n="flatfieldImportImage">Import image configuration</span><input id="importImageFlatfield" type="file" accept="application/json,.json"></label><button id="exportImageFlatfields" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 10v7m0 0-3-3m3 3 3-3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldExport">Export all configurations</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 17v-7m0 0-3 3m3-3 3 3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldImport">Import all configurations</span><input id="importImageFlatfields" type="file" accept="application/json,.json"></label></div>
+          </div>
         </aside>
       </section>
 
@@ -201,6 +201,24 @@
             <label id="exportModalClipboardLabel" class="export-modal-clipboard" hidden><span id="exportModalClipboardLabelText"></span><textarea id="exportModalClipboardText" readonly spellcheck="false"></textarea></label>
             <p id="exportModalStatus" class="export-modal-status" aria-live="polite"></p>
             <div class="export-modal-actions"><button id="cancelExportModal" type="button" data-i18n="exportModalCancel">Cancel</button><button id="copyExportModalText" type="button" hidden data-i18n="exportModalCopy">Copy</button><button id="downloadExportModal" class="load-button" type="button"><span>↓</span><span data-i18n="exportModalDownload">Download files</span></button></div>
+          </div>
+        </section>
+      </div>
+
+      <div id="panoramaExportModal" class="export-modal" hidden role="dialog" aria-modal="true" aria-labelledby="panoramaExportTitle" aria-describedby="panoramaExportDescription">
+        <section class="export-modal-card panorama-export-modal-card">
+          <header class="export-modal-header">
+            <div><p class="eyebrow" data-i18n="panoramaExportEyebrow">PANORAMA EXPORT</p><h2 id="panoramaExportTitle" data-i18n="panoramaExportTitle">Layered equirectangular panorama</h2></div>
+            <button id="closePanoramaExportModal" class="export-modal-close" type="button" data-i18n-aria-label="panoramaExportClose" aria-label="Close panorama export">×</button>
+          </header>
+          <div class="export-modal-body">
+            <p id="panoramaExportDescription"></p>
+            <div id="panoramaExportOptions" class="panorama-export-options">
+              <label><span data-i18n="panoramaExportWidth">Output width</span><input id="panoramaExportWidth" type="number" min="1024" max="8192" step="256" value="4096" inputmode="numeric" aria-describedby="panoramaExportEstimate"></label>
+              <p id="panoramaExportEstimate" class="panorama-export-estimate" aria-live="polite"></p>
+            </div>
+            <p id="panoramaExportStatus" class="export-modal-status" aria-live="polite"></p>
+            <div class="export-modal-actions"><a id="panoramaExtensionLink" class="panorama-extension-link" href="https://github.com/Vendrel/martian-robots#chrome-extension" target="_blank" rel="noreferrer" data-i18n="panoramaExportInstall">Install Chrome extension</a><button id="cancelPanoramaExportModal" type="button" data-i18n="exportModalCancel">Cancel</button><button id="startPanoramaExport" class="load-button" type="button"><span>↓</span><span data-i18n="panoramaExportStart">Export PNG layers</span></button></div>
           </div>
         </section>
       </div>
@@ -388,15 +406,15 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script src="./locales/en.js?2026110601"></script>
-    <script src="./locales/hu.js?2026110601"></script>
+    <script src="./locales/en.js?2026110603"></script>
+    <script src="./locales/hu.js?2026110603"></script>
     <script src="./invalid-sols/curiosity.js"></script>
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110616"></script>
+    <script type="module" src="./app.js?2026110624"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

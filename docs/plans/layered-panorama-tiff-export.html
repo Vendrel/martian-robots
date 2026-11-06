@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rétegezett equirectangularis export – kutatási terv</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1017;--surface:#131d29;--surface-2:#19283a;--line:#2a3e55;--text:#e9f1fa;--muted:#afc0d2;--accent:#6de1ff;--good:#75e3a0;--warn:#ffd179;--bad:#ff8e8e}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#16435c 0,transparent 35%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(1120px,100% - 36px);margin:0 auto;padding:56px 0 80px}h1,h2,h3{line-height:1.15}h1{font-size:clamp(2.2rem,6vw,4.6rem);letter-spacing:-.045em;margin:.15em 0}h2{margin-top:2.6em;font-size:1.5rem}h3{margin:.1em 0 .5em;font-size:1.06rem}.eyebrow{color:var(--accent);font-size:.8rem;font-weight:750;letter-spacing:.13em;text-transform:uppercase}.lead{max-width:900px;font-size:1.14rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px;margin:26px 0}.card,.callout{border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--surface) 94%,transparent);padding:18px}.good{border-color:color-mix(in srgb,var(--good) 50%,var(--line))}.warn{border-color:color-mix(in srgb,var(--warn) 58%,var(--line))}.bad{border-color:color-mix(in srgb,var(--bad) 55%,var(--line))}.card p,.callout p,li{color:var(--muted)}.callout{border-left:4px solid var(--accent);background:#102333}.callout strong{color:var(--text)}code{padding:.12em .35em;background:#071019;border:1px solid #23374c;border-radius:5px;color:#c9efff;font-size:.92em}table{border-collapse:separate;border-spacing:0;width:100%;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:16px 0}th,td{padding:13px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}th{background:var(--surface-2);color:var(--text)}td{color:var(--muted)}a{color:var(--accent)}ol{padding-left:1.4em}li+li{margin-top:.55em}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:stretch;margin:18px 0}.flow div{padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:.9rem}.flow strong{display:block;color:var(--accent)}.arrow{display:grid;place-items:center;color:var(--accent)}.tiny{color:var(--muted);font-size:.9rem}@media(max-width:720px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}th,td{padding:10px}}
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Kutatás és megvalósítási terv · 2026-11-06</p>
+  <h1>Rétegezett, 2:1 panoráma-export</h1>
+  <p class="lead">A funkció megvalósítható, de a böngészőből közvetlenül generált, minden szerkesztőben valódi rétegekként megnyíló TIFF nem reális általános cél. A jelenlegi NASA-képforrások CORS-válasza miatt a publikus webappnak szerveroldali exportútvonal kell. A Chrome-bővítmény ezt saját, engedélyezett letöltési útvonalon meg tudja kerülni.</p>
+
+  <section class="grid" aria-label="Döntési összefoglaló">
+    <article class="card good"><h3>2:1 equirectangularis kép</h3><p>Lehetséges: a panoráma meglévő kamera-geometriájából külön, kifejezetten equirectangularis renderert kell építeni. A képernyőre rajzolt perspektivikus canvas nem használható közvetlenül.</p></article>
+    <article class="card bad"><h3>Webes CORS-blokkoló</h3><p>A vizsgált <code>mars.nasa.gov</code> JPEG-válasz nem adott <code>Access-Control-Allow-Origin</code> fejlécet. Ez a jelenlegi canvas exportját biztonsági okból blokkolja.</p></article>
+    <article class="card warn"><h3>„Rétegezett TIFF”</h3><p>A réteg fogalma TIFF-ben eszközfüggő. A Photoshop támogat réteges TIFF-et, de a szabványos TIFF-képek/multipage TIFF-ek nem garantáltan szerkeszthető rétegek más programokban.</p></article>
+  </section>
+
+  <h2>Megfigyelt jelenlegi állapot</h2>
+  <table>
+    <thead><tr><th>Terület</th><th>Megállapítás</th><th>Hatás</th></tr></thead>
+    <tbody>
+      <tr><td>Renderelés</td><td>A <code>dist/app.js</code> <code>render()</code> függvénye az aktuális nézetet, fixen 1800×900-as, perspektivikus <code>panoramaCanvas</code>-ra rajzolja; képenként a <code>warp()</code> geometriáját használja.</td><td>Külön export-renderer kell: 360°×180° equirectangularis koordinátatérben, a nézet yaw/pitch/fov paraméterei nélkül.</td></tr>
+      <tr><td>Forrásképek</td><td>A <code>connect()</code> közvetlen <code>new Image()</code> betöltést alkalmaz; a kód ezt maga is origin-cleannek nem tekinthetőként dokumentálja.</td><td>A kijelzőn megjelenítés működik, de <code>getImageData()</code>, <code>toBlob()</code> és ezért a Canvas-alapú fájlexport nem.</td></tr>
+      <tr><td>Webapp</td><td>A NASA képválaszon végzett 2026-11-06-i HEAD ellenőrzésnél nincs <code>Access-Control-Allow-Origin</code>.</td><td>A kliensoldali <code>crossOrigin='anonymous'</code> nem javítás: ilyen válasz mellett a kép betöltése CORS-módban eleve sikertelen lenne.</td></tr>
+      <tr><td>Chrome-bővítmény</td><td>A manifest már tartalmazza a <code>https://mars.nasa.gov/*</code> és <code>https://pds-imaging.jpl.nasa.gov/*</code> host permissionöket.</td><td>A bővítmény service workerből engedélyezetten lekérheti a képbájtokat, majd saját extension-origines Blobként adhatja át a renderernek.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Miért nem elég a mostani canvas mentése?</h2>
+  <p>A cross-origin kép canvasra rajzolása után a canvas „tainted”. A böngésző ilyenkor megtiltja a pixel-visszaolvasást és a <code>toBlob()</code>-ot is; ezt az <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/CORS_enabled_image">MDN CORS/canvas útmutatója</a> és a <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob">toBlob API-dokumentáció</a> egyértelműen rögzíti. A Canvas böngésző által garantált beépített exportformátuma PNG, nem TIFF; az ismeretlen MIME-típusra PNG-visszaesés történik.</p>
+  <p>Az export ráadásul nem csak egy nagyobb canvas. Egy adott equirectangularis pixelhez a gömbi irányvektort kell kiszámolni, majd minden forráskép CAHV/CAHVOR kameramodelljével visszavetíteni. Így minden forrás saját, transzparens, teljes 2:1 méretű réteget kap; a háttér pedig egy önálló legalacsonyabb réteg.</p>
+
+  <h2>Formátumdöntés: a TIFF korlátja</h2>
+  <div class="callout"><strong>Ajánlás:</strong> a szerkeszthető mestert PSB-ben, a kompatibilis átadást tömörített, lapított TIFF-ben adjuk. Ha a termékkövetelmény név szerint TIFF-et ír elő, készülhet Photoshop-célú réteges TIFF is, de ezt dokumentáltan Photoshop-kompatibilis kimenetként kell kezelni, nem univerzális rétegformátumként.</div>
+  <table>
+    <thead><tr><th>Kimenet</th><th>Rétegek</th><th>Kompatibilitás</th><th>Javaslat</th></tr></thead>
+    <tbody>
+      <tr><td>Photoshop-kompatibilis layered TIFF</td><td>Photoshopban valódi háttér + képrétegek.</td><td>A TIFF 6.0 alapformátumon túli Photoshop-specifikus adatokra támaszkodik; más eszköz lapított képet vagy másképp értelmezett oldalakat láthat.</td><td>Csak explicit Photoshop-cél esetén.</td></tr>
+      <tr><td>PSB</td><td>Natív, névvel és sorrenddel ellátott rétegek, maszkok és nagy dokumentum.</td><td>A Photoshop teljesen támogatja; más eszközök támogatása változó.</td><td><strong>Elsődleges szerkeszthető master.</strong></td></tr>
+      <tr><td>TIFF + rétegcsomag</td><td>Egy lapított 2:1 TIFF, illetve háttér + egy képenkénti átlátszó TIFF/PNG és JSON-manifeszt.</td><td>Eszközfüggetlen, minden külső szerkesztőbe importálható.</td><td><strong>Elsődleges interoperábilis átadás.</strong></td></tr>
+      <tr><td>Multipage TIFF</td><td>Több TIFF-oldal, nem szerkesztőréteg.</td><td>Képnézők, GIS- és grafikai programok eltérően kezelik.</td><td>Nem ajánlott a „minden kép külön layer” ígéretére.</td></tr>
+    </tbody>
+  </table>
+  <p class="tiny">Az Adobe jelenlegi dokumentációja szerint a TIFF Photoshopban rétegeket és legfeljebb 4 GB-os fájlt őrizhet, nagyobb dokumentumhoz PSB kell; lásd: <a href="https://helpx.adobe.com/photoshop/desktop/save-and-export/save-files/save-in-tiff-format.html">TIFF</a> és <a href="https://helpx.adobe.com/photoshop/desktop/save-and-export/save-files/save-large-documents.html">nagy dokumentumok</a>. Az Adobe fájlformátum-specifikációja azt is jelzi, hogy a Photoshop nem szabványos TIFF tageket használ.</p>
+
+  <h2>Ajánlott architektúra</h2>
+  <div class="flow" aria-label="Javasolt renderelési folyamat">
+    <div><strong>1. Kliens</strong>Aktív helyszín, képlisták, geometriák, exportbeállítások.</div><span class="arrow" aria-hidden="true">→</span>
+    <div><strong>2. Export API</strong>Jogosultság, input-validáció, exportfeladat létrehozása.</div><span class="arrow" aria-hidden="true">→</span>
+    <div><strong>3. Worker</strong>Forrásképek kontrollált, cache-elt lekérése; CORS itt nem korlát.</div><span class="arrow" aria-hidden="true">→</span>
+    <div><strong>4. Renderer</strong>Képenkénti equirectangularis RGBA-réteg és gradient-háttér.</div><span class="arrow" aria-hidden="true">→</span>
+    <div><strong>5. Csomag</strong>PSB / Photoshop-TIFF + flattened TIFF + manifest, kredit és ellenőrzőösszeg.</div>
+  </div>
+  <p>Weben ez a robusztus útvonal. A Chrome-bővítményben a 2–4. lépés egy Web Workerben helyben is lefuthat: a host permissionök a bővítmény saját originjéből engedélyezik a távoli képletöltést. A Chrome <a href="https://developer.chrome.com/docs/extensions/develop/concepts/network-requests">hivatalos dokumentációja</a> ezt a modellt írja le. A szerveres renderer ettől függetlenül szükséges a webapp paritásához és a nagyon nagy exportok stabil kezeléséhez.</p>
+
+  <h2>Megvalósítási terv</h2>
+  <ol>
+    <li><strong>Export-szerződés rögzítése.</strong> Felbontás: szélesség választható, magasság mindig a fele; 8-bit sRGB RGBA; háttér, összes renderelt forráskép, név, capture time, product ID, forrás-URL és kredit. A rétegsorrend egyezzen a jelenlegi <code>renderOrder()</code>-rel.</li>
+    <li><strong>Geometriai export-renderer.</strong> A meglévő <code>ray()</code>, <code>toPanoramaFrame()</code> és CAHV/CAHVOR vetítési logika újrafelhasználásával rendereljen equirectangularis célrácsba. Minden forrás saját átlátszó RGBA-sík; külön „Background gradient” réteg; opcionálisan „Composite preview” csak előnézetnek.</li>
+    <li><strong>Forrás- és jogkezelés.</strong> A worker kizárólag az exportba bevont rekordot töltheti le; harmadik fél copyright jelölésű képet blokkoljon. A meglévő <code>image_credit</code>, product ID és URL minden kimeneti manifestben és a rétegnevekben is jelenjen meg.</li>
+    <li><strong>Webes render szolgáltatás.</strong> Rövid életű exportfeladat, domain allowlisttel, méret- és képszám-limittel, progresszjelzéssel, törölhető ideiglenes fájlokkal. A felhasználó sem tetszőleges URL-t, sem tetszőleges belső hálózati címet nem adhat át.</li>
+    <li><strong>Kimeneti formátumok.</strong> Kezdetben lossless ZIP/LZW TIFF composite + ZIP rétegcsomag + manifest. Ezután PSB master. Photoshop-kompatibilis layered TIFF csak célalkalmazásos interoperabilitási teszt után.</li>
+    <li><strong>Felület.</strong> Új „Panoráma export” panel: 4096×2048, 8192×4096, 16384×8192 és egyedi szélesség; becsült memória/fájlméret; formátum; bevont rétegek; figyelmeztetés a CORS/távoli renderre és a TIFF-réteg kompatibilitására.</li>
+    <li><strong>Ellenőrzés.</strong> Egységteszt a hosszúság–x és szélesség–y leképezésre, seam kezelésre, a 2:1 arányra, rétegsorrendre és transzparenciára. Aranyképes regressziós teszt kis felbontáson. Kimeneti megnyitási próba Photoshopban és legalább egy nem Adobe-eszközben.</li>
+  </ol>
+
+  <h2>Erőforrás- és méretkockázat</h2>
+  <p>Egy 16 384×8 192-es 8-bit RGBA réteg nyersen kb. 512 MiB. Már 20 forrásréteg esetén ez kb. 10 GiB képadat tömörítés előtt, ezért a „teljesértékű nagyfelbontás” nem tartható memóriában sem a böngészőben, sem egyetlen canvasban. A böngészők canvas-limitje környezetfüggő; az MDN külön kiemeli, hogy bizonyos mobil környezetek csak 4096×4096-ig működnek megbízhatóan. A renderernek csíkozott/tile-os írással kell dolgoznia, a kliensnek pedig előre fájlméretet becsülve kell figyelmeztetnie.</p>
+
+  <h2>Elfogadási kritériumok</h2>
+  <ul>
+    <li>A lapított TIFF pontosan 2:1 és gömbre feszítve a jelenlegi panorámával azonos irányhelyességet ad.</li>
+    <li>Minden exportált forrásképhez egy névvel ellátott, teljes vászonméretű, alfa-csatornás réteg tartozik; a háttér külön réteg.</li>
+    <li>A rétegek összefésülése pixel-tolerancián belül az export composite-tal egyezik.</li>
+    <li>A TIFF/PSB manifest minden képre visszavezeti a product ID-t, eredeti URL-t és pontos kreditet.</li>
+    <li>CORS-hibán vagy NASA-letöltési hibán az export részletes, képszintű hibajelentést ad, nem készít észrevétlenül hiányos fájlt.</li>
+  </ul>
+
+  <h2>Nyitott termékdöntés</h2>
+  <div class="callout"><strong>A következő döntés szükséges az implementáció előtt:</strong> a „rétegezett TIFF” elsődleges célalkalmazása Photoshop-e? Ha igen, a Photoshop-kompatibilis TIFF és PSB együtt adható. Ha a cél bármely külső panoráma-/képszerkesztő, az őszinte és hordozható ajánlat a lapított 2:1 TIFF + képenkénti átlátszó rétegfájlok + manifest; ezeket az adott eszköz biztosan külön rétegként importálhatja.</div>
+
+  <h2>Elsődleges források</h2>
+  <ul>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/CORS_enabled_image">MDN: CORS-képek canvasban</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob">MDN: Canvas toBlob</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas">MDN: canvas méretkorlátok</a></li>
+    <li><a href="https://developer.chrome.com/docs/extensions/develop/concepts/network-requests">Chrome Extensions: cross-origin hálózati kérések</a></li>
+    <li><a href="https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/">Adobe Photoshop file format specification</a></li>
+    <li><a href="https://helpx.adobe.com/photoshop/desktop/save-and-export/save-files/save-in-tiff-format.html">Adobe: TIFF mentése rétegekkel</a></li>
+  </ul>
+</main>
+</body>
+</html>
