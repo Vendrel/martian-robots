@@ -1,5 +1,8 @@
 :root {
+	color-scheme: light;
 	--bg: #f1f4f8;
+	--scrollbar-track: color-mix(in srgb, var(--surface2) 70%, transparent);
+	--scrollbar-thumb: color-mix(in srgb, var(--accent) 68%, var(--muted));
 	--surface: #fff;
 	--surface2: #e9eef4;
 	--ink: #16213b;
@@ -482,7 +485,10 @@
 }
 
 :root[data-theme="dark"] {
+	color-scheme: dark;
 	--bg: #050812;
+	--scrollbar-track: color-mix(in srgb, var(--surface2) 80%, #020711);
+	--scrollbar-thumb: color-mix(in srgb, var(--accent) 74%, #c8f8ff);
 	--surface: #0c1222;
 	--surface2: #101a2d;
 	--ink: #eaf6ff;
@@ -505,6 +511,52 @@ body {
 	font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 	min-height: 100vh;
 	transition: background .25s, color .25s
+}
+
+/* Every scrollable application surface uses the active theme palette. */
+body,
+.location-download-modal-card,
+#image-gallery,
+.crossview-stage,
+.help-modal-body,
+.image-panel,
+textarea {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+body::-webkit-scrollbar,
+.location-download-modal-card::-webkit-scrollbar,
+#image-gallery::-webkit-scrollbar,
+.crossview-stage::-webkit-scrollbar,
+.help-modal-body::-webkit-scrollbar,
+.image-panel::-webkit-scrollbar,
+textarea::-webkit-scrollbar {
+	width: 11px;
+	height: 11px;
+}
+
+body::-webkit-scrollbar-track,
+.location-download-modal-card::-webkit-scrollbar-track,
+#image-gallery::-webkit-scrollbar-track,
+.crossview-stage::-webkit-scrollbar-track,
+.help-modal-body::-webkit-scrollbar-track,
+.image-panel::-webkit-scrollbar-track,
+textarea::-webkit-scrollbar-track {
+	background: var(--scrollbar-track);
+	border-radius: 99px;
+}
+
+body::-webkit-scrollbar-thumb,
+.location-download-modal-card::-webkit-scrollbar-thumb,
+#image-gallery::-webkit-scrollbar-thumb,
+.crossview-stage::-webkit-scrollbar-thumb,
+.help-modal-body::-webkit-scrollbar-thumb,
+.image-panel::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb {
+	border: 3px solid var(--scrollbar-track);
+	border-radius: 99px;
+	background: var(--scrollbar-thumb);
 }
 
 .app-shell {
@@ -709,13 +761,7 @@ body {
 .help-modal-header h2 { margin: 0; font-size: clamp(1.35rem, 2vw, 1.8rem); letter-spacing: .025em }
 .help-modal-close { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer; font-size: 1.35rem; line-height: 1; transition: border-color .16s ease, transform .16s ease }
 .help-modal-close:hover, .help-modal-close:focus-visible { border-color: var(--accent); outline: 0; transform: rotate(90deg) }
-.help-modal-body { min-height: 0; overflow: auto; padding: 24px 28px 30px; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 55%, var(--line)) color-mix(in srgb, var(--surface2) 70%, transparent) }
-.help-modal-body::-webkit-scrollbar { width: 11px }
-.help-modal-body::-webkit-scrollbar-track { background: color-mix(in srgb, var(--surface2) 70%, transparent); border-radius: 99px }
-.help-modal-body::-webkit-scrollbar-thumb { border: 3px solid color-mix(in srgb, var(--surface2) 70%, transparent); border-radius: 99px; background: color-mix(in srgb, var(--accent) 68%, var(--muted)) }
-[data-theme="dark"] .help-modal-body { scrollbar-color: color-mix(in srgb, var(--accent) 72%, #c8f8ff) color-mix(in srgb, var(--surface2) 80%, #020711) }
-[data-theme="dark"] .help-modal-body::-webkit-scrollbar-track { background: color-mix(in srgb, var(--surface2) 80%, #020711) }
-[data-theme="dark"] .help-modal-body::-webkit-scrollbar-thumb { border-color: color-mix(in srgb, var(--surface2) 80%, #020711); background: color-mix(in srgb, var(--accent) 74%, #c8f8ff) }
+.help-modal-body { min-height: 0; overflow: auto; padding: 24px 28px 30px }
 .help-intro { max-width: 78ch; margin: 0 0 20px; color: var(--muted); font-size: .93rem; line-height: 1.55 }
 .help-control-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px }
 .help-section, .help-controller-section { border: 1px solid var(--line); border-radius: 13px; background: color-mix(in srgb, var(--surface) 84%, transparent); box-shadow: 0 8px 22px color-mix(in srgb, var(--ink) 6%, transparent) }
