@@ -31,9 +31,10 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026110624" />
+    <link rel="stylesheet" href="./styles.css?2026110627" />
   </head>
   <body>
+    <svg class="icon-sprite" aria-hidden="true"><symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".12"/><path d="M8.5 8.5l7 7m0-7-7 7"/></symbol></svg>
     <main class="app-shell">
       <header class="topbar">
         <a class="brand" href="#" aria-label="Martian Robots home">
@@ -110,13 +111,13 @@
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
-            <button class="flatfield-panel-button" id="flatfieldPanelButton" type="button" aria-controls="flatfieldPanel" aria-expanded="false" data-i18n-aria-label="flatfieldOpen" aria-label="Open flatfield correction"><span aria-hidden="true"></span></button>
+            <button class="flatfield-panel-button" id="flatfieldPanelButton" type="button" aria-controls="flatfieldPanel" aria-expanded="false" data-i18n-aria-label="flatfieldOpen" data-i18n-tooltip="flatfieldPanelTooltip" aria-label="Open flatfield correction" data-tooltip="Per-image flatfield correction and layered panorama export are available in the Chrome extension."><span aria-hidden="true"></span></button>
             <label class="parallax-layer-control"><span data-i18n="parallaxLayerLabel">Layer spacing</span><input id="parallaxLayerSeparation" type="range" min="0.1" max="1.5" step="0.01" value="0.5" data-i18n-aria-label="parallaxLayerLabel" aria-label="Layer spacing"><output id="parallaxLayerSeparationValue">0.5</output></label>
             <div class="coverage"><span data-i18n="coverageLabel">Coverage</span><strong id="coverageValue">0° / 360°</strong></div>
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" tabindex="0" aria-label="Interactive Mars panorama"></canvas>
-            <button id="flatfieldHideImageButton" class="flatfield-image-hide" type="button" hidden data-i18n-aria-label="flatfieldHideImage" aria-label="Hide this image">×</button>
+            <button id="flatfieldHideImageButton" class="flatfield-image-hide" type="button" hidden data-i18n-aria-label="flatfieldHideImage" aria-label="Hide this image"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
             <section id="instrumentWheel" class="instrument-wheel" aria-hidden="true" aria-label="Instrument wheel">
               <div class="instrument-wheel-core"><strong class="instrument-wheel-title">Instrument Wheel</strong><span class="instrument-wheel-hint">Hold L1 · select with the right stick · X toggles</span></div>
               <ol class="instrument-wheel-items"></ol>
@@ -153,7 +154,7 @@
         </div>
 
         <aside class="image-panel" id="imagePanel" hidden aria-live="polite">
-          <div class="panel-heading"><div><p class="eyebrow" data-i18n="imagePanelEyebrow">IMAGE INFO PANEL</p><h2 id="imageTitle">—</h2></div><button id="closePanel" type="button" aria-label="Close image panel">×</button></div>
+          <div class="panel-heading"><div><p class="eyebrow" data-i18n="imagePanelEyebrow">IMAGE INFO PANEL</p><h2 id="imageTitle">—</h2></div><button id="closePanel" type="button" aria-label="Close image panel"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button></div>
           <div class="panel-image-target" data-i18n-tooltip="crossviewTargetTooltip">
             <img id="panelImage" alt="Selected Mars rover image" />
           </div>
@@ -165,14 +166,15 @@
           </div>
         </aside>
         <aside class="image-panel flatfield-panel" id="flatfieldPanel" hidden aria-live="polite">
-          <div class="panel-heading"><div><p class="eyebrow" data-i18n="flatfieldLegend">FLATFIELD CORRECTION</p><h2 data-i18n="flatfieldTitle">Vignetting correction</h2></div><button id="closeFlatfieldPanel" type="button" data-i18n-aria-label="flatfieldClose" aria-label="Close flatfield correction">×</button></div>
+          <div class="panel-heading"><div><p class="eyebrow" data-i18n="flatfieldLegend">FLATFIELD CORRECTION</p><h2 data-i18n="flatfieldTitle">Vignetting correction</h2></div><button id="closeFlatfieldPanel" type="button" data-i18n-aria-label="flatfieldClose" aria-label="Close flatfield correction"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button></div>
           <p id="flatfieldExtensionNotice" class="flatfield-extension-notice" role="button" tabindex="0"></p>
           <div id="flatfieldEditor" class="flatfield-editor" hidden>
             <p id="flatfieldSelectedImage" class="flatfield-selected-image"></p>
             <section class="flatfield-sculpture"><header><div><h3 data-i18n="flatfieldSurfaceTitle">Local light surface</h3><p data-i18n="flatfieldSurfaceHint">Drag the nine luminous nodes vertically. Drag the centre ring to set falloff.</p></div><button id="resetFlatfieldSurface" class="flatfield-sculpture-reset" type="button" data-i18n-aria-label="flatfieldSurfaceResetTooltip" data-i18n-tooltip="flatfieldSurfaceResetTooltip" aria-label="Reset local light surface" data-tooltip="Reset local light surface">↺</button></header><svg id="flatfieldSurface" class="flatfield-surface" viewBox="0 0 320 220" role="img" data-i18n-aria-label="flatfieldSurfaceTitle" aria-label="Local light surface"></svg></section>
             <section class="flatfield-sculpture"><header><div><h3 data-i18n="flatfieldGradientTitle">Directional gradient</h3><p data-i18n="flatfieldGradientHint">Drag either glowing edge vertically to set that end of the gradient.</p></div><button id="resetFlatfieldGradient" class="flatfield-sculpture-reset" type="button" data-i18n-aria-label="flatfieldGradientResetTooltip" data-i18n-tooltip="flatfieldGradientResetTooltip" aria-label="Reset directional gradient" data-tooltip="Reset directional gradient">↺</button></header><svg id="flatfieldGradient" class="flatfield-surface" viewBox="0 0 320 220" role="img" data-i18n-aria-label="flatfieldGradientTitle" aria-label="Directional gradient"></svg><label class="flatfield-gradient-angle"><span class="visually-hidden" data-i18n="flatfieldGradientAngle">Gradient direction</span><input id="flatfieldGradientAngle" type="range" min="-180" max="180" step="1" value="0" data-i18n-aria-label="flatfieldGradientAngle" aria-label="Gradient direction"></label></section>
             <fieldset class="flatfield-crop"><legend data-i18n="flatfieldCropTitle">Edge crop</legend><p data-i18n="flatfieldCropHint">Hide up to five unreliable edge pixels.</p><div class="flatfield-crop-layout"><label><span data-i18n="flatfieldCropLeft">Left</span><input data-flatfield-crop="left" type="number" min="0" max="5" step="1" value="0"></label><div><label><span data-i18n="flatfieldCropTop">Top</span><input data-flatfield-crop="top" type="number" min="0" max="5" step="1" value="0"></label><label><span data-i18n="flatfieldCropBottom">Bottom</span><input data-flatfield-crop="bottom" type="number" min="0" max="5" step="1" value="0"></label></div><label><span data-i18n="flatfieldCropRight">Right</span><input data-flatfield-crop="right" type="number" min="0" max="5" step="1" value="0"></label></div></fieldset>
-            <div class="flatfield-file-actions"><button id="exportImageFlatfield" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 11v7m0 0-3-3m3 3 3-3"/></svg><span data-i18n="flatfieldExportImage">Export image configuration</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 18v-7m0 0-3 3m3-3 3 3"/></svg><span data-i18n="flatfieldImportImage">Import image configuration</span><input id="importImageFlatfield" type="file" accept="application/json,.json"></label><button id="exportImageFlatfields" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 10v7m0 0-3-3m3 3 3-3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldExport">Export all configurations</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 17v-7m0 0-3 3m3-3 3 3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldImport">Import all configurations</span><input id="importImageFlatfields" type="file" accept="application/json,.json"></label></div>
+            <p class="flatfield-storage-note" data-i18n="flatfieldStorageNote">Configurations persist in this extension, but are lost if the extension is removed. Export a JSON backup.</p>
+            <div class="flatfield-file-actions"><button id="exportImageFlatfield" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 11v7m0 0-3-3m3 3 3-3"/></svg><span data-i18n="flatfieldExportImage">Export image configuration</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h5M12 18v-7m0 0-3 3m3-3 3 3"/></svg><span data-i18n="flatfieldImportImage">Import image configuration</span><input id="importImageFlatfield" type="file" accept="application/json,.json"></label><button id="exportImageFlatfields" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 10v7m0 0-3-3m3 3 3-3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldExport">Export all configurations</span></button><label><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11v11H4zM9 17v-7m0 0-3 3m3-3 3 3M9 5V3h11v11h-5"/></svg><span data-i18n="flatfieldImport">Import all configurations</span><input id="importImageFlatfields" type="file" accept="application/json,.json"></label><button id="restoreFlatfieldImages" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5"/></svg><span data-i18n="flatfieldRestoreImages">Összes elrejtett kép megjelenítése</span></button><button id="openFlatfieldPanoramaExport" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 15l3-3 2 2 2-2 3 3M12 3v5m0 0-3-3m3 3 3-3"/></svg><span data-i18n="flatfieldPanoramaExport">Rétegezett panoráma exportálása</span></button></div>
           </div>
         </aside>
       </section>
@@ -183,7 +185,7 @@
 
       <div id="downloadNotice" class="download-notice" hidden role="dialog" aria-modal="true" aria-labelledby="downloadNoticeText">
         <div class="download-notice-card">
-          <button id="closeDownloadNotice" class="download-notice-close" type="button" aria-label="Close notification">×</button>
+          <button id="closeDownloadNotice" class="download-notice-close" type="button" aria-label="Close notification"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
           <span class="download-notice-icon" aria-hidden="true">i</span>
           <p id="downloadNoticeText"></p>
         </div>
@@ -193,7 +195,7 @@
         <section class="export-modal-card">
           <header class="export-modal-header">
             <div><p class="eyebrow" data-i18n="exportModalEyebrow">EXPORT</p><h2 id="exportModalTitle"></h2></div>
-            <button id="closeExportModal" class="export-modal-close" type="button" data-i18n-aria-label="exportModalClose" aria-label="Close export">×</button>
+            <button id="closeExportModal" class="export-modal-close" type="button" data-i18n-aria-label="exportModalClose" aria-label="Close export"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
           </header>
           <div class="export-modal-body">
             <p id="exportModalDescription"></p>
@@ -209,7 +211,7 @@
         <section class="export-modal-card panorama-export-modal-card">
           <header class="export-modal-header">
             <div><p class="eyebrow" data-i18n="panoramaExportEyebrow">PANORAMA EXPORT</p><h2 id="panoramaExportTitle" data-i18n="panoramaExportTitle">Layered equirectangular panorama</h2></div>
-            <button id="closePanoramaExportModal" class="export-modal-close" type="button" data-i18n-aria-label="panoramaExportClose" aria-label="Close panorama export">×</button>
+            <button id="closePanoramaExportModal" class="export-modal-close" type="button" data-i18n-aria-label="panoramaExportClose" aria-label="Close panorama export"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
           </header>
           <div class="export-modal-body">
             <p id="panoramaExportDescription"></p>
@@ -225,7 +227,7 @@
 
       <div id="locationDownloadModal" class="location-download-modal" hidden role="dialog" aria-modal="true" aria-labelledby="locationDownloadTitle" aria-describedby="locationDownloadDescription">
         <section class="location-download-modal-card">
-          <header class="location-download-modal-header"><div><p class="eyebrow" data-i18n="locationDownloadEyebrow">LOCATION EXPORT</p><h2 id="locationDownloadTitle" data-i18n="locationDownloadTitle">Location image package</h2></div><button id="closeLocationDownloadModal" class="export-modal-close" type="button" data-i18n-aria-label="exportModalClose" aria-label="Close export">×</button></header>
+          <header class="location-download-modal-header"><div><p class="eyebrow" data-i18n="locationDownloadEyebrow">LOCATION EXPORT</p><h2 id="locationDownloadTitle" data-i18n="locationDownloadTitle">Location image package</h2></div><button id="closeLocationDownloadModal" class="export-modal-close" type="button" data-i18n-aria-label="exportModalClose" aria-label="Close export"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button></header>
           <div class="location-download-modal-body"><p id="locationDownloadDescription" data-i18n="locationDownloadDescription">Choose image layers, then download or copy the source URLs and metadata.</p><div id="locationDownloadStepper" class="location-download-stepper"></div><fieldset id="locationDownloadFilters" class="location-download-filters"></fieldset><label class="export-modal-clipboard"><span data-i18n="locationDownloadUrls">Image URLs</span><textarea id="locationDownloadUrls" readonly spellcheck="false"></textarea></label><div class="location-download-modal-actions"><button id="copyLocationDownloadUrls" type="button" data-i18n="exportModalCopy">Copy</button><button id="downloadLocationUrls" class="download-all-button" type="button" data-i18n="locationDownloadUrlsFile">Download URL list</button><button id="downloadLocationMetadata" class="load-button" type="button" data-i18n="locationDownloadMetadata">Download metadata JSON</button></div></div>
         </section>
       </div>
@@ -241,7 +243,7 @@
         <section class="help-modal-card">
           <header class="help-modal-header">
             <div><p class="eyebrow" data-i18n="helpEyebrow">MISSION CONTROL</p><h2 id="helpModalTitle" data-i18n="helpTitle">Explorer controls</h2></div>
-            <button id="closeHelpModal" class="help-modal-close" type="button" data-i18n-aria-label="helpClose" aria-label="Close help">×</button>
+            <button id="closeHelpModal" class="help-modal-close" type="button" data-i18n-aria-label="helpClose" aria-label="Close help"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
           </header>
           <div class="help-modal-body">
             <p class="help-intro" data-i18n="helpIntro">Navigate the panorama, inspect overlapping source frames, and move through each rover’s mapped locations.</p>
@@ -334,7 +336,7 @@
         <section class="research-modal-card">
           <header class="research-modal-header">
             <div><p class="eyebrow">INTERNAL TOOL</p><h2 id="researchModalTitle">Research Mode</h2></div>
-            <button id="closeResearchModal" class="research-modal-close" type="button" aria-label="Research Mode bezárása">×</button>
+            <button id="closeResearchModal" class="research-modal-close" type="button" aria-label="Research Mode bezárása"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
           </header>
           <form id="researchForm" class="research-modal-body" novalidate>
             <p id="researchModalDescription">NASA-metaadatok gyűjtése a megadott Sol-tartományban. A határok sorrendje felcserélhető; mindkét határ beleértendő. A jelenlegi exportfolyamat letölthető manifestfájlokat készít.</p>
@@ -352,7 +354,7 @@
 
       <div id="invalidSolsModal" class="state-transfer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="invalidSolsTitle">
         <section class="state-transfer-card">
-          <header class="state-transfer-header"><div><p class="eyebrow">INTERNAL TOOL</p><h2 id="invalidSolsTitle" data-i18n="invalidSolsTitle">Invalid Sols</h2></div><button id="closeInvalidSolsModal" class="state-transfer-close" type="button" data-i18n-aria-label="invalidSolsClose" aria-label="Close Invalid Sols">×</button></header>
+          <header class="state-transfer-header"><div><p class="eyebrow">INTERNAL TOOL</p><h2 id="invalidSolsTitle" data-i18n="invalidSolsTitle">Invalid Sols</h2></div><button id="closeInvalidSolsModal" class="state-transfer-close" type="button" data-i18n-aria-label="invalidSolsClose" aria-label="Close Invalid Sols"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button></header>
           <div class="state-transfer-body">
             <p data-i18n="invalidSolsDescription">Export the complete local inverse cache as the four package files, or import the files after dropping them here.</p>
             <button id="exportInvalidSols" class="load-button" type="button"><span>↓</span><span data-i18n="invalidSolsExport">Download 4 package files</span></button>
@@ -364,7 +366,7 @@
 
       <div id="stateTransferModal" class="state-transfer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="stateTransferTitle">
         <section class="state-transfer-card">
-          <header class="state-transfer-header"><div><p class="eyebrow">STATE TRANSFER</p><h2 id="stateTransferTitle">Open shared state</h2></div><button id="closeStateTransferModal" class="state-transfer-close" type="button" data-i18n-aria-label="stateImportClose" aria-label="Close shared state">×</button></header>
+          <header class="state-transfer-header"><div><p class="eyebrow">STATE TRANSFER</p><h2 id="stateTransferTitle">Open shared state</h2></div><button id="closeStateTransferModal" class="state-transfer-close" type="button" data-i18n-aria-label="stateImportClose" aria-label="Close shared state"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button></header>
           <form id="stateTransferForm" class="state-transfer-body">
             <p id="stateTransferDescription">Paste a URL parameter set or permalink, or drop its TXT file here.</p>
             <textarea id="stateTransferInput" rows="6" spellcheck="false" data-i18n-placeholder="stateImportPlaceholder" placeholder="Paste URL parameter set or permalink"></textarea>
@@ -406,15 +408,15 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script src="./locales/en.js?2026110603"></script>
-    <script src="./locales/hu.js?2026110603"></script>
+    <script src="./locales/en.js?2026110605"></script>
+    <script src="./locales/hu.js?2026110605"></script>
     <script src="./invalid-sols/curiosity.js"></script>
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110624"></script>
+    <script type="module" src="./app.js?2026110627"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
