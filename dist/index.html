@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026110301" />
+    <link rel="stylesheet" href="./styles.css?2026110601" />
   </head>
   <body>
     <main class="app-shell">
@@ -179,6 +179,7 @@
 
       <section id="crossviewPanel" class="crossview" hidden aria-live="polite"></section>
       <section id="image-gallery" hidden aria-live="polite"></section>
+      <section id="excluded-image-gallery" hidden aria-live="polite"></section>
 
       <div id="downloadNotice" class="download-notice" hidden role="dialog" aria-modal="true" aria-labelledby="downloadNoticeText">
         <div class="download-notice-card">
@@ -387,15 +388,15 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script src="./locales/en.js"></script>
-    <script src="./locales/hu.js"></script>
+    <script src="./locales/en.js?2026110601"></script>
+    <script src="./locales/hu.js?2026110601"></script>
     <script src="./invalid-sols/curiosity.js"></script>
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110609"></script>
+    <script type="module" src="./app.js?2026110611"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

@@ -196,11 +196,14 @@
 .location-download-modal-card { background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent)), var(--surface)); }
 .selection-actions .download-all-button { margin: 0 }
 
-#image-gallery { margin: 18px 0 28px; padding: 12px; max-height: 72vh; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted) }
-#image-gallery h2 { margin: 0 0 13px; color: var(--text); font-size: .95rem }
-#image-gallery img { display: block; width: auto; max-width: none; height: auto; margin: 0 0 16px; border: 0; box-shadow: none }
+#image-gallery, #excluded-image-gallery { margin: 18px 0 28px; padding: 12px; max-height: 72vh; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted) }
+#excluded-image-gallery { border-color: color-mix(in srgb, var(--accent) 42%, var(--line)); background: color-mix(in srgb, var(--surface) 92%, var(--accent)); }
+#image-gallery h2, #excluded-image-gallery h2 { margin: 0 0 13px; color: var(--text); font-size: .95rem }
+#image-gallery img, #excluded-image-gallery img { display: block; width: auto; max-width: none; height: auto; margin: 0 0 16px; border: 0; box-shadow: none }
 #image-gallery .gallery-section + .gallery-section { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line) }
-#image-gallery .gallery-note { margin: -7px 0 14px; font-size: .78rem }
+#image-gallery .gallery-note, #excluded-image-gallery .gallery-note { margin: -7px 0 14px; font-size: .78rem }
+.excluded-image-instruments { display:flex; flex-wrap:wrap; gap:6px; margin:-5px 0 14px; padding:0; list-style:none }
+.excluded-image-instruments li { padding:4px 7px; border:1px solid color-mix(in srgb,var(--accent) 34%,var(--line)); border-radius:999px; color:var(--accent); font:700 .7rem/1 system-ui }
 
 .selectionMode #collectCrossviewButton { display: none }
 
@@ -517,6 +520,7 @@ body {
 body,
 .location-download-modal-card,
 #image-gallery,
+#excluded-image-gallery,
 .crossview-stage,
 .help-modal-body,
 .image-panel,
@@ -528,6 +532,7 @@ textarea {
 body::-webkit-scrollbar,
 .location-download-modal-card::-webkit-scrollbar,
 #image-gallery::-webkit-scrollbar,
+#excluded-image-gallery::-webkit-scrollbar,
 .crossview-stage::-webkit-scrollbar,
 .help-modal-body::-webkit-scrollbar,
 .image-panel::-webkit-scrollbar,
@@ -539,6 +544,7 @@ textarea::-webkit-scrollbar {
 body::-webkit-scrollbar-track,
 .location-download-modal-card::-webkit-scrollbar-track,
 #image-gallery::-webkit-scrollbar-track,
+#excluded-image-gallery::-webkit-scrollbar-track,
 .crossview-stage::-webkit-scrollbar-track,
 .help-modal-body::-webkit-scrollbar-track,
 .image-panel::-webkit-scrollbar-track,
@@ -550,6 +556,7 @@ textarea::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb,
 .location-download-modal-card::-webkit-scrollbar-thumb,
 #image-gallery::-webkit-scrollbar-thumb,
+#excluded-image-gallery::-webkit-scrollbar-thumb,
 .crossview-stage::-webkit-scrollbar-thumb,
 .help-modal-body::-webkit-scrollbar-thumb,
 .image-panel::-webkit-scrollbar-thumb,
