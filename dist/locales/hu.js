@@ -58,3 +58,26 @@ Object.assign(window.localeDictionaries.hu, {
   stateImportTitle: 'Megosztott állapot megnyitása', stateImportDescription: 'Illessz be egy permalinket vagy URL-változócsomagot, illetve dobd ide a kapott TXT-fájlt.', stateImportPlaceholder: 'Permalink vagy URL-változócsomag beillesztése', stateImportDrop: 'TXT-fájl rádobása vagy kiválasztása', stateImportCancel: 'Mégse', stateImportApply: 'Állapot megnyitása', stateImportClose: 'Megosztott állapot bezárása', stateImportInvalid: 'Ez nem tartalmaz érvényes permalinket vagy URL-változócsomagot.', stateImportFileError: 'A TXT-fájl nem olvasható.'
   ,invalidSolsOpen: 'Érvénytelen Sol-ok', invalidSolsTitle: 'Érvénytelen Sol-ok', invalidSolsClose: 'Érvénytelen Sol-ok bezárása', invalidSolsDescription: 'A teljes helyi inverz cache négy csomagfájlként menthető, vagy a fájlok ide visszadobva importálhatók.', invalidSolsExport: '4 csomagfájl letöltése', invalidSolsDrop: 'Dobd ide az invalid-sols JavaScript-fájlokat, vagy válaszd ki őket', invalidSolsCounts: 'Helyi cache: Curiosity {curiosity} · Perseverance {perseverance} · Spirit {spirit} · Opportunity {opportunity}.', invalidSolsExported: 'A négy csomagfájl 100 ms eltéréssel letöltődött.', invalidSolsImported: '{imported} invalid-sols fájl a helyi cache-be importálva.', invalidSolsImportPartial: '{imported} fájl importálva; {invalid} fájl nem volt olvasható.'
 });
+
+Object.assign(window.localeDictionaries.hu, {
+  threeDModeLabel: 'Nézetmód',
+  threeDWorkspaceTitle: '3D munkaterület',
+  threeDPreflight: '3D készenléti ellenőrzés',
+  threeDIdle: 'Válassz forrásképet, majd indítsd az ellenőrzést.',
+  threeDReady: '3D előkészítve',
+  threeDModelCalibrated: 'rovermodell kalibrálva',
+  threeDModelPending: 'rovermodell-kalibráció szükséges',
+  threeDStorageError: 'A 3D helyi tároló ebben a böngészőkörnyezetben nem elérhető.',
+  threeDChecking: 'Forrásképpontok és hardveres képességek ellenőrzése…',
+  threeDPreflightPassed: 'A forrásképpontok olvashatók.',
+  threeDPreflightFailed: 'A 3D készenléti ellenőrzés sikertelen.',
+  threeDCalibrationTitle: 'Rovermodell kalibrációja',
+  threeDCalibrationNote: 'Az értékek scene-méterben és fokban értendők. A modell-frame auditjáig nem tekinthetők ellenőrzöttnek.',
+  threeDScaleLabel: 'Skála',
+  threeDCalibrationSave: 'Roverkalibráció mentése',
+  threeDCalibrationSaved: 'A roverkalibráció helyben elmentve. A modell-frame ellenőrzése továbbra is szükséges.',
+  threeDViewerError: 'A 3D viewer indítása sikertelen. A részletekhez nyisd meg a bővítmény konzolját.',
+  threeDCubeTitle: '50 cm-es kalibrációs kocka',
+  threeDCubeNote: 'A piros kocka középpontja scene-méterben. A kocka a felszínhez igazított, tengelypárhuzamos marad; a cián +Z nyíl a 0° előreirány.',
+  threeDControlsNote: 'Egérgörgő: dolly · Gamepad: exponenciális karok, L1 nyomva + bal kar függőlegesen inspect/dolly, R2 közelít, L2 távolít, L3 alaphelyzet, R3 roverfókusz, Négyzet fullscreen.',
+});

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rover-közeli 3D mód – megvalósítási terv</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1018; --panel:#121b28; --panel2:#182436; --line:#2b3d56; --text:#e7eef8; --muted:#9db0c8; --cyan:#75d8ff; --green:#8de2b0; --orange:#ffbd72; --red:#ff8d98; --shadow:0 16px 48px #0008; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:radial-gradient(900px 480px at 90% -10%,#193653 0%,transparent 60%),var(--bg); color:var(--text); font:16px/1.58 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--cyan); }
+    a:focus-visible, summary:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+    .shell { max-width:1240px; margin:auto; padding:28px 24px 72px; }
+    header { padding:34px; border:1px solid var(--line); border-radius:18px; background:linear-gradient(135deg,#15273a,#101824 72%); box-shadow:var(--shadow); }
+    .eyebrow { margin:0 0 7px; color:var(--cyan); font-weight:750; letter-spacing:.11em; font-size:.78rem; }
+    h1 { margin:0; font-size:clamp(1.8rem,4vw,3.15rem); line-height:1.12; }
+    h2 { margin:0; font-size:1.42rem; }
+    h3 { margin:0 0 .55rem; font-size:1.05rem; }
+    .lead { max-width:78ch; margin:17px 0 0; color:#c7d5e5; font-size:1.08rem; }
+    .meta { display:flex; flex-wrap:wrap; gap:9px; margin-top:23px; }
+    .pill { padding:5px 10px; border:1px solid #3b5878; border-radius:999px; background:#0c1622; color:#b9d8f0; font-size:.84rem; }
+    nav { display:flex; gap:8px; flex-wrap:wrap; margin:22px 0; }
+    nav a { padding:7px 10px; border:1px solid var(--line); border-radius:8px; background:#0e1723; color:#c9e8ff; text-decoration:none; font-size:.88rem; }
+    main { display:grid; gap:18px; }
+    section, details { border:1px solid var(--line); border-radius:14px; background:color-mix(in srgb,var(--panel) 94%,transparent); padding:24px; }
+    p { margin:.65rem 0; }
+    ul, ol { padding-left:1.35rem; }
+    li + li { margin-top:.35rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:16px; }
+    .card { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--panel2); }
+    .good { border-left:4px solid var(--green); }
+    .warn { border-left:4px solid var(--orange); }
+    .risk { border-left:4px solid var(--red); }
+    .flow { display:grid; grid-template-columns:repeat(5,minmax(145px,1fr)); gap:10px; align-items:stretch; margin:18px 0 4px; }
+    .flow > div { position:relative; padding:13px; border:1px solid #35506e; border-radius:10px; background:#162537; font-weight:650; }
+    .flow > div:not(:last-child)::after { content:"→"; position:absolute; right:-18px; top:50%; z-index:2; color:var(--cyan); font-size:1.35rem; transform:translateY(-50%); }
+    small { display:block; margin-top:5px; color:var(--muted); font-weight:400; }
+    table { width:100%; border-collapse:collapse; margin:13px 0; overflow:hidden; border:1px solid var(--line); border-radius:9px; }
+    th, td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; text-align:left; }
+    th { background:#1b2b3e; color:#cbe9ff; }
+    tr:last-child td { border-bottom:0; }
+    code { padding:.12em .32em; border-radius:4px; background:#0a121d; color:#d6efff; font: .88em ui-monospace,SFMono-Regular,Menlo,monospace; }
+    pre { overflow:auto; padding:14px; border:1px solid var(--line); border-radius:9px; background:#09111b; }
+    .status { font-weight:700; }
+    .yes { color:var(--green); } .no { color:var(--red); } .maybe { color:var(--orange); }
+    details > summary { cursor:pointer; color:#d9edfc; font-weight:700; }
+    details > :not(summary) { margin-top:15px; }
+    .source-list li { margin:.55rem 0; }
+    @media (max-width:800px) { .shell { padding:16px; } header,section,details { padding:19px; } .flow { grid-template-columns:1fr; } .flow > div:not(:last-child)::after { content:"↓"; top:auto; right:50%; bottom:-23px; transform:translateX(50%); } .flow { gap:27px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <p class="eyebrow">MARTIAN-ROBOTS · TERVEZÉSI SPECIFIKÁCIÓ · 2026-11-06</p>
+      <h1>Rover-közeli 3D mód</h1>
+      <p class="lead">Chrome-bővítményben futó, helyszínenként perzisztens 3D környezet Curiosity- és Perseverance-felvételekből. A cél nem tudományos pontossági állítás, hanem a forrásokkal, bizonytalansággal és rekonstrukciós beállításokkal együtt megőrzött, valós kamerageometrián alapuló térbeli nézet.</p>
+      <div class="meta"><span class="pill">Hatókör: extension-only</span><span class="pill">Első kiadás: Curiosity + Perseverance</span><span class="pill">Tárolás: IndexedDB + JSON export/import</span><span class="pill">Render: WebGL 2 / Three.js</span></div>
+    </header>
+
+    <nav aria-label="Tartalomjegyzék">
+      <a href="#finding">Előzmény és döntés</a><a href="#sources">Adatforrások</a><a href="#architecture">Architektúra</a><a href="#frame">Világ-frame</a><a href="#algorithm">Rekonstrukció</a><a href="#ui">Felület és tárolás</a><a href="#phases">Ütemezés</a><a href="#validation">Ellenőrzés</a><a href="#risks">Kockázatok</a>
+    </nav>
+
+    <main>
+      <section id="finding">
+        <h2>1. Meglévő előzmény és ajánlott döntés</h2>
+        <div class="grid">
+          <article class="card good"><h3>Megtalált terv</h3><p>A projektgyökérben lévő <a href="../../crossview-3d-dataset-research.md">crossview-3d-dataset-research.md</a> a Gale- és Jezero-térség ortofotó/DEM alapú, felülnézeti Crossview nézetéhez kutat forrásokat. A <a href="../rover-route-layer.md">rover-route-layer.md</a> ugyanebbe a lokális térkoordináta-rendszerbe helyezett útvonalréteget ír le.</p></article>
+          <article class="card warn"><h3>Nem duplikálja az új funkciót</h3><p>E dokumentumok nem fedik le a helyszínenkénti bal–jobb sztereó párosítást, a diszparitásból generált mesh-t, a kamera-kalibrált textúravetítést vagy a saját 3D-adat exportját. A Crossview maradjon későbbi, nagy léptékű referencia- és ellenőrzőréteg.</p></article>
+          <article class="card good"><h3>Ajánlás</h3><p>Önálló <strong>Rover 3D módot</strong> kell létrehozni. Elsőbbséget kapnak a PDS-ben már elérhető sztereó/mesh RDR-ek, ezeket egészíti ki a bővítményben, kiválasztott nyers sztereópárokból futó rekonstrukció. A webappban a kapcsoló nem jelenik meg.</p></article>
+        </div>
+        <p>A meglévő <code>dist/app.js</code> már kezeli a Curiosity és Perseverance CAHV/CAHVOR/CAHVORE kameramodelleit, a képenkénti orientációt, illetve a sztereó szemek elkülönítését. Ez újrafelhasználható a sugárképzéshez, de a nagy, egyfájlos renderelőt nem szabad tovább terhelni: az új mód külön, ESM-alapú modulokban éljen.</p>
+      </section>
+
+      <section id="sources">
+        <h2>2. A CORS-határ és az adatok</h2>
+        <p>A korábbi elvetés oka valós volt a webappban: a távoli képek pixelei a CORS miatt nem olvashatók biztonságosan canvasból. A Chrome saját dokumentációja szerint azonban az extension oldal vagy service worker a manifestben engedélyezett hostokra közvetlenül kérhet adatot. Ez kizárólag a <code>chrome-extension://</code> felületen érvényes; egy content script továbbra is a beágyazott oldal originjének korlátait örökli.</p>
+        <table>
+          <thead><tr><th>Forrásréteg</th><th>Szerep</th><th>Prioritás</th><th>Megjegyzés</th></tr></thead>
+          <tbody>
+            <tr><td>NASA raw-image API</td><td>helyszín, gyors képjegyzék, jelenlegi panorámaképek</td><td>kötelező</td><td>A már használt feedek; önmagukban nem garantálnak teljes sztereó-kalibrációt.</td></tr>
+            <tr><td>PDS kamera- és kalibrációs rekord</td><td>termékazonosító, teljes felbontás, CAHV(O)(RE), frame, subframe</td><td>kötelező a saját rekonstrukcióhoz</td><td>Nem URL-név vagy <code>_LEFT/_RIGHT</code> heurisztika dönt a párról.</td></tr>
+            <tr><td>PDS Perseverance sztereó RDR</td><td>diszparitás, XYZ/range/hiba, maszk</td><td>első választás, ha van</td><td>A PDS Navcam stereo bundle publikált, folyamatosan bővülő archívum.</td></tr>
+            <tr><td>PDS Perseverance mesh RDR</td><td>NASA által előállított háromszögháló és textúra</td><td>első választás, ha illeszkedik a lokációhoz</td><td>Gyors és reprodukálható belépési út; a provenance megmarad.</td></tr>
+            <tr><td>Roverhelyzet / helyi frame</td><td>rover és kamera világpozíciója</td><td>kötelező a világkoordinátás nézethez</td><td>PLACES/SPICE előfeldolgozott, verziózott lokális kivonatból, nem menet közbeni teljes SPICE-betöltésből.</td></tr>
+          </tbody>
+        </table>
+        <div class="card warn"><h3>Engedélyezési változás</h3><p>A jelenlegi manifest már engedi a <code>mars.nasa.gov</code> és <code>pds-imaging.jpl.nasa.gov</code> hostokat. A PDS tényleges termék- és metaadatútjaihoz várhatóan <code>planetarydata.jpl.nasa.gov</code> és <code>pds-geosciences.wustl.edu</code> is kell. Ezek legyenek <code>optional_host_permissions</code>-ök: a „3D-források engedélyezése” gomb felhasználói gesztusra kérje őket, világos indoklással. A letöltött képbájtokból a renderer extension-origines <code>Blob</code>/<code>ImageBitmap</code>-et készít; ezt egy korai próbában tényleges <code>getImageData()</code>-val kell igazolni.</p></div>
+      </section>
+
+      <section id="architecture">
+        <h2>3. Javasolt architektúra</h2>
+        <div class="flow" aria-label="3D adatfolyam">
+          <div>Aktív helyszín<small>panoráma képei, site/drive/Sol</small></div>
+          <div>Forrás-felderítés<small>PDS pár/RDR/mesh + közeli nézetek</small></div>
+          <div>Worker feldolgozás<small>stereo · MVS · mesh</small></div>
+          <div>Textúra-bake<small>kamera-modell szerinti vetítés</small></div>
+          <div>3D viewer + IndexedDB<small>orbit/first-person, export</small></div>
+        </div>
+        <table>
+          <thead><tr><th>Új modul</th><th>Felelősség</th></tr></thead>
+          <tbody>
+            <tr><td><code>dist/three-d/entry.js</code></td><td>Extension-őr, módváltás, a jelenlegi kiválasztott helyszín explicit átadása. Nem olvas és nem módosít panoráma-belső állapotot közvetlenül.</td></tr>
+            <tr><td><code>three-d/sources.js</code></td><td>NASA/PDS discovery, opcionális host-jog, termékek stabil LIDVID-alapú azonosítása, letöltési kvóta és provenance.</td></tr>
+            <tr><td><code>three-d/geometry.js</code></td><td>Egységes kamera-, frame- és póztranszformáció; kizárólag itt él az image pixel ↔ kamera sugár ↔ scene-world konverzió.</td></tr>
+            <tr><td><code>three-d/acceleration.js</code></td><td>Futtatásidejű képességvizsgálat, rövid helyi benchmark és a WebGPU/WebGL/WASM backend kiválasztása; nincs GPU-gyártó szerinti elágazás.</td></tr>
+            <tr><td><code>three-d/reconstruction.worker.js</code></td><td>Teljes felbontású dekódolás, rectifikálás, sztereó egyeztetés, konfidencia, pontfelhő és determinisztikus grid-mesh.</td></tr>
+            <tr><td><code>three-d/multiview.worker.js</code></td><td>Ismert pózú többnézetes fotogrammetria: jelöltválasztás, feature-track, geometriai validáció, MVS mélységtámogatás és fúzió.</td></tr>
+            <tr><td><code>three-d/texture-baker.js</code></td><td>CAHV/CAHVOR/CAHVORE-előreprojekcióval működő, offscreen WebGL-es vetítés és atlasz-bake; nem a 2D panoráma CSS/canvas warp-ja.</td></tr>
+            <tr><td><code>three-d/store.js</code></td><td>IndexedDB séma, migráció, kvótafigyelés, JSON export/import és integritásellenőrzés.</td></tr>
+            <tr><td><code>three-d/viewer.js</code></td><td>Three.js WebGL 2 jelenet, rover GLB, mesh, kamera, vezérlők, GPU-erőforrások felszabadítása.</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Renderdöntés:</strong> lokálisan csomagolt, verzióra rögzített Three.js + <code>GLTFLoader</code>. A jelenlegi 17,4 MB-os <code>curiosity-rover/source/curiosity rover.glb</code> betölthető glTF-ként; a kísérletnek előbb fel kell mérnie a modell tengelyirányát, méretarányát és memóriáját. Ugyanez a sematikus rover Perseverance-nál csak egyértelmű, nem tudományos címkével használható. Manifest V3 miatt távolról letöltött JavaScript vagy WASM nem használható: minden futtatható kód és opcionális OpenCV-WASM bináris a bővítménycsomag része.</p>
+        <div class="card warn"><h3>Rovermodell-kalibráció</h3><p>A <code>curiosity rover.glb</code> saját modell-frame-je várhatóan nem egyezik a Three.js render-frame-mel és a scene <code>S</code> frame-mel, ezért alapértelmezésben nem tekinthető helyesen beállítottnak. A bővítményben a vele ekvivalens, kibontott <code>curiosity-rover.gltf</code> + <code>buffer.bin</code> + PNG-textúra csomag szolgál a loadernek: ez explicit módon ellenőrizhető és bővítményen belül relatív erőforrásokkal töltődik. A PDS szerint a Curiosity <code>ROVER_NAV_FRAME</code> origója a névleges marsi felszínen, a rover turn-in-place forgástengelye alatt van; ez a modell- és az API-póz közös pivotja. A viewer ezért külön <code>rover-nav-frame</code> csomópontban alkalmazza az API orientációt, alatta a kézi modellkorrekciót és az explicit <code>modelPivotOffsetMeters</code> transzformációt. Széles lokációcsoportnál a scalar-first orientáció-kvaterniók előjelhelyes, normalizált átlaga kerül ide — nem Euler-szögek számtani átlaga. A rovermodellhez kötelező, scene-től külön tárolt <code>positionMeters[3]</code>, <code>rotationDegrees[3]</code> és egységes <code>scale</code> változók tartoznak. A modellt csak a tengelyirány, origó és méret referenciaellenőrzése után szabad a mesh mellé végleges pozícióban megjeleníteni; a korrekció teljes értéke, egysége és modellhash-e a scene manifestbe és exportba kerül.</p></div>
+        <h3>Hardveres gyorsítás: fokozatos backend</h3>
+        <table>
+          <thead><tr><th>Feladat</th><th>Elsődleges út</th><th>Biztos fallback</th></tr></thead>
+          <tbody>
+            <tr><td>Rectifikálás, diszparitás, MVS reprojekció és depth-fúzió</td><td>WebGPU compute (WGSL)</td><td>OpenCV.js/WASM dedikált workerben</td></tr>
+            <tr><td>Texture bake, láthatósági/depth pass, viewer</td><td>WebGL 2 / Three.js</td><td>Alacsonyabb felbontású WebGL 2 profil; WebGL hiányában nincs 3D viewer</td></tr>
+            <tr><td>Mesh-indexelés, topológia, redukció, export</td><td>WASM worker</td><td>Egyszálú JavaScript worker</td></tr>
+          </tbody>
+        </table>
+        <p>A WebGPU az Apple Siliconon a böngésző Metal backendjén, támogatott Intel/AMD/Nvidia gépeken az ottani böngésző-GPU backendjén dolgozik. A <code>navigator.gpu</code>, adapter, eszközlimitek és egy rövid, helyi próbamérés alapján választunk <code>high</code>, <code>balanced</code> vagy <code>portable</code> profilt; nem az eszköz neve vagy gyártója alapján. Sikertelen adapter, device-loss, kevés tárhely vagy lassú próba esetén automatikusan WASM profilra kell visszaesni.</p>
+        <p>Az adatáramlás elve: a rácsszerű képi műveletek lehetőleg GPU-n maradnak egymás után; a nagy diszparitás- és depth-térképeket nem másoljuk minden lépés után CPU és GPU között. A szabálytalan mesh-topológia és export marad workerben. A WASM SIMD build alapkövetelmény, a WASM threads csak opcionális: <code>SharedArrayBuffer</code>-t kizárólag sikeres extension-isolation próba után használunk.</p>
+      </section>
+
+      <section id="frame">
+        <h2>4. Közös világkoordináta-rendszer: kötelező alapréteg</h2>
+        <div class="grid">
+          <article class="card good"><h3>A jelenlegi panoráma helyes viselkedése</h3><p>A <code>dist/app.js</code> a CAHV(O)(RE) inverz vetítésből kapott képsugarat a scalar-first <code>attitude</code> kvaternióval forgatja <code>ROVER_NAV_FRAME → SITE_FRAME</code> irányba. A <code>basis()</code>, <code>project()</code> és <code>unproject()</code> ezért közös <em>irány</em>-térben kezeli a yaw/pitch értékeket. Ez a nézetek tájolásához pontosan a helyes modell.</p></article>
+          <article class="card warn"><h3>Mi hiányzik a fizikai 3D-hez</h3><p>A 2D renderer a kamera <code>C</code> középpontját nem használja, a parallaxist mesterséges hélymélységgel állítja elő. A <code>buildLocations()</code> az <code>xyz</code> értékeket site-onként csoportosítja, a Perseverance-nál a site-számot is az identitás részévé teszi. Ez szándékosan nem állít elő több site-ra érvényes, transzlációt tartalmazó világpozíciót.</p></article>
+        </div>
+        <p>Ezért az új módnak saját, explicit <strong>scene frame</strong>-et kell választania. Egy scene-en belül ez a PDS/PLACES lokalizált alaptérképéhez rögzített, méteregységű <code>S</code> frame; nem keverhető közvetlenül más roverrel vagy ismeretlen site-frame-mel. A PDS natív North–East–Nadir tengelykonvencióját meg kell őrizni a tárolt geometriában. Csak a Three.js renderelő kap külön, dokumentált <code>S → render(Y-up)</code> transzformációt.</p>
+        <pre><code>T^S_C(i) = T^S_SITE(site_i) · T^SITE_RNAV(i) · T^RNAV_C(i)
+X_S = T^S_C(i) · X_C
+
+pixel(u,v) → CAHV(O)(RE) ray in C → X_S
+mesh vertex X_S → inverse CAHV(O)(RE) → pixel(u,v)</code></pre>
+        <p><code>T^S_SITE</code>, <code>T^SITE_RNAV</code>, a kamera <code>C</code> extrinsicje, a kvaternió sorrendje és a frame-nevek mind PDS-címkéből/PLACES-ből származó, verziózott mezők. Nem szabad a jelenlegi <code>xyz</code>-t vagy <code>camera_position</code>-t címke és egység nélkül globális koordinátának tekinteni. Curiositynél a <em>localized_pos</em>/<em>localized_interp</em>, Perseverance-nál a Rover PLACES localization rekord adja a site-ok közötti hídot.</p>
+        <div class="card risk"><h3>Invariáns</h3><p>Sztereó trianguláció, PDS mesh import, szomszédos állomásból jövő többnézetes mérés, texture bake, rovermodell és a felhasználó 3D kamerája ugyanazt az <code>S</code> frame-et használja. A 2D panoráma irány-frame-jét nem tesszük meg automatikusan 3D scene-frame-nek.</p></div>
+      </section>
+
+      <section id="algorithm">
+        <h2>5. Rekonstrukciós eljárás</h2>
+        <ol>
+          <li><strong>Forrásválasztás.</strong> Az aktuális lokációhoz minden jelöltet termékazonosító, felvételi idő, kameraoldal, fókusz/zoom, subframe és mast-póz alapján csoportosítunk. Azonos időablak, azonos optikai konfiguráció és igazolt bal–jobb pár kell. Dinamikus jelenet, égbolt, tömörítés vagy hiányos kalibráció esetén a pár elutasítandó.</li>
+          <li><strong>Elsőbbségi beolvasás.</strong> Ha a Perseverance-hoz PDS-sztereó RDR vagy mesh illeszkedik, azt importáljuk, és csak a textúrát/nézetet építjük rá. A rekord jelzi, hogy <em>NASA derived</em>, nem saját diszparitás eredménye.</li>
+          <li><strong>Kalibrált rectifikálás.</strong> Saját futáskor a CAHV/CAHVOR/CAHVORE paraméterekből mindkét kamera virtuális, közös pinhole síkra mintavételez. A nemlineáris lencséket nem sík képként kezeljük. A feldolgozó szürke, egyforma mintavételű képet kap, a színkép csak textúrához marad meg.</li>
+          <li><strong>Diszparitás és konfidencia.</strong> Kezdeti implementáció: lokálisan csomagolt OpenCV.js/WASM <code>StereoSGBM</code>, bal–jobb konzisztencia, speckle-szűrés és textúra-/hibaküszöb. A kész PDS diszparitásnál az archív hibatérkép és maszk az elsődleges. Ne legyen generatív mélységbecslés az első kiadásban.</li>
+          <li><strong>3D és scene frame.</strong> A rectifikálási <code>Q</code> mátrixból kapott pontokat a kamera → rover → site → <code>S</code> transzformációval emeljük világkoordinátába. A roverpóz, kamera-extrinsic, kalibráció, frame és termékverzió minden eredményben kötelező provenance.</li>
+          <li><strong>Többnézetes finomítás (MVS).</strong> Ez szakmailag valid fotogrammetriai lépés, de nem „minden közeli kép automatikus hozzáadása”. A sztereó mélységtérkép adja a seedet. A külön site/sol képek csak akkor jelöltek, ha PLACES alapján ugyanabban az <code>S</code> frame-ben vannak, a frustumuk várhatóan metszi a seed mesh-t, megfelelő a baseline és a látószög, valamint az expozíció/optika összevethető. A worker ismert pózok mellett epipolárisan vezetett feature-trackeket készít, RANSAC-reprojekcióval elutasítja a hibás egyezéseket, majd a seed mélységet több nézet fotometriai és geometriai konzisztenciájával erősíti vagy elveti. A bizonytalanság-inverz súlyozású depth-fúzió tölthet be megbízható részletet; nem támogatott felület nem lesz kitalálva.</li>
+          <li><strong>Mesh.</strong> A fuzionált, jó minőségű mélység mintarácsának szomszédai alkotnak háromszögeket; él nem mehet át nagymélység-ugráson, lyukon vagy alacsony konfidencián. Ezután konfigurálható cellalépés és cél-triangleszám szerinti, határőrző redukció következik. Így kiszámítható, reprodukálható a poligonszám.</li>
+          <li><strong>Textúrázás.</strong> A kiinduló sztereó bal kép adja az alaptextúrát. A jóváhagyott MVS-nézetek és a már betöltött panorámaképek közül a geometriailag érvényesek külön bake-passban versenyeznek: a world-pontra adott CAHV(O)(RE) előreprojekció, képszél-távolság, nézeti szög, felbontás és láthatósági depth-teszt választ súlyt. Ez akadályozza meg, hogy egy távoli kép egy közeli szikla mögötti felületet fessen meg.</li>
+        </ol>
+        <pre><code>worldPoint = roverPose * cameraExtrinsic * Q(u, v, disparity)
+
+support(X) = robustFuse(stereoDepth, validMvsViews(X), poseCovariance)
+keepTriangle(a, b, c) = confidence(a,b,c) ≥ threshold
+  && maxDepthJump(a,b,c) &lt; configuredDepthJump
+  && normalConsistency(a,b,c) ≥ configuredNormalLimit</code></pre>
+        <div class="grid">
+          <article class="card good"><h3>MVP konfiguráció</h3><p><code>processingScale</code>, <code>maxDisparity</code>, <code>confidenceThreshold</code>, <code>gridStepPx</code>, <code>maxTriangles</code>, <code>depthJumpMeters</code>, <code>roverPoseOffset[xyz,rpy]</code>. Minden érték a 3D-eredményhez tartozik, nem globális rejtett beállítás.</p></article>
+          <article class="card"><h3>MVS konfiguráció</h3><p><code>multiView.enabled</code>, <code>candidateRadiusMeters</code>, <code>maxSolGap</code>, <code>minBaselineMeters</code>, <code>maxBaselineMeters</code>, <code>minTriangulationAngle</code>, <code>maxReprojectionErrorPx</code>, <code>minSupportingViews</code>. A jelöltek kiválasztását elsősorban térbeli közelség és fedés, nem önmagában Sol-szám vezérli.</p></article>
+          <article class="card warn"><h3>Kalibráció kezelése</h3><p>A kézi rover-póz korrekció diagnosztikai eszköz legyen, külön névvel és figyelmeztetéssel. Nem írhatja felül csendben a PDS/PLACES pózt; az alap- és korrekciós transzformáció, egysége és oka exportálandó. A preview-ben a <code>ROVER_CALIBRATION_CUBE = true</code> kapcsoló egy tengelypárhuzamos, 0,5 m-es piros referenciakockát engedélyez; X/Y/Z középpontja együtt tárolódik a roverkalibrációval. A cián <code>+Z</code> nyíl a világ-frame rögzített 0° előreiránya.</p></article>
+        </div>
+      </section>
+
+      <section id="ui">
+        <h2>6. Felület, saját adatok és export</h2>
+        <div class="grid">
+          <article class="card"><h3>Canvas módváltó</h3><p>Csak extensionben, a <code>#panoramaWrap</code> bal felső sarkában jelenik meg, vizuálisan a jelenlegi bal alsó „Húzd egérrel” tipp párjaként. Egyetlen, két egyforma félből álló vezérlő stabil felirata: <strong>2D | 3D</strong>. Az aktív fél kontrasztos háttérrel, accent kerettel és enyhe fénnyel kiemelt; az inaktív fél változatlanul olvasható. A <code>2D</code> fél visszaadja a panorámát, a <code>3D</code> fél meglévő scene-et nyit vagy az építési párbeszédet indítja.</p></article>
+          <article class="card"><h3>Akadálymentes vezérlő</h3><p>Sem a szöveg, sem az elem pozíciója nem változik módváltáskor. A két fél külön <code>&lt;button&gt;</code> egy <code>role="group"</code> konténerben; az aktívé <code>aria-pressed="true"</code>. Fullscreenben a 2D HUD a kapcsoló alá tolódik, így nem fedik egymást. A kapcsoló nem indít újból scene-építést megerősítés nélkül.</p></article>
+          <article class="card"><h3>Építési párbeszéd</h3><p>Források listája (PDS mesh/RDR, elsődleges sztereópár, jóváhagyott többnézetes jelöltek), várható memória, feldolgozási felbontás, cél-triangleszám, pózkorrekció. A becslés után explicit indítás; megállítás és részleges eredmény törlése elérhető.</p></article>
+          <article class="card"><h3>Viewer</h3><p>Orbit kamera az eredet körül, opcionális rovermodell, kamera-frustumok és konfidencia-színezés. A nézetben mindig látszik a „PDS derived” vagy „local stereo” eredet, a részletesség és a pózbizonytalanság.</p></article>
+        </div>
+        <pre><code>&lt;div class="scene-mode-toggle" role="group" aria-label="Nézetmód"&gt;
+  &lt;button type="button" aria-pressed="true"&gt;2D&lt;/button&gt;
+  &lt;button type="button" aria-pressed="false"&gt;3D&lt;/button&gt;
+&lt;/div&gt;
+
+/* #panoramaWrap-on belül: position:absolute; top:13px; left:13px */
+/* [aria-pressed="true"]: accent háttér, keret és glow */</code></pre>
+        <h3>IndexedDB v1 séma</h3>
+        <table>
+          <thead><tr><th>Object store</th><th>Kulcs</th><th>Tartalom</th></tr></thead>
+          <tbody>
+            <tr><td><code>scenes</code></td><td><code>sceneId</code></td><td>verziózott scene-manifest: rover, helyszín, frame, beállítás, állapot, felépítési idő, becsült pontosság, bájtok.</td></tr>
+            <tr><td><code>artifacts</code></td><td><code>[sceneId, role]</code></td><td>Blobok: mesh (GLB/quantized saját bináris), textúra-atlasz, konfidencia- és mélységrács. Nem localStorage.</td></tr>
+            <tr><td><code>sources</code></td><td><code>[sceneId, sourceId]</code></td><td>PDS LIDVID/URL, checksum, kamera/pose snapshot, licenc-attribúció és letöltési idő.</td></tr>
+            <tr><td><code>jobs</code></td><td><code>sceneId</code></td><td>Újraindítható feldolgozási checkpoint; csak rövid életű munkaadat.</td></tr>
+          </tbody>
+        </table>
+        <p>Az export egy <code>martian-robots-3d-scene/v1</code> ZIP: <code>manifest.json</code>, <code>mesh.glb</code>, textúrák és opcionális PDS-metadata snapshot. A manifest kötelezően tartalmazza a scene <code>S</code> frame-leírását, a PLACES-forrásverziót, az összes kamera <code>T^S_C</code> transzformációját és az MVS-elfogadási mérőszámokat. Import előtt séma-, méret-, fájlnév-, hash- és korlátellenőrzés kötelező. Az import nem futtat kódot és nem használ külső URL-t automatikusan. A felhasználó kérésének megfelelően a scene-ek ugyanazon extension-origin IndexedDB-jében maradnak; a chrome-extension és a webes origin tárolója nem közös.</p>
+      </section>
+
+      <section id="phases">
+        <h2>7. Megvalósítási fázisok és elfogadási feltételek</h2>
+        <div class="card good"><h3>2026-11-07. technikai spike eredménye</h3><p>A bővítményben futtatott előellenőrzés a kiválasztott NASA-forrásnál sikeres pixelolvasást jelzett: <strong>„A forrásképpontok olvashatók. WebGPU / high.”</strong> Ez igazolja az extension-originből indított Blob → ImageBitmap → canvas pixel-hozzáférés útvonalát és a WebGPU-s gyorsítás elérhetőségét ezen a gépen. A WASM/WebGL visszaesés továbbra is kötelező marad más eszközökhöz.</p></div>
+        <table>
+          <thead><tr><th>Fázis</th><th>Szállítmány</th><th>Elfogadási feltétel</th></tr></thead>
+          <tbody>
+            <tr><td>0. Technikai spike</td><td>Extension-fetched JPEG/PNG → Blob → ImageBitmap → pixelolvasási próba; PDS termék discovery; rover GLB tengely/méret audit; PLACES → <code>S</code> frame-kísérlet két szomszédos stationnel; WebGPU/WebGL/WASM képesség- és rövid sebességpróba.</td><td>A CORS-feltevés böngészőteszttel igazolt; a szükséges hostok, termékformátumok, frame-szerződés, gyorsítási fallback és jogosultsági UX véglegesek.</td></tr>
+            <tr><td>1. Tartó és perzisztencia</td><td>Canvas bal felső <code>2D | 3D</code> módváltó, local scene index, IndexedDB, ZIP export/import, üres viewer és gombok. A rovermodellhez külön <code>positionMeters</code>, <code>rotationDegrees</code> és <code>scale</code> kalibrációs rekord tartozik.</td><td>Egy kis kézzel készített tesztmesh elmenthető, újra megnyitható és sérült import elutasított; a kalibráció menthető és visszaolvasható; módváltás nem változtatja meg a stabil vezérlőszöveget.</td></tr>
+            <tr><td>2. Perseverance PDS-import</td><td>Navcam sztereó RDR/mesh parser, provenance panel, PDS-mesh viewer.</td><td>Egy rögzített, ismert PDS-lokáció azonos koordinátával és textúrával reprodukálható két külön telepítésben.</td></tr>
+            <tr><td>3. Saját Perseverance sztereó</td><td>Párosító, CAHVORE-rectify, worker SGBM, konfidenciapontok és grid-mesh.</td><td>Rögzített bal–jobb tesztpáron a pontok kamera-frame-je és ismert referencia/RDR kontrollpontok hibája a megadott küszöbön belül van.</td></tr>
+            <tr><td>4. Kamerahelyes textúra</td><td>Alaptextúra, többnézetes bake, source-frustum/debug overlay.</td><td>A tesztmesh-negyedeken nincs vetítési tükrözés, nyilvánvaló paint-through vagy helytelen subframe-skála.</td></tr>
+            <tr><td>5. Ismert pózú MVS</td><td>Szomszédos lokáció/Sol felderítése PLACES alapján, feature-track, PDS-pózzal vezetett depth-támogatás és fúzió.</td><td>Három vagy több nézetnél a fuzionált felület reprojekciós hibája és a PDS RDR-kontrollpontok hibája javul vagy változatlan; romló eredmény nem írja felül a stereo seedet.</td></tr>
+            <tr><td>6. Opcionális korlátos bundle adjustment</td><td>Kis, bizonytalansággal súlyozott pózdelta-optimalizálás, rögzített intrinsics és PLACES-ankor.</td><td>A javítás a PDS frame-et, skálát és map-regisztrációt megtartja; a delta és a reprojekciós mérőszám exportált. Alapbeállításként kikapcsolt.</td></tr>
+            <tr><td>7. Curiosity adapter</td><td>MSL termékfeloldás, Navcam-stereo, localizált PDS/PLACES póz adapter.</td><td>Ugyanaz a közös core fut Curiosityn, külön küldetésspecifikus geometria- vagy frame-eltérés nélkül.</td></tr>
+            <tr><td>8. Stabilizálás</td><td>Kvótakezelés, törlés, hibatűrés, lokációváltás, teljesítményprofil, akadálymentes státuszok.</td><td>Hibás hálózat, hiányos pár, kvótahiba és WebGL-kiesés nem hagy félrevezető vagy sérült scene-et.</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Szándékosan későbbi:</strong> szabad (PDS-pozíció nélküli) SfM, neurális mélység, Spirit/Opportunity, automatikus internetes scene-megosztás és Crossview/DEM összeolvasztás. Ezek mind saját minőségi és licenc-/adatvolumen-döntést igényelnek.</p>
+      </section>
+
+      <section id="validation">
+        <h2>8. Teszt- és minőségbiztosítási terv</h2>
+        <div class="grid">
+          <article class="card"><h3>Egységtesztek</h3><p>CAHV/CAHVOR/CAHVORE forward–inverse sugár hibája; bal–jobb párosítás; <code>T^S_C</code> frame-szorzási sorrend; depth-jump mesh-szakítás; többnézetes outlier-elutasítás; export/import validálás és séma-migráció.</p></article>
+          <article class="card"><h3>Arany adatkészletek</h3><p>Kis, repo-n kívüli letölthető fixture-lista, rögzített PDS LIDVID + hash + elvárt pont/mesh mérőszám. A bináris nyers képek és a 3D scene-ek ne kerüljenek a kiadási csomagba.</p></article>
+          <article class="card"><h3>Vizuális regresszió</h3><p>Rover, mesh, frustum és referencia pontok négy rögzített kameranézetből készült screenshotjai. A különböző GPU-k miatt tűréssel, nem pixelre pontos összehasonlítással.</p></article>
+          <article class="card"><h3>Teljesítmény</h3><p>Worker ne blokkolja a UI-t; mérjük a letöltést, rectifikálást, diszparitást, bake-et, VRAM-ot és IndexedDB-bájtokat. A felhasználó felbontás/triangleszám választás előtt becslést kap.</p></article>
+        </div>
+        <p>A jelenlegi panoráma regresszióját külön ellenőrizni kell: extension nélküli HTTP-s kiadásnak továbbra is azonos funkciókészlettel kell működnie, a 3D-modul nem tölthető be azon az útvonalon.</p>
+      </section>
+
+      <section id="risks">
+        <h2>9. Fő kockázatok és kezelésük</h2>
+        <table>
+          <thead><tr><th>Kockázat</th><th>Hatás</th><th>Kezelés</th></tr></thead>
+          <tbody>
+            <tr><td>PDS termékek elérhetősége/formátuma heterogén</td><td>Nem minden lokáció építhető meg automatikusan.</td><td>Forrásképesség jelzése a gomb előtt; PDS mesh/RDR → saját sztereó → „nem építhető” sorrend, hamis mélység nélkül.</td></tr>
+            <tr><td>Kamera- és rover-frame összekeverése</td><td>Jól kinéző, de térben hibás modell.</td><td>Egyetlen geometry-modul, explicit frame-címke minden rekordban, transzformációs unit tesztek és kontrollpontok.</td></tr>
+            <tr><td>Szomszédos nézet rossz egyezése vagy pózdriftje</td><td>A MVS felület elmosódik vagy elhajlik.</td><td>Ismert PLACES-póz az alap, nem szabad SfM; frustum/baseline kapu, epipoláris validáció, robusztus fúzió és stereo-seed visszaesés. A bundle adjustment csak korlátos, alapból kikapcsolt kísérlet.</td></tr>
+            <tr><td>Közel/távol tartomány és kevés textúra</td><td>Lyukas vagy zajos felszín.</td><td>Konfidencia alapú lyukak maradnak lyukak; nem interpoláljuk őket tényként. A nézet kommunikálja a fedettséget.</td></tr>
+            <tr><td>Extension tárhely/GPU memória</td><td>Instabil vagy lassú élmény.</td><td>Felbontás- és triangleszám-korlát, kvótafigyelés, scene-enkénti törlés, texture/geometry <code>dispose()</code>, progresszív minőségi profilok.</td></tr>
+            <tr><td>Gyenge vagy hibás GPU/WebGPU implementáció</td><td>A compute út lassabb, leáll vagy nem érhető el.</td><td>Adapter- és limitvizsgálat, device-loss kezelés, rövid helyi próba, majd WebGL/WASM visszaesés. A GPU gyártóneve nem döntési feltétel.</td></tr>
+            <tr><td>Jogosultsági figyelmeztetés</td><td>Telepítési súrlódás.</td><td>Csak a 3D gomb megnyomásakor kérhető opcionális PDS hostok, hostonként indokolt UI-val; a fő panoráma nem igényel új jogot.</td></tr>
+            <tr><td>Tudományos túlértelmezés</td><td>Felhasználó abszolút mérést tulajdonít a nézetnek.</td><td>„Vizualizáció / becsült geometria” felirat, forrástípus és hiba/konfidencia megjelenítése, exportált provenance.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <details>
+        <summary>Elsődleges források és technológiai alapok</summary>
+        <ul class="source-list">
+          <li><a href="https://developer.chrome.com/docs/extensions/develop/concepts/network-requests">Chrome Extensions – Cross-origin network requests</a>: extension oldal és service worker host permissionnel kérhet cross-origin adatot; content script nem kerül ki a weboldal originje alól.</li>
+          <li><a href="https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions">Chrome Extensions – Declare permissions</a>: host- és optional host permission viselkedés, minimális jogosultság elve.</li>
+          <li><a href="https://pds.nasa.gov/ds-view/pds/viewBundle.jsp?identifier=urn:nasa:pds:mars2020_navcam_ops_stereo&amp;version=11.0">PDS – Mars 2020 Navcam Operations Stereo Product Bundle</a>: publikált Perseverance Navcam sztereó RDR gyűjtemény.</li>
+          <li><a href="https://pds-imaging.jpl.nasa.gov/documentation/Mars2020_Camera_Bundle_SIS.pdf">Mars 2020 Camera Archive Bundle SIS</a>: a <em>mesh</em> termék háromszögekből és ráillesztett képtextúrából áll; a Navcam/Hazcam/Mastcam-Z sztereó, mesh és mozaik bundle-ek archív szerkezete.</li>
+          <li><a href="https://pds-geosciences.wustl.edu/missions/mars2020/places.htm">Mars 2020 Rover PLACES Bundle</a> és <a href="https://pds.nasa.gov/ds-view/pds/viewProfile.jsp?dsid=MSL-M-ROVER-6-RDR-PLACES-V1.0">MSL PLACES RDR</a>: a küldetésenkénti lokalizációs, mechanizmus- és térképadatok; MSL-nél a localized nézetek a localization team alaptérképhez regisztrált finomítását tartalmazzák.</li>
+          <li><a href="https://pds-imaging.jpl.nasa.gov/documentation/MSL_COORDINATE_FRAMES.PDF">MSL Primary Rover Operations Coordinate Frames</a>: a SITE, RNAV és Local Level frame-ek eredete és tengelyirányai; a site-frame Mars-fix és a rover-frame rover-fix szerepe.</li>
+          <li><a href="https://docs.opencv.org/4.2.0/d9/d0c/group__calib3d.html">OpenCV calib3d</a>: <code>stereoRectify</code>/<code>Q</code> alapú diszparitás-visszavetítés, a fixpontos diszparitás skálázási követelménye.</li>
+          <li><a href="https://developer.chrome.com/docs/web-platform/webgpu/overview/">Chrome – WebGPU overview</a> és <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">MDN – WebGPU API</a>: böngészőn át elérhető modern GPU backendek és compute shader; a WebGPU nem minden böngészőben garantált, ezért fallback szükséges.</li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API">MDN – WebGL</a>: hardveresen gyorsított, széles körben elérhető 3D renderelés; a viewer és texture bake kompatibilitási alapja.</li>
+          <li><a href="https://developer.chrome.com/docs/extensions/develop/concepts/cross-origin-isolation">Chrome Extensions – Cross-origin isolation</a>: az extension opt-in izolációval használhat <code>SharedArrayBuffer</code>-t, de nem minden extension-context támogatása teljes, ezért ez nem lehet kötelező feldolgozási feltétel.</li>
+          <li><a href="https://colmap.github.io/faq.html">COLMAP – known camera poses</a>: ismert külső kamera-pózokkal futtatható sűrű rekonstrukció; a pose prior és a bundle adjustment alapelvei. A terv nem építi be a COLMAP-ot, ez algoritmikus referencia a korlátos MVS-hez.</li>
+          <li><a href="https://threejs.org/docs/pages/GLTFLoader.html">Three.js GLTFLoader</a> és <a href="https://threejs.org/docs/pages/WebGLRenderer">WebGLRenderer</a>: lokálisan csomagolt glTF rovermodell és WebGL 2 viewer alapja.</li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">MDN – IndexedDB API</a>: nagy strukturált adat és Blob tárolása worker-kompatibilisen; a localStorage helyett megfelelő scene-cache.</li>
+          <li><a href="https://www.usgs.gov/publications/mars-2020-perseverance-rover-mast-camera-zoom-mastcam-z-multispectral-stereoscopic">USGS – Mastcam-Z sztereoszkópikus kamera</a>: a Mastcam-Z fizikai sztereóbázisa és optikai konfigurációja.</li>
+        </ul>
+      </details>
+    </main>
+  </div>
+</body>
+</html>

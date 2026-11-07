@@ -56,3 +56,26 @@ Object.assign(window.localeDictionaries.en, {
   stateImportTitle: 'Open shared state', stateImportDescription: 'Paste a permalink or URL parameter bundle, or drop a TXT file here.', stateImportPlaceholder: 'Paste a permalink or URL parameter bundle', stateImportDrop: 'Drop a TXT file here, or choose one', stateImportCancel: 'Cancel', stateImportApply: 'Open state', stateImportClose: 'Close shared state', stateImportInvalid: 'This does not contain a valid permalink or URL parameter bundle.', stateImportFileError: 'The TXT file could not be read.'
   ,invalidSolsOpen: 'Invalid Sols', invalidSolsTitle: 'Invalid Sols', invalidSolsClose: 'Close Invalid Sols', invalidSolsDescription: 'Export the complete local inverse cache as the four package files, or import the files after dropping them here.', invalidSolsExport: 'Download 4 package files', invalidSolsDrop: 'Drop invalid-sols JavaScript files here, or choose them', invalidSolsCounts: 'Local cache: Curiosity {curiosity} · Perseverance {perseverance} · Spirit {spirit} · Opportunity {opportunity}.', invalidSolsExported: 'Four package files were downloaded 100 ms apart.', invalidSolsImported: '{imported} invalid-sols file(s) imported into this local cache.', invalidSolsImportPartial: '{imported} file(s) imported; {invalid} file(s) could not be read.'
 });
+
+Object.assign(window.localeDictionaries.en, {
+  threeDModeLabel: 'View mode',
+  threeDWorkspaceTitle: '3D workspace',
+  threeDPreflight: 'Run 3D readiness check',
+  threeDIdle: 'Select a source image, then run the readiness check.',
+  threeDReady: 'Ready for 3D',
+  threeDModelCalibrated: 'rover model calibrated',
+  threeDModelPending: 'rover model calibration pending',
+  threeDStorageError: '3D local storage is unavailable in this browser context.',
+  threeDChecking: 'Checking source pixels and hardware capabilities…',
+  threeDPreflightPassed: 'Source pixels are readable.',
+  threeDPreflightFailed: '3D readiness check failed.',
+  threeDCalibrationTitle: 'Rover model calibration',
+  threeDCalibrationNote: 'Values are in scene metres and degrees. They remain unverified until the model-frame audit is complete.',
+  threeDScaleLabel: 'Scale',
+  threeDCalibrationSave: 'Save rover calibration',
+  threeDCalibrationSaved: 'Rover calibration saved locally. Model-frame verification is still required.',
+  threeDViewerError: '3D viewer initialization failed. Open the extension console for details.',
+  threeDCubeTitle: '50 cm calibration cube',
+  threeDCubeNote: 'Red cube centre in scene metres. The cube stays axis-aligned on the surface; cyan +Z arrow is 0° forward.',
+  threeDControlsNote: 'Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 approaches, L2 retreats, L3 resets, R3 focuses rover, Square toggles fullscreen.',
+});

@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026110629" />
+    <link rel="stylesheet" href="./styles.css?2026110635" />
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true"><symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".12"/><path d="M8.5 8.5l7 7m0-7-7 7"/></symbol></svg>
@@ -117,6 +117,40 @@
           </div>
           <div class="panorama-wrap" id="panoramaWrap">
             <canvas id="panoramaCanvas" width="1800" height="900" tabindex="0" aria-label="Interactive Mars panorama"></canvas>
+            <div class="three-d-viewport" id="threeDViewport" hidden aria-label="Interactive 3D rover scene">
+              <p class="three-d-viewport-status" data-three-d-viewport-status>Preparing 3D viewer…</p>
+            </div>
+            <div class="scene-mode-toggle" id="sceneModeToggle" role="group" aria-label="View mode" hidden>
+              <button type="button" data-scene-mode="2d" aria-pressed="true">2D</button><button type="button" data-scene-mode="3d" aria-pressed="false">3D</button>
+            </div>
+            <section class="three-d-workspace" id="threeDWorkspace" aria-live="polite" hidden>
+              <p class="eyebrow">MARTIAN-ROBOTS</p>
+              <h2 data-three-d-title>3D workspace</h2>
+              <p data-three-d-status>Select a source image, then run the readiness check.</p>
+              <button type="button" data-three-d-preflight>Run 3D readiness check</button>
+              <p class="three-d-controls-note" data-three-d-controls-note>Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 approaches, L2 retreats, L3 resets, R3 focuses rover, Square toggles fullscreen.</p>
+              <details class="rover-calibration">
+                <summary data-three-d-calibration-title>Rover model calibration</summary>
+                <p data-three-d-calibration-note>Values are in scene metres and degrees. They remain unverified until the model-frame audit is complete.</p>
+                <div class="rover-calibration-grid">
+                  <label><span>X</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-position="0" value="0" /></label>
+                  <label><span>Y</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-position="1" value="0" /></label>
+                  <label><span>Z</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-position="2" value="0" /></label>
+                  <label><span>Rx°</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-rotation="0" value="0" /></label>
+                  <label><span>Ry°</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-rotation="1" value="0" /></label>
+                  <label><span>Rz°</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-rotation="2" value="0" /></label>
+                  <label class="rover-calibration-scale"><span data-three-d-scale-label>Scale</span><input type="number" min="0.000001" step="any" inputmode="decimal" data-rover-calibration-scale value="1" /></label>
+                </div>
+                <h3 data-three-d-cube-title>50 cm calibration cube</h3>
+                <p data-three-d-cube-note>Red cube centre in scene metres. The cube stays axis-aligned on the surface; cyan +Z arrow is 0° forward.</p>
+                <div class="rover-calibration-grid">
+                  <label><span>X</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-cube="0" value="1" /></label>
+                  <label><span>Y</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-cube="1" value="0.25" /></label>
+                  <label><span>Z</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-cube="2" value="0" /></label>
+                </div>
+                <button type="button" data-rover-calibration-save>Save rover calibration</button>
+              </details>
+            </section>
             <button id="flatfieldHideImageButton" class="flatfield-image-hide" type="button" hidden data-i18n-aria-label="flatfieldHideImage" aria-label="Hide this image"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
             <section id="instrumentWheel" class="instrument-wheel" aria-hidden="true" aria-label="Instrument wheel">
               <div class="instrument-wheel-core"><strong class="instrument-wheel-title">Instrument Wheel</strong><span class="instrument-wheel-hint">Hold L1 · select with the right stick · X toggles</span></div>
@@ -417,7 +451,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110629"></script>
+    <script type="module" src="./app.js?2026110643"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

@@ -1,3 +1,5 @@
+import { initializeThreeDMode } from './three-d/entry.js';
+
 // Navigation polarity: use 1 normally or -1 to invert an axis.
 const NAVIGATION_X_FACTOR = 1;
 const NAVIGATION_Y_FACTOR = -1;
@@ -631,14 +633,21 @@ function gamepadResponse(value,deadZone=GAMEPAD_STICK_DEAD_ZONE){const magnitude
 function gamepadButtonPressure(gamepad,indices){return Math.max(0,...indices.map(index=>{const button=gamepad.buttons[index];/* Standard-mapped triggers expose a fractional value. Do not promote a
 partially pressed trigger to 1 merely because its boolean pressed threshold
 has been crossed; only fall back to that boolean for digital-only buttons. */return button?(Number.isFinite(button.value)?button.value:(button.pressed?1:0)):0}))}
-let gamepadLastFrame=0,gamepadResetHeld=false,gamepadAltHoverHeld=false,gamepadAimerActive=false,gamepadEscapeHeld=false,gamepadFullscreenHeld=false,gamepadLayerSeparationHeld=false;
+let gamepadLastFrame=0,gamepadResetHeld=false,gamepadFocusHeld=false,gamepadAltHoverHeld=false,gamepadAimerActive=false,gamepadEscapeHeld=false,gamepadFullscreenHeld=false,gamepadLayerSeparationHeld=false;
 function gamepadEscape(){if(!$('#downloadNotice').hidden)closeDownloadNotice();if(s.selection||s.selectionDraft)clearSelection()}
 const gamepadDpadRepeats={up:{},down:{},left:{},right:{}};
 function repeatGamepadDpad(name,pressed,now,action){const repeat=gamepadDpadRepeats[name];if(!pressed){repeat.held=false;repeat.first=false;return}if(!repeat.held||now>=repeat.next){action();repeat.held=true;repeat.next=now+(repeat.first?GAMEPAD_DPAD_REPEAT_MS:GAMEPAD_DPAD_INITIAL_REPEAT_MS);repeat.first=true}}
 function processGamepadDpad(gamepad,now,layerSeparationMode=false){const pressed=index=>gamepadButtonPressure(gamepad,[index])>GAMEPAD_TRIGGER_DEAD_ZONE;if(layerSeparationMode){repeatGamepadDpad('left',false,now,()=>{});repeatGamepadDpad('right',false,now,()=>{});repeatGamepadDpad('up',pressed(GAMEPAD_DPAD_UP_BUTTON),now,()=>changeGamepadLayerSeparation(1,true));repeatGamepadDpad('down',pressed(GAMEPAD_DPAD_DOWN_BUTTON),now,()=>changeGamepadLayerSeparation(-1,true));return}repeatGamepadDpad('left',pressed(GAMEPAD_DPAD_LEFT_BUTTON),now,()=>changeGamepadLocationTolerance(-1));repeatGamepadDpad('right',pressed(GAMEPAD_DPAD_RIGHT_BUTTON),now,()=>changeGamepadLocationTolerance(1));repeatGamepadDpad('up',pressed(GAMEPAD_DPAD_UP_BUTTON),now,()=>advanceLocation(1));repeatGamepadDpad('down',pressed(GAMEPAD_DPAD_DOWN_BUTTON),now,()=>advanceLocation(-1))}
 function pollGamepad(now){
   const elapsed=Math.min(.05,gamepadLastFrame?(now-gamepadLastFrame)/1000:0);gamepadLastFrame=now;
-  const gamepad=[...navigator.getGamepads?.()||[]].find(Boolean),wheelHeldNow=gamepad&&gamepadButtonPressure(gamepad,[GAMEPAD_INSTRUMENT_WHEEL_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE;let shouldRender=wheelHeldNow?false:updateFullscreenAim(now,elapsed);
+  const gamepad=[...navigator.getGamepads?.()||[]].find(Boolean);
+  // The 3D view owns the same physical controls, but maps them to its
+  // third-person orbit camera instead of changing the panorama state.
+  if(document.body.dataset.sceneMode==='3d'){
+    if(gamepad&&elapsed){const leftX=gamepad.axes[0]||0,leftY=gamepad.axes[1]||0,rightX=gamepad.axes[2]||0,rightY=gamepad.axes[3]||0,l1=gamepadButtonPressure(gamepad,[GAMEPAD_INSTRUMENT_WHEEL_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE,l2=gamepadButtonPressure(gamepad,[GAMEPAD_ZOOM_BUTTONS[0]]),r2=gamepadButtonPressure(gamepad,[GAMEPAD_DESCEND_BUTTONS[0]]),reset=gamepadButtonPressure(gamepad,GAMEPAD_RESET_BUTTONS)>GAMEPAD_TRIGGER_DEAD_ZONE,focus=gamepadButtonPressure(gamepad,GAMEPAD_ALT_HOVER_BUTTONS)>GAMEPAD_TRIGGER_DEAD_ZONE,fullscreen=gamepadButtonPressure(gamepad,[GAMEPAD_FULLSCREEN_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE;window.dispatchEvent(new CustomEvent('martianrobots3dgamepad',{detail:{elapsed,leftX,leftY,rightX,rightY,l1,l2,r2,reset:reset&&!gamepadResetHeld,focus:focus&&!gamepadFocusHeld,fullscreen:fullscreen&&!gamepadFullscreenHeld}}));gamepadResetHeld=reset;gamepadFocusHeld=focus;gamepadFullscreenHeld=fullscreen}else{gamepadResetHeld=false;gamepadFocusHeld=false;gamepadFullscreenHeld=false}
+    requestAnimationFrame(pollGamepad);return;
+  }
+  const wheelHeldNow=gamepad&&gamepadButtonPressure(gamepad,[GAMEPAD_INSTRUMENT_WHEEL_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE;let shouldRender=wheelHeldNow?false:updateFullscreenAim(now,elapsed);
   if(gamepad&&elapsed){
     const rawLeftX=gamepad.axes[0]||0,rawLeftY=gamepad.axes[1]||0,rawRightX=gamepad.axes[2]||0,rawRightY=gamepad.axes[3]||0,
       wheelHeld=wheelHeldNow,
@@ -996,3 +1005,17 @@ const imageLookupApplyLocale=applyLocale;
 applyLocale=code=>{imageLookupApplyLocale(code);document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>element.placeholder=lookupText(element.dataset.i18nPlaceholder,element.placeholder));syncStateTransferUi();setImageLookupStatus('imageLookupHint')};
 document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>element.placeholder=lookupText(element.dataset.i18nPlaceholder,element.placeholder));
 syncStateTransferUi();
+
+initializeThreeDMode({
+  isExtensionContext,
+  getSceneContext() {
+    const source = (s.panoramaImages || s.images || []).find(image => image.geometryValid !== false && isRoverImageEnabled(image) && url(image));
+    return {
+      rover: s.rover,
+      sol: Number(s.requestedSol),
+      locationIndex: Number(s.selectedLocationIndex),
+      sourceUrl: source ? url(source) : null,
+      orientationSamples: (s.locations?.[s.selectedLocationIndex]?.images || s.panoramaImages || []).map(image => image.model?.orientation?.q).filter(Boolean),
+    };
+  },
+});
