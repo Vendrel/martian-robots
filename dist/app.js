@@ -1,4 +1,4 @@
-import { initializeThreeDMode } from './three-d/entry.js';
+import { initializeThreeDMode } from './three-d/entry.js?2026110660';
 
 // Navigation polarity: use 1 normally or -1 to invert an axis.
 const NAVIGATION_X_FACTOR = 1;
@@ -410,7 +410,7 @@ async function toggleFullscreen(source='mouse') {
 $('#fullscreenButton').onclick=toggleFullscreen;
 $('#fullscreenButton').addEventListener('pointerdown',(event)=>event.stopPropagation());
 let fullscreenCursorTimer=0,fullscreenCursorPointer=null;
-function wakeFullscreenCursor(event){if(document.fullscreenElement!==wrap)return;if(event?.type==='pointermove'){const pointer={x:event.clientX,y:event.clientY};if(fullscreenCursorPointer&&Math.hypot(pointer.x-fullscreenCursorPointer.x,pointer.y-fullscreenCursorPointer.y)<2)return;fullscreenCursorPointer=pointer}else if(event?.clientX!=null)fullscreenCursorPointer={x:event.clientX,y:event.clientY};wrap.classList.remove('is-cursor-hidden');clearTimeout(fullscreenCursorTimer);fullscreenCursorTimer=setTimeout(()=>wrap.classList.add('is-cursor-hidden'),FULLSCREEN_CURSOR_IDLE_MS)}
+function wakeFullscreenCursor(event){if(document.fullscreenElement!==wrap)return;if(wrap.classList.contains('is-three-d')){clearTimeout(fullscreenCursorTimer);wrap.classList.remove('is-cursor-hidden');return}if(event?.type==='pointermove'){const pointer={x:event.clientX,y:event.clientY};if(fullscreenCursorPointer&&Math.hypot(pointer.x-fullscreenCursorPointer.x,pointer.y-fullscreenCursorPointer.y)<2)return;fullscreenCursorPointer=pointer}else if(event?.clientX!=null)fullscreenCursorPointer={x:event.clientX,y:event.clientY};wrap.classList.remove('is-cursor-hidden');clearTimeout(fullscreenCursorTimer);fullscreenCursorTimer=setTimeout(()=>wrap.classList.add('is-cursor-hidden'),FULLSCREEN_CURSOR_IDLE_MS)}
 for(const eventName of ['pointermove','pointerdown','wheel'])wrap.addEventListener(eventName,wakeFullscreenCursor,{passive:true});
 const fullscreenReticles=[$('#presentationMouse'),$('#controllerAimer')].filter(Boolean);
 function syncFullscreenReticles(active){for(const reticle of fullscreenReticles)(active?wrap:document.body).append(reticle)}
@@ -641,8 +641,8 @@ function processGamepadDpad(gamepad,now,layerSeparationMode=false){const pressed
 function pollGamepad(now){
   const elapsed=Math.min(.05,gamepadLastFrame?(now-gamepadLastFrame)/1000:0);gamepadLastFrame=now;
   const gamepad=[...navigator.getGamepads?.()||[]].find(Boolean);
-  // The 3D view owns the same physical controls, but maps them to its
-  // third-person orbit camera instead of changing the panorama state.
+  // The 3D view owns the same physical controls and maps them to its local
+  // free-flight camera instead of changing the panorama state.
   if(document.body.dataset.sceneMode==='3d'){
     if(gamepad&&elapsed){const leftX=gamepad.axes[0]||0,leftY=gamepad.axes[1]||0,rightX=gamepad.axes[2]||0,rightY=gamepad.axes[3]||0,l1=gamepadButtonPressure(gamepad,[GAMEPAD_INSTRUMENT_WHEEL_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE,l2=gamepadButtonPressure(gamepad,[GAMEPAD_ZOOM_BUTTONS[0]]),r2=gamepadButtonPressure(gamepad,[GAMEPAD_DESCEND_BUTTONS[0]]),reset=gamepadButtonPressure(gamepad,GAMEPAD_RESET_BUTTONS)>GAMEPAD_TRIGGER_DEAD_ZONE,focus=gamepadButtonPressure(gamepad,GAMEPAD_ALT_HOVER_BUTTONS)>GAMEPAD_TRIGGER_DEAD_ZONE,fullscreen=gamepadButtonPressure(gamepad,[GAMEPAD_FULLSCREEN_BUTTON])>GAMEPAD_TRIGGER_DEAD_ZONE;window.dispatchEvent(new CustomEvent('martianrobots3dgamepad',{detail:{elapsed,leftX,leftY,rightX,rightY,l1,l2,r2,reset:reset&&!gamepadResetHeld,focus:focus&&!gamepadFocusHeld,fullscreen:fullscreen&&!gamepadFullscreenHeld}}));gamepadResetHeld=reset;gamepadFocusHeld=focus;gamepadFullscreenHeld=fullscreen}else{gamepadResetHeld=false;gamepadFocusHeld=false;gamepadFullscreenHeld=false}
     requestAnimationFrame(pollGamepad);return;
@@ -1016,6 +1016,49 @@ initializeThreeDMode({
       locationIndex: Number(s.selectedLocationIndex),
       sourceUrl: source ? url(source) : null,
       orientationSamples: (s.locations?.[s.selectedLocationIndex]?.images || s.panoramaImages || []).map(image => image.model?.orientation?.q).filter(Boolean),
+      stereoCandidates: (s.locations?.[s.selectedLocationIndex]?.images || []).map(image => ({
+        imageId: imageIdentity(image), capturedAt: image.date_taken || image.date_taken_utc || '', sourceUrl: url(image), camera: image.model ? { C: image.model.C, A: image.model.A, H: image.model.H, V: image.model.V } : null,
+      })).filter(image => image.sourceUrl && image.camera?.C && image.camera?.A && image.camera?.H && image.camera?.V),
+      // Match the proven 2D panorama source selection. Do not include both
+      // eyes or non-panorama products merely because they have pixels.
+      panoramaCandidates: (s.panoramaImages || []).filter(image => Number(image.sol) === Number(s.requestedSol) && image.geometryValid !== false && isRoverImageEnabled(image)).map(image => ({
+        imageId: imageIdentity(image), sourceUrl: url(image), camera: image.model ? { type: image.model.type, C: image.model.C, A: image.model.A, H: image.model.H, V: image.model.V, orientation: image.model.orientation?.q || null } : null,
+      })).filter(image => image.sourceUrl && image.camera?.C && image.camera?.A && image.camera?.H && image.camera?.V),
+      // Reuse the normal panorama's exact CAHV/CAHVOR/CAHVORE inverse and
+      // attitude transform as the authoritative 3D visual reference.
+      async buildPanoramaEquirectangular(onProgress) {
+        const images = (s.panoramaImages || []).filter(image => Number(image.sol) === Number(s.requestedSol) && image.geometryValid !== false && isRoverImageEnabled(image));
+        if (!images.length) throw Error('no-sol-panorama-images');
+        const width = 2048, height = width / 2;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d', { alpha: true });
+        let loaded = 0;
+        for (const image of images) {
+          onProgress?.(loaded, images.length);
+          try {
+            const bitmap = await fetchExtensionImageBitmap(image);
+            try {
+              context.drawImage(renderEquirectangularLayer(image, bitmap, width, height), 0, 0);
+              loaded += 1;
+            } finally { bitmap.close?.(); }
+          } catch (error) { debug('3D panorama image skipped', `${imageIdentity(image)}: ${error.message || error}`); }
+        }
+        onProgress?.(loaded, images.length);
+        if (!loaded) throw Error('no-readable-sol-panorama-images');
+        return { canvas, loaded, total: images.length };
+      },
     };
   },
 });
+
+// Keep the extension-only viewer synchronized with the active panorama
+// location. The 3D module deliberately reads its context through this small
+// event boundary so the panorama module remains the sole owner of selection.
+const activateLocationForThreeD = activateLocation;
+activateLocation = (...args) => {
+  const result = activateLocationForThreeD(...args);
+  document.dispatchEvent(new Event('martianrobots3dlocationchange'));
+  return result;
+};

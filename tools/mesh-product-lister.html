@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perseverance PDS mesh-termék lista</title>
+    <link rel="stylesheet" href="./mesh-product-lister.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">MARTIAN-ROBOTS · DIAGNOSZTIKA</p>
+      <h1>Perseverance PDS mesh-termék lista</h1>
+      <p class="lead">A hivatalos Mars 2020 Navcam Operations Terrain Mesh PDS-könyvtárat kérdezi le. Elsőként a PDS Sol-indexét olvassa; csak ennek sikertelensége esetén végez lassabb, tartományos ellenőrzést.</p>
+
+      <section class="actions" aria-label="Lekérdezési vezérlők">
+        <button id="loadIndex" type="button">PDS Sol-index lekérdezése</button>
+        <label>Első Sol <input id="firstSol" type="number" min="0" value="0" /></label>
+        <label>Utolsó Sol <input id="lastSol" type="number" min="0" value="700" /></label>
+        <button id="scanRange" type="button">Tartomány ellenőrzése</button>
+      </section>
+
+      <p id="status" role="status">Várakozás. Bővítményoldalként megnyitva a PDS-hozzáférést jóvá kell hagyni.</p>
+      <p class="note">A PDS jelenlegi könyvtárstruktúrája: <code>data/sol/{Sol}/ids/rdr/mesh/</code>. Egy Sol több OBJ+MTL+PNG terméket is tartalmazhat.</p>
+
+      <section id="results" hidden aria-live="polite">
+        <h2>Mesh-termékkel rendelkező Sol-ok</h2>
+        <p id="summary"></p>
+        <ol id="solList"></ol>
+      </section>
+    </main>
+    <script type="module" src="./mesh-product-lister.js"></script>
+  </body>
+</html>

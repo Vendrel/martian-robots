@@ -16,6 +16,10 @@
     "https://mars.nasa.gov/*",
     "https://pds-imaging.jpl.nasa.gov/*"
   ],
+  "optional_host_permissions": [
+    "https://planetarydata.jpl.nasa.gov/*",
+    "https://pds-geosciences.wustl.edu/*"
+  ],
   "icons": {
     "16": "favicon-16x16.png",
     "32": "favicon-32x32.png",

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>martian-robots · 3D világkoordináta-rendszer</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101419;--surface:#192128;--line:#33424c;--text:#edf4f6;--muted:#abc0c9;--cyan:#70e4f3;--amber:#f2bd74}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#20353a 0,transparent 36rem),var(--bg);color:var(--text);font:16px/1.58 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:48px 24px 72px}h1{line-height:1.1;margin:0 0 10px;font-size:clamp(2rem,5vw,3.5rem)}h2{margin-top:40px}.lede{color:var(--muted);font-size:1.15rem;max-width:72ch}.tag{color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-size:.78rem}section,aside{background:color-mix(in srgb,var(--surface) 86%,transparent);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:20px}table{border-collapse:collapse;width:100%;margin-top:12px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--cyan)}code{background:#0b1014;padding:.14em .35em;border-radius:4px;color:#e9cb9d}pre{overflow:auto;background:#0b1014;padding:18px;border-radius:9px;border:1px solid var(--line)}.flow{display:grid;gap:10px;grid-template-columns:repeat(5,minmax(110px,1fr));align-items:center}.node{padding:14px;border-radius:10px;text-align:center;background:#111a20;border:1px solid var(--line)}.arrow{text-align:center;color:var(--cyan);font-size:1.5rem}@media(max-width:720px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+  </style>
+</head>
+<body><main>
+  <p class="tag">martian-robots · architektúrális döntés</p>
+  <h1>3D világkoordináta-rendszer</h1>
+  <p class="lede">A 3D jelenet talajszintű, rover-központú referenciát használ. Ez leváltja a korábbi, külön-külön kézzel beforgatott objektum-frame-eket.</p>
+  <section><h2>Rögzített invariánsok</h2>
+    <table><thead><tr><th>Fogalom</th><th>Definíció</th></tr></thead><tbody>
+      <tr><td>Jelenetvilág</td><td><code>+Y</code> felfelé, <code>+Z</code> előre, talajorigó <code>(0,0,0)</code>.</td></tr>
+      <tr><td>NASA ROVER_NAV</td><td><code>+X</code> előre (mast felé), <code>+Z</code> lefelé. Origója a két középső kerék középpontja.</td></tr>
+      <tr><td>Magassági kapcsolat</td><td>A ROVER_NAV origó a világ talajorigója fölött <code>0,25 m</code>: <code>(0,+0.25,0)</code>.</td></tr>
+      <tr><td>Statikus tengelyadapter</td><td><code>(x,y,z)<sub>rnav</sub> → (-y,-z,x)<sub>render</sub></code>. Egyetlen helyen: <code>three-d/scene-frame.js</code>.</td></tr>
+    </tbody></table>
+  </section>
+  <section><h2>Transzformációs lánc</h2><div class="flow"><div class="node">GLTF<br>modell</div><div class="arrow">→</div><div class="node">ROVER_NAV<br>modell-pivot</div><div class="arrow">→</div><div class="node">Three.js<br>világ</div></div>
+    <pre>világ = T(rnav→render, y=+0.25 m) · T(API relatív rover-póz) · T(GLTF kalibráció)</pre>
+    <p>A saját sztereó mesh <code>ROVER_NAV</code>-ból a képkori API-attitude segítségével lép <code>SITE_FRAME</code>-be. A PDS OBJ címkéje szerint már <code>SITE_FRAME</code>-ben van: a termék RMC-jét a Rover PLACES lokalizációs táblája oldja fel, ezért a mesh a rover SITE-beli pozíciójához relatívan kerül a jelenetbe. Erre rover-póz nem kerül; csak a közös SITE → render tengelyadapter. A panoráma szintén SITE-alapú iránytextúrás referencia-gömb.</p>
+  </section>
+  <aside><strong>Kalibrációs következmény.</strong> A korábbi rover- és meshkalibrációk az ad hoc render-frame-re készültek. Az új frame-verzió ezeket szándékosan nem használja automatikusan. A rovermodell újrakalibrálása a 50 cm-es kockához, majd a mesh-ek külön kalibrálása szükséges.</aside>
+  <section><h2>PDS provenance-gate</h2><p>A betöltő a kapcsolódó <code>.obj.xml</code> címkéből kiolvassa a koordináta-frame-et, és jelenleg csak a bizonyított <code>SITE_FRAME</code> OBJ-t fogadja el. Ismeretlen frame esetén inkább hibát jelez, mint hogy rejtett 90°-os javítást alkalmazzon.</p></section>
+</main></body></html>

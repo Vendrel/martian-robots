@@ -1,6 +1,8 @@
 import { detectAcceleration } from './acceleration.js';
-import { loadRoverCalibration, saveRoverCalibration } from './store.js';
-import { createThreeDViewer } from './viewer.js';
+import { loadLocalMeshCalibration, loadMeshCalibration, loadPanoramaCalibration, loadRoverCalibration, loadRoverCalibrationRecord, saveLocalMeshCalibration, saveMeshCalibration, savePanoramaCalibration, saveRoverCalibration } from './store.js?2026110660';
+import { defaultRoverCalibrationFor, roverAssetPath } from './rover-calibration.js';
+import { createThreeDViewer } from './viewer.js?2026110674';
+import { findNearestPublishedPerseverancePdsMesh, findPerseverancePdsMesh, probePerseverancePdsSources } from './pds-sources.js?2026110660';
 
 function text(key, fallback) {
   return window.localeDictionary?.[key] || fallback;
@@ -9,6 +11,7 @@ function text(key, fallback) {
 function setMode(buttons, mode) {
   for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.sceneMode === mode));
 }
+function sceneCalibrationKey(context) { return `${context.rover}:${context.sol}:${context.locationIndex}`; }
 
 export const SHOW2D3DBUTTON = false;
 const THREE_D_SHORTCUT_KEY = 'í';
@@ -25,6 +28,53 @@ function averageRoverOrientation(samples) {
   }
   const length = Math.hypot(...sum);
   return length > 0 ? sum.map(component => component / length) : null;
+}
+
+function dot3(left, right) { return left[0] * right[0] + left[1] * right[1] + left[2] * right[2]; }
+function length3(vector) { return Math.hypot(...vector); }
+function validCamera(camera) { return ['C', 'A', 'H', 'V'].every(key => Array.isArray(camera?.[key]) && camera[key].length === 3 && camera[key].every(Number.isFinite)); }
+function stereoSide(imageId) { const id = String(imageId || '').toUpperCase(); return /^(?:N|NAV)[^A-Z]*L|^NL|LEFT/.test(id) ? 'left' : /^(?:N|NAV)[^A-Z]*R|^NR|RIGHT/.test(id) ? 'right' : null; }
+
+function selectStereoPair(candidates) {
+  let selected = null;
+  for (let leftIndex = 0; leftIndex < candidates.length; leftIndex += 1) for (let rightIndex = leftIndex + 1; rightIndex < candidates.length; rightIndex += 1) {
+    const left = candidates[leftIndex], right = candidates[rightIndex];
+    if (!validCamera(left.camera) || !validCamera(right.camera)) continue;
+    const axisSimilarity = dot3(left.camera.A, right.camera.A) / (length3(left.camera.A) * length3(right.camera.A));
+    const baseline = length3(left.camera.C.map((value, index) => value - right.camera.C[index]));
+    if (!Number.isFinite(axisSimilarity) || axisSimilarity < .985 || baseline < .02 || baseline > 2) continue;
+    const oppositeSides = stereoSide(left.imageId) && stereoSide(right.imageId) && stereoSide(left.imageId) !== stereoSide(right.imageId);
+    const timeDelta = Math.abs(Date.parse(left.capturedAt) - Date.parse(right.capturedAt)) / 1000;
+    const temporalWeight = Number.isFinite(timeDelta) ? 1 / (1 + Math.min(timeDelta, 120) / 15) : .5;
+    const score = baseline * axisSimilarity * (oppositeSides ? 3 : 1) * temporalWeight;
+    if (!selected || score > selected.score) selected = { left, right, baseline, score };
+  }
+  return selected;
+}
+
+async function fetchImageBitmap(sourceUrl) {
+  const response = await fetch(sourceUrl, { cache: 'force-cache' });
+  if (!response.ok) throw Error(`stereo-image-http-${response.status}`);
+  return createImageBitmap(await response.blob());
+}
+
+async function runStereoWorker(pair) {
+  let stage = 'image-download';
+  const [leftBitmap, rightBitmap] = await Promise.all([fetchImageBitmap(pair.left.sourceUrl), fetchImageBitmap(pair.right.sourceUrl)]);
+  stage = 'worker-start';
+  const worker = new Worker(new URL('./reconstruction.worker.js', import.meta.url), { type: 'module' });
+  try {
+    return await new Promise((resolve, reject) => {
+      worker.onmessage = event => event.data?.ok ? resolve(event.data) : reject(Error(`${event.data?.stage || 'worker'}: ${event.data?.error || 'local-stereo-worker-failed'}`));
+      worker.onerror = event => reject(event.error || Error(`worker: ${event.message || 'local-stereo-worker-error'}`));
+      stage = 'worker-message';
+      worker.postMessage({ leftBitmap, rightBitmap, leftCamera: pair.left.camera, rightCamera: pair.right.camera }, [leftBitmap, rightBitmap]);
+    });
+  } catch (error) {
+    throw Error(`${stage}: ${error.message || error}`);
+  } finally {
+    worker.terminate();
+  }
 }
 
 async function probeReadablePixels(sourceUrl) {
@@ -61,15 +111,41 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
   const status = workspace.querySelector('[data-three-d-status]');
   const viewportStatus = viewport.querySelector('[data-three-d-viewport-status]');
   const preflight = workspace.querySelector('[data-three-d-preflight]');
+  const panoramaBuild = workspace.querySelector('[data-three-d-panorama-build]');
+  const panoramaStatus = workspace.querySelector('[data-three-d-panorama-status]');
+  const localReconstruct = workspace.querySelector('[data-three-d-local-reconstruct]');
+  const localReconstructionStatus = workspace.querySelector('[data-three-d-local-reconstruction-status]');
+  const pdsProbe = workspace.querySelector('[data-three-d-pds-probe]');
+  const pdsStatus = workspace.querySelector('[data-three-d-pds-status]');
+  const nasaMeshToggle = workspace.querySelector('[data-three-d-nasa-mesh]');
+  const localMeshToggle = workspace.querySelector('[data-three-d-local-mesh]');
   const calibrationSave = workspace.querySelector('[data-rover-calibration-save]');
+  const meshCalibrationDetails = workspace.querySelector('[data-mesh-calibration]');
+  const meshCalibrationSave = workspace.querySelector('[data-mesh-calibration-save]');
+  const localMeshCalibrationSave = workspace.querySelector('[data-local-mesh-calibration-save]');
+  const panoramaCalibrationSave = workspace.querySelector('[data-panorama-calibration-save]');
   const calibrationInputs = {
     position: [...workspace.querySelectorAll('[data-rover-calibration-position]')],
     rotation: [...workspace.querySelectorAll('[data-rover-calibration-rotation]')],
     scale: workspace.querySelector('[data-rover-calibration-scale]'),
     cube: [...workspace.querySelectorAll('[data-rover-calibration-cube]')],
   };
+  const meshCalibrationInputs = {
+    position: [...workspace.querySelectorAll('[data-mesh-calibration-position]')],
+    rotation: [...workspace.querySelectorAll('[data-mesh-calibration-rotation]')],
+    scale: workspace.querySelector('[data-mesh-calibration-scale]'),
+  };
+  const localMeshCalibrationInputs = { position: [...workspace.querySelectorAll('[data-local-mesh-calibration-position]')], rotation: [...workspace.querySelectorAll('[data-local-mesh-calibration-rotation]')], scale: workspace.querySelector('[data-local-mesh-calibration-scale]') };
+  const panoramaCalibrationInputs = { rotation: [...workspace.querySelectorAll('[data-panorama-calibration-rotation]')] };
   let acceleration = null;
   let calibration = null;
+  let calibrationRover = null;
+  let meshCalibration = null;
+  let meshCalibrationKey = null;
+  let localMeshCalibration = null;
+  let panoramaCalibration = null;
+  let activeSceneCalibrationKey = null;
+  let panoramaBuiltForScene = null;
   let viewer = null;
 
   const setViewerStatus = message => {
@@ -85,6 +161,17 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     return viewer;
   };
 
+  const selectRoverCalibration = async rover => {
+    const calibrationRecord = await loadRoverCalibrationRecord(rover);
+    let nextCalibration = calibrationRecord.calibration;
+    // A different model asset has a different pivot, unit and axis frame.
+    // Never inherit Curiosity calibration into a real Perseverance model.
+    if (!calibrationRecord.exists || nextCalibration.assetPath !== roverAssetPath(rover)) nextCalibration = await saveRoverCalibration(rover, defaultRoverCalibrationFor(rover));
+    calibration = nextCalibration;
+    calibrationRover = rover;
+    return calibration;
+  };
+
   const syncCalibrationFields = () => {
     if (!calibration) return;
     calibrationInputs.position.forEach((input, index) => input.value = String(calibration.positionMeters[index]));
@@ -94,17 +181,59 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     viewer?.applyRoverCalibration(calibration);
   };
 
+  const syncMeshCalibrationFields = () => {
+    if (!meshCalibration) return;
+    meshCalibrationInputs.position.forEach((input, index) => input.value = String(meshCalibration.positionMeters[index]));
+    meshCalibrationInputs.rotation.forEach((input, index) => input.value = String(meshCalibration.rotationDegrees[index]));
+    meshCalibrationInputs.scale.value = String(meshCalibration.scale);
+    viewer?.applyMeshCalibration(meshCalibration);
+  };
+
+  const syncLocalMeshCalibrationFields = () => {
+    if (!localMeshCalibration) return;
+    localMeshCalibrationInputs.position.forEach((input, index) => input.value = String(localMeshCalibration.positionMeters[index]));
+    localMeshCalibrationInputs.rotation.forEach((input, index) => input.value = String(localMeshCalibration.rotationDegrees[index]));
+    localMeshCalibrationInputs.scale.value = String(localMeshCalibration.scale);
+    viewer?.applyLocalMeshCalibration(localMeshCalibration);
+  };
+  const syncPanoramaCalibrationFields = () => {
+    if (!panoramaCalibration) return;
+    panoramaCalibrationInputs.rotation.forEach((input, index) => input.value = String(panoramaCalibration.rotationDegrees[index]));
+    viewer?.applyPanoramaCalibration(panoramaCalibration);
+  };
+  const loadSceneCalibrations = async context => {
+    activeSceneCalibrationKey = sceneCalibrationKey(context);
+    [localMeshCalibration, panoramaCalibration] = await Promise.all([loadLocalMeshCalibration(activeSceneCalibrationKey), loadPanoramaCalibration(activeSceneCalibrationKey)]);
+    syncLocalMeshCalibrationFields();
+    syncPanoramaCalibrationFields();
+  };
+
   const updateCopy = () => {
     toggle.setAttribute('aria-label', text('threeDModeLabel', 'View mode'));
     workspace.querySelector('[data-three-d-title]').textContent = text('threeDWorkspaceTitle', '3D workspace');
     preflight.textContent = text('threeDPreflight', 'Run 3D readiness check');
+    panoramaBuild.textContent = text('threeDPanoramaBuild', 'Build Sol 3D panorama');
+    localReconstruct.textContent = text('threeDLocalReconstruct', 'Build local stereo mesh');
+    pdsProbe.textContent = text('threeDPdsProbe', 'Check Perseverance PDS 3D sources');
+    workspace.querySelector('[data-three-d-nasa-mesh-label]').textContent = text('threeDNasaMeshLayer', 'NASA PDS mesh');
+    workspace.querySelector('[data-three-d-local-mesh-label]').textContent = text('threeDLocalMeshLayer', 'Local stereo reconstruction mesh');
     workspace.querySelector('[data-three-d-calibration-title]').textContent = text('threeDCalibrationTitle', 'Rover model calibration');
     workspace.querySelector('[data-three-d-calibration-note]').textContent = text('threeDCalibrationNote', 'Values are in scene metres and degrees. They remain unverified until the model-frame audit is complete.');
     workspace.querySelector('[data-three-d-scale-label]').textContent = text('threeDScaleLabel', 'Scale');
     workspace.querySelector('[data-three-d-cube-title]').textContent = text('threeDCubeTitle', '50 cm calibration cube');
     workspace.querySelector('[data-three-d-cube-note]').textContent = text('threeDCubeNote', 'Red cube centre in scene metres. The cube stays axis-aligned on the surface; cyan +Z arrow is 0° forward.');
-    workspace.querySelector('[data-three-d-controls-note]').textContent = text('threeDControlsNote', 'Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 approaches, L2 retreats, L3 resets, R3 focuses rover, Square toggles fullscreen.');
+    workspace.querySelector('[data-three-d-controls-note]').textContent = text('threeDControlsNote', 'Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 rises, L2 descends above terrain, L3 resets, R3 focuses rover, Square toggles fullscreen.');
     calibrationSave.textContent = text('threeDCalibrationSave', 'Save rover calibration');
+    workspace.querySelector('[data-three-d-mesh-calibration-title]').textContent = text('threeDMeshCalibrationTitle', 'Mesh calibration');
+    workspace.querySelector('[data-three-d-mesh-calibration-note]').textContent = text('threeDMeshCalibrationNote', 'Values apply only to the currently loaded PDS mesh product and are stored locally with that product.');
+    workspace.querySelector('[data-three-d-mesh-scale-label]').textContent = text('threeDScaleLabel', 'Scale');
+    meshCalibrationSave.textContent = text('threeDMeshCalibrationSave', 'Save mesh calibration');
+    workspace.querySelector('[data-three-d-local-mesh-calibration-title]').textContent = text('threeDLocalMeshCalibrationTitle', 'Local mesh calibration');
+    workspace.querySelector('[data-three-d-local-mesh-calibration-note]').textContent = text('threeDLocalMeshCalibrationNote', 'Only the locally reconstructed heightfield is affected.');
+    localMeshCalibrationSave.textContent = text('threeDLocalMeshCalibrationSave', 'Save local mesh calibration');
+    workspace.querySelector('[data-three-d-panorama-calibration-title]').textContent = text('threeDPanoramaCalibrationTitle', 'Panorama calibration');
+    workspace.querySelector('[data-three-d-panorama-calibration-note]').textContent = text('threeDPanoramaCalibrationNote', 'Only the stereo source-image reference is affected.');
+    panoramaCalibrationSave.textContent = text('threeDPanoramaCalibrationSave', 'Save panorama calibration');
     if (!status.textContent) status.textContent = text('threeDIdle', 'Select a source image, then run the readiness check.');
   };
 
@@ -113,10 +242,14 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     setMode(buttons, '3d');
     viewport.hidden = false;
     document.body.dataset.sceneMode = '3d';
+    toggle.hidden = false;
     viewport.closest('#panoramaWrap').classList.add('is-three-d');
     acceleration ||= await detectAcceleration();
     const context = getSceneContext();
-    calibration = await loadRoverCalibration(context.rover);
+    await loadSceneCalibrations(context);
+    pdsProbe.hidden = context.rover !== 'perseverance';
+    pdsStatus.hidden = true;
+    calibration = await selectRoverCalibration(context.rover);
     const currentOrientation = averageRoverOrientation(context.orientationSamples || []);
     if (!calibration.orientationReferenceWxyz && currentOrientation) {
       calibration = await saveRoverCalibration(context.rover, { ...calibration, orientationReferenceWxyz: currentOrientation });
@@ -124,8 +257,12 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     syncCalibrationFields();
     status.textContent = `${text('threeDReady', 'Ready for 3D')} · ${acceleration.backend} / ${acceleration.profile} · ${calibration.calibrated ? text('threeDModelCalibrated', 'rover model calibrated') : text('threeDModelPending', 'rover model calibration pending')}`;
     const activeViewer = await getViewer();
+    await activeViewer.loadRoverModel(calibration.assetPath, context.rover);
+    activeViewer.setLocalReconstructionMeshVisible(localMeshToggle.checked);
     activeViewer.applyRoverCalibration(calibration);
     activeViewer.applyRoverNavigationOrientation(currentOrientation, calibration.orientationReferenceWxyz);
+    syncLocalMeshCalibrationFields();
+    syncPanoramaCalibrationFields();
     activeViewer.activate();
   };
 
@@ -133,10 +270,32 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     workspace.hidden = true;
     viewport.hidden = true;
     document.body.dataset.sceneMode = '2d';
+    toggle.hidden = !SHOW2D3DBUTTON;
     viewport.closest('#panoramaWrap').classList.remove('is-three-d');
     viewer?.deactivate();
     setMode(buttons, '2d');
   };
+
+  const refreshLocationPose = async () => {
+    if (document.body.dataset.sceneMode !== '3d' || !viewer || !calibration) return;
+    const context = getSceneContext();
+    if (sceneCalibrationKey(context) !== activeSceneCalibrationKey) await loadSceneCalibrations(context);
+    pdsProbe.hidden = context.rover !== 'perseverance';
+    if (context.rover !== 'perseverance') pdsStatus.hidden = true;
+    if (context.rover !== calibrationRover) {
+      calibration = await selectRoverCalibration(context.rover);
+      const initialOrientation = averageRoverOrientation(context.orientationSamples || []);
+      if (!calibration.orientationReferenceWxyz && initialOrientation) {
+        calibration = await saveRoverCalibration(context.rover, { ...calibration, orientationReferenceWxyz: initialOrientation });
+      }
+      syncCalibrationFields();
+      await viewer.loadRoverModel(calibration.assetPath, context.rover);
+    }
+    const orientation = averageRoverOrientation(context.orientationSamples || []);
+    viewer.applyRoverNavigationOrientation(orientation, calibration.orientationReferenceWxyz);
+    console.info('3D rover location pose updated', { rover: context.rover, sol: context.sol, locationIndex: context.locationIndex, orientationSamples: context.orientationSamples?.length || 0 });
+  };
+  document.addEventListener('martianrobots3dlocationchange', refreshLocationPose);
 
   let shortcutTimer = 0;
   const startShortcut = event => {
@@ -189,6 +348,93 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     }
   });
 
+  panoramaBuild.addEventListener('click', async event => {
+    event.stopPropagation();
+    panoramaBuild.disabled = true;
+    panoramaStatus.hidden = false;
+    try {
+      const context = getSceneContext();
+      const candidates = context.panoramaCandidates || [];
+      if (!candidates.length) throw Error('no-sol-panorama-images');
+      const activeViewer = await getViewer();
+      const panorama = await context.buildPanoramaEquirectangular?.((loaded, total) => {
+        panoramaStatus.textContent = text('threeDPanoramaBuilding', 'Projecting Sol images: {loaded}/{total}…').replace('{loaded}', String(loaded)).replace('{total}', String(total));
+      });
+      if (!panorama) throw Error('three-d-panorama-builder-unavailable');
+      activeViewer.setPanoramaEquirectangular(panorama.canvas);
+      const { loaded, total } = panorama;
+      panoramaBuiltForScene = sceneCalibrationKey(context);
+      panoramaStatus.textContent = text('threeDPanoramaBuilt', 'Sol 3D panorama: {loaded}/{total} images projected.').replace('{loaded}', String(loaded)).replace('{total}', String(total));
+    } catch (error) {
+      panoramaStatus.textContent = error.message === 'no-sol-panorama-images'
+        ? text('threeDPanoramaUnavailable', 'No camera-calibrated image is available for this Sol.')
+        : `${text('threeDPanoramaFailed', 'Sol 3D panorama build failed.')} ${error.message || ''}`;
+    } finally { panoramaBuild.disabled = false; }
+  });
+
+  localReconstruct.addEventListener('pointerdown', event => event.stopPropagation());
+  localReconstruct.addEventListener('click', async event => {
+    event.stopPropagation();
+    localReconstruct.disabled = true;
+    localReconstructionStatus.hidden = false;
+    localReconstructionStatus.textContent = text('threeDLocalReconstructing', 'Selecting a calibrated stereo pair and computing disparity…');
+    try {
+      const context = getSceneContext();
+      const pair = selectStereoPair(context.stereoCandidates || []);
+      if (!pair) throw Error('no-validated-stereo-pair');
+      const reconstruction = await runStereoWorker(pair);
+      const activeViewer = await getViewer();
+      const statistics = activeViewer.applyLocalStereoReconstruction(reconstruction);
+      const textureBitmap = await fetchImageBitmap(pair.left.sourceUrl);
+      activeViewer.applyLocalStereoTexture(textureBitmap);
+      if (panoramaBuiltForScene !== activeSceneCalibrationKey) activeViewer.applyStereoReferenceImage(textureBitmap, pair.left.camera, pair.left.imageId);
+      localMeshToggle.checked = true;
+      activeViewer.setLocalReconstructionMeshVisible(true);
+      localReconstructionStatus.textContent = `${text('threeDLocalReconstructed', 'Local stereo mesh: {points} valid points, {triangles} triangles.').replace('{points}', String(statistics.valid)).replace('{triangles}', String(statistics.triangles))} ${pair.left.imageId} ↔ ${pair.right.imageId} · baseline ${pair.baseline.toFixed(3)} m.`;
+    } catch (error) {
+      console.error('Local stereo reconstruction failed', error);
+      localReconstructionStatus.textContent = error.message === 'no-validated-stereo-pair'
+        ? text('threeDNoStereoPair', 'No usable, calibrated stereo pair is available at this location.')
+        : error.message.includes('local-stereo-insufficient-triangles')
+          ? text('threeDInsufficientStereoMesh', 'The selected pair had too few geometrically consistent points to form a mesh.')
+        : `${text('threeDLocalReconstructionFailed', 'Local stereo reconstruction failed; see the extension console.')} ${error.message || 'unknown-error'}`;
+    } finally {
+      localReconstruct.disabled = false;
+    }
+  });
+
+  pdsProbe.addEventListener('pointerdown', event => event.stopPropagation());
+  pdsProbe.addEventListener('click', async event => {
+    event.stopPropagation();
+    pdsProbe.disabled = true;
+    pdsStatus.hidden = false;
+    pdsStatus.textContent = text('threeDPdsChecking', 'Requesting PDS access and checking the Navcam mesh bundle…');
+    try {
+      const source = await probePerseverancePdsSources();
+      const context = getSceneContext();
+      const mesh = await findPerseverancePdsMesh(context.sol) || await findNearestPublishedPerseverancePdsMesh(context.sol);
+      if (!mesh) {
+        pdsStatus.textContent = text('threeDPdsNoMesh', 'The PDS bundle is reachable, but it has no mesh product for this Sol.');
+        return;
+      }
+      const activeViewer = await getViewer();
+      await activeViewer.loadPdsMesh(mesh);
+      nasaMeshToggle.disabled = false;
+      activeViewer.setNasaMeshVisible(nasaMeshToggle.checked);
+      meshCalibrationKey = mesh.objUrl;
+      meshCalibration = await loadMeshCalibration(meshCalibrationKey);
+      meshCalibrationDetails.hidden = false;
+      syncMeshCalibrationFields();
+      const statusKey = mesh.fallback ? 'threeDPdsFallbackMeshLoaded' : 'threeDPdsMeshLoaded';
+      pdsStatus.textContent = `${text(statusKey, 'PDS Navcam terrain mesh loaded for Sol {sol} ({format}).').replace('{sol}', String(mesh.sol)).replace('{format}', `${source.meshFormat} · ${mesh.coordinateFrame} · SITE ${mesh.rmc.site}/${mesh.rmc.drive}`)} ${text('threeDPdsProductCount', '{count} OBJ product(s) are available for this Sol; the first is currently loaded.').replace('{count}', String(mesh.productUrls?.length || 1))}`;
+    } catch (error) {
+      const denied = error?.message === 'pds-permission-denied';
+      pdsStatus.textContent = denied ? text('threeDPdsPermissionDenied', 'PDS source access was not granted.') : text('threeDPdsFailed', 'PDS source check failed.');
+    } finally {
+      pdsProbe.disabled = false;
+    }
+  });
+
   calibrationSave.addEventListener('pointerdown', event => event.stopPropagation());
   calibrationSave.addEventListener('click', async event => {
     event.stopPropagation();
@@ -222,6 +468,70 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
       cubePositionMeters: calibrationInputs.cube.map(field => Number(field.value)),
     });
   }));
+
+  meshCalibrationSave.addEventListener('pointerdown', event => event.stopPropagation());
+  meshCalibrationSave.addEventListener('click', async event => {
+    event.stopPropagation();
+    if (!meshCalibrationKey) return;
+    meshCalibrationSave.disabled = true;
+    try {
+      meshCalibration = await saveMeshCalibration(meshCalibrationKey, {
+        positionMeters: meshCalibrationInputs.position.map(input => Number(input.value)),
+        rotationDegrees: meshCalibrationInputs.rotation.map(input => Number(input.value)),
+        scale: Number(meshCalibrationInputs.scale.value),
+      });
+      syncMeshCalibrationFields();
+      status.textContent = text('threeDMeshCalibrationSaved', 'Mesh calibration saved locally for this PDS product.');
+    } catch {
+      status.textContent = text('threeDStorageError', '3D local storage is unavailable in this browser context.');
+    } finally {
+      meshCalibrationSave.disabled = false;
+    }
+  });
+
+  [...meshCalibrationInputs.position, ...meshCalibrationInputs.rotation, meshCalibrationInputs.scale].forEach(input => input.addEventListener('input', () => {
+    if (!meshCalibration) return;
+    const previewCalibration = {
+      ...meshCalibration,
+      positionMeters: meshCalibrationInputs.position.map(field => Number(field.value)),
+      rotationDegrees: meshCalibrationInputs.rotation.map(field => Number(field.value)),
+      scale: Number(meshCalibrationInputs.scale.value),
+    };
+    viewer?.applyMeshCalibration(previewCalibration);
+  }));
+
+  localMeshCalibrationSave.addEventListener('click', async event => {
+    event.stopPropagation();
+    if (!activeSceneCalibrationKey) return;
+    localMeshCalibrationSave.disabled = true;
+    try {
+      localMeshCalibration = await saveLocalMeshCalibration(activeSceneCalibrationKey, { positionMeters: localMeshCalibrationInputs.position.map(input => Number(input.value)), rotationDegrees: localMeshCalibrationInputs.rotation.map(input => Number(input.value)), scale: Number(localMeshCalibrationInputs.scale.value) });
+      syncLocalMeshCalibrationFields();
+      status.textContent = text('threeDLocalMeshCalibrationSaved', 'Local mesh calibration saved.');
+    } catch { status.textContent = text('threeDStorageError', '3D local storage is unavailable in this browser context.'); } finally { localMeshCalibrationSave.disabled = false; }
+  });
+  [...localMeshCalibrationInputs.position, ...localMeshCalibrationInputs.rotation, localMeshCalibrationInputs.scale].forEach(input => input.addEventListener('input', () => {
+    if (!localMeshCalibration) return;
+    viewer?.applyLocalMeshCalibration({ ...localMeshCalibration, positionMeters: localMeshCalibrationInputs.position.map(field => Number(field.value)), rotationDegrees: localMeshCalibrationInputs.rotation.map(field => Number(field.value)), scale: Number(localMeshCalibrationInputs.scale.value) });
+  }));
+
+  panoramaCalibrationSave.addEventListener('click', async event => {
+    event.stopPropagation();
+    if (!activeSceneCalibrationKey) return;
+    panoramaCalibrationSave.disabled = true;
+    try {
+      panoramaCalibration = await savePanoramaCalibration(activeSceneCalibrationKey, { rotationDegrees: panoramaCalibrationInputs.rotation.map(input => Number(input.value)) });
+      syncPanoramaCalibrationFields();
+      status.textContent = text('threeDPanoramaCalibrationSaved', 'Panorama calibration saved.');
+    } catch { status.textContent = text('threeDStorageError', '3D local storage is unavailable in this browser context.'); } finally { panoramaCalibrationSave.disabled = false; }
+  });
+  panoramaCalibrationInputs.rotation.forEach(input => input.addEventListener('input', () => {
+    if (!panoramaCalibration) return;
+    viewer?.applyPanoramaCalibration({ ...panoramaCalibration, rotationDegrees: panoramaCalibrationInputs.rotation.map(field => Number(field.value)) });
+  }));
+
+  nasaMeshToggle.addEventListener('change', () => viewer?.setNasaMeshVisible(nasaMeshToggle.checked));
+  localMeshToggle.addEventListener('change', () => viewer?.setLocalReconstructionMeshVisible(localMeshToggle.checked));
 
   document.addEventListener('localechange', updateCopy);
   updateCopy();

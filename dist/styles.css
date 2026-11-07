@@ -1092,8 +1092,15 @@ canvas {
 .three-d-workspace h2 { margin: 0; color: #effcff; font-size: .92rem }
 .three-d-workspace p[data-three-d-status] { min-height: 2.7em; margin: 8px 0 10px; color: #bdcfda; font-size: .74rem; line-height: 1.35 }
 .three-d-workspace .three-d-controls-note { margin: 8px 0; color: #9eb4c0; font-size: .65rem; line-height: 1.35 }
+.three-d-workspace .three-d-pds-status { margin: 7px 0 0; color: #a9dbe8; font-size: .67rem; line-height: 1.35 }
+.three-d-workspace .three-d-local-reconstruction-status { margin: 7px 0 0; color: #d4c38f; font-size: .67rem; line-height: 1.35 }
 .three-d-workspace button { width: 100%; border: 1px solid color-mix(in srgb, var(--accent) 55%, #b9eef9); border-radius: 5px; background: color-mix(in srgb, var(--accent) 22%, #0a1c26); color: #efffff; padding: 7px 9px; font: 700 .68rem/1.1 system-ui, sans-serif; letter-spacing: .04em; cursor: pointer }
 .three-d-workspace button:disabled { cursor: wait; opacity: .65 }
+.three-d-mesh-layers { display: grid; gap: 5px; margin: 9px 0; padding: 8px; border: 1px solid rgba(220, 245, 255, .2); border-radius: 6px; color: #bcd6df; font: 600 .65rem/1.25 system-ui, sans-serif }
+.three-d-mesh-layers legend { padding: 0 4px; color: #dff8ff; font-weight: 750; letter-spacing: .04em }
+.three-d-mesh-layers label { display: flex; align-items: center; gap: 6px; cursor: pointer }
+.three-d-mesh-layers input { accent-color: var(--accent) }
+.three-d-mesh-layers label:has(input:disabled) { opacity: .52; cursor: default }
 .rover-calibration { margin-top: 11px; border-top: 1px solid rgba(220, 245, 255, .2); padding-top: 9px }
 .rover-calibration summary { color: #dff8ff; cursor: pointer; font-size: .72rem; font-weight: 700 }
 .rover-calibration > p { margin: 7px 0; color: #9eb4c0; font-size: .66rem; line-height: 1.35 }
@@ -1116,7 +1123,7 @@ canvas {
 	background: #02050b
 }
 
-.panorama-wrap:fullscreen.is-cursor-hidden, .panorama-wrap:fullscreen.is-cursor-hidden * { cursor: none !important }
+.panorama-wrap:fullscreen.is-cursor-hidden:not(.is-three-d), .panorama-wrap:fullscreen.is-cursor-hidden:not(.is-three-d) * { cursor: none !important }
 
 .panorama-wrap:fullscreen canvas {
 	width: 100%;

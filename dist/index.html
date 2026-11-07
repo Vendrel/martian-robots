@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026110635" />
+    <link rel="stylesheet" href="./styles.css?2026110660" />
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true"><symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".12"/><path d="M8.5 8.5l7 7m0-7-7 7"/></symbol></svg>
@@ -128,7 +128,18 @@
               <h2 data-three-d-title>3D workspace</h2>
               <p data-three-d-status>Select a source image, then run the readiness check.</p>
               <button type="button" data-three-d-preflight>Run 3D readiness check</button>
-              <p class="three-d-controls-note" data-three-d-controls-note>Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 approaches, L2 retreats, L3 resets, R3 focuses rover, Square toggles fullscreen.</p>
+              <button type="button" data-three-d-panorama-build>Build Sol 3D panorama</button>
+              <p class="three-d-local-reconstruction-status" data-three-d-panorama-status hidden></p>
+              <button type="button" data-three-d-local-reconstruct>Build local stereo mesh</button>
+              <p class="three-d-local-reconstruction-status" data-three-d-local-reconstruction-status hidden></p>
+              <button type="button" data-three-d-pds-probe hidden>Check Perseverance PDS 3D sources</button>
+              <p class="three-d-pds-status" data-three-d-pds-status hidden></p>
+              <fieldset class="three-d-mesh-layers" data-three-d-mesh-layers>
+                <legend>Terrain layers</legend>
+                <label><input type="checkbox" data-three-d-nasa-mesh checked disabled /> <span data-three-d-nasa-mesh-label>NASA PDS mesh</span></label>
+                <label><input type="checkbox" data-three-d-local-mesh checked /> <span data-three-d-local-mesh-label>Local stereo reconstruction mesh</span></label>
+              </fieldset>
+              <p class="three-d-controls-note" data-three-d-controls-note>Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 rises, L2 descends above terrain, L3 resets, R3 focuses rover, Square toggles fullscreen.</p>
               <details class="rover-calibration">
                 <summary data-three-d-calibration-title>Rover model calibration</summary>
                 <p data-three-d-calibration-note>Values are in scene metres and degrees. They remain unverified until the model-frame audit is complete.</p>
@@ -149,6 +160,36 @@
                   <label><span>Z</span><input type="number" step="any" inputmode="decimal" data-rover-calibration-cube="2" value="0" /></label>
                 </div>
                 <button type="button" data-rover-calibration-save>Save rover calibration</button>
+              </details>
+              <details class="rover-calibration" data-mesh-calibration hidden>
+                <summary data-three-d-mesh-calibration-title>NASA mesh calibration</summary>
+                <p data-three-d-mesh-calibration-note>Values apply only to the currently loaded PDS mesh product and are stored locally with that product.</p>
+                <div class="rover-calibration-grid">
+                  <label><span>X</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-position="0" value="0" /></label>
+                  <label><span>Y</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-position="1" value="0" /></label>
+                  <label><span>Z</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-position="2" value="0" /></label>
+                  <label><span>Rx°</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-rotation="0" value="0" /></label>
+                  <label><span>Ry°</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-rotation="1" value="0" /></label>
+                  <label><span>Rz°</span><input type="number" step="any" inputmode="decimal" data-mesh-calibration-rotation="2" value="0" /></label>
+                  <label class="rover-calibration-scale"><span data-three-d-mesh-scale-label>Scale</span><input type="number" min="0.000001" step="any" inputmode="decimal" data-mesh-calibration-scale value="1" /></label>
+                </div>
+                <button type="button" data-mesh-calibration-save>Save mesh calibration</button>
+              </details>
+              <details class="rover-calibration" data-local-mesh-calibration>
+                <summary data-three-d-local-mesh-calibration-title>Local mesh calibration</summary>
+                <p data-three-d-local-mesh-calibration-note>Only the locally reconstructed heightfield is affected.</p>
+                <div class="rover-calibration-grid">
+                  <label><span>X</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-position="0" value="0" /></label><label><span>Y</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-position="1" value="0" /></label><label><span>Z</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-position="2" value="0" /></label>
+                  <label><span>Rx°</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-rotation="0" value="0" /></label><label><span>Ry°</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-rotation="1" value="0" /></label><label><span>Rz°</span><input type="number" step="any" inputmode="decimal" data-local-mesh-calibration-rotation="2" value="0" /></label>
+                  <label class="rover-calibration-scale"><span>Scale</span><input type="number" min="0.000001" step="any" inputmode="decimal" data-local-mesh-calibration-scale value="1" /></label>
+                </div><button type="button" data-local-mesh-calibration-save>Save local mesh calibration</button>
+              </details>
+              <details class="rover-calibration" data-panorama-calibration>
+                <summary data-three-d-panorama-calibration-title>Panorama calibration</summary>
+                <p data-three-d-panorama-calibration-note>Only the stereo source-image reference is affected.</p>
+                <div class="rover-calibration-grid">
+                  <label><span>Rx°</span><input type="number" step="any" inputmode="decimal" data-panorama-calibration-rotation="0" value="0" /></label><label><span>Ry°</span><input type="number" step="any" inputmode="decimal" data-panorama-calibration-rotation="1" value="0" /></label><label><span>Rz°</span><input type="number" step="any" inputmode="decimal" data-panorama-calibration-rotation="2" value="0" /></label>
+                </div><button type="button" data-panorama-calibration-save>Save panorama calibration</button>
               </details>
             </section>
             <button id="flatfieldHideImageButton" class="flatfield-image-hide" type="button" hidden data-i18n-aria-label="flatfieldHideImage" aria-label="Hide this image"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
@@ -443,15 +484,15 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script src="./locales/en.js?2026110606"></script>
-    <script src="./locales/hu.js?2026110606"></script>
+    <script src="./locales/en.js?2026110660"></script>
+    <script src="./locales/hu.js?2026110660"></script>
     <script src="./invalid-sols/curiosity.js"></script>
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110643"></script>
+    <script type="module" src="./app.js?2026110674"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>
