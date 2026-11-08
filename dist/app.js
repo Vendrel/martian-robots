@@ -1,4 +1,4 @@
-import { initializeThreeDMode } from './three-d/entry.js?2026110660';
+import { initializeThreeDMode } from './three-d/entry.js?2026110814';
 
 // Navigation polarity: use 1 normally or -1 to invert an axis.
 const NAVIGATION_X_FACTOR = 1;
@@ -1017,7 +1017,7 @@ initializeThreeDMode({
       sourceUrl: source ? url(source) : null,
       orientationSamples: (s.locations?.[s.selectedLocationIndex]?.images || s.panoramaImages || []).map(image => image.model?.orientation?.q).filter(Boolean),
       stereoCandidates: (s.locations?.[s.selectedLocationIndex]?.images || []).map(image => ({
-        imageId: imageIdentity(image), capturedAt: image.date_taken || image.date_taken_utc || '', sourceUrl: url(image), camera: image.model ? { C: image.model.C, A: image.model.A, H: image.model.H, V: image.model.V } : null,
+        imageId: imageIdentity(image), instrument: image.instrument || '', capturedAt: image.date_taken || image.date_taken_utc || '', sourceUrl: url(image), camera: image.model ? { type: image.model.type, C: image.model.C, A: image.model.A, H: image.model.H, V: image.model.V, O: image.model.O, R: image.model.R, E: image.model.E, lensType: image.model.lensType, lensParameter: image.model.lensParameter, orientation: image.model.orientation?.q || null } : null,
       })).filter(image => image.sourceUrl && image.camera?.C && image.camera?.A && image.camera?.H && image.camera?.V),
       // Match the proven 2D panorama source selection. Do not include both
       // eyes or non-panorama products merely because they have pixels.

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>martian-robots · Projektállapot: 3D</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0e1419;--surface:#182229;--line:#31434e;--text:#edf6f8;--muted:#a9c0c8;--cyan:#75e6f4;--amber:#f0bc75;--ok:#98daa8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0,#1c3b42 0,transparent 38rem),var(--bg);color:var(--text);font:16px/1.58 system-ui,sans-serif}main{max-width:1000px;margin:auto;padding:44px 24px 72px}h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3.3rem);line-height:1.1}h2{margin:0 0 12px;font-size:1.25rem}.tag{color:var(--cyan);font-size:.78rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase}.lede{max-width:75ch;color:var(--muted);font-size:1.1rem}section,aside{margin-top:20px;padding:20px 22px;background:color-mix(in srgb,var(--surface) 92%,transparent);border:1px solid var(--line);border-radius:13px}aside{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));color:#f4d9b3}ul{padding-left:1.25rem}li+li{margin-top:.45rem}code{padding:.12em .32em;border-radius:4px;background:#0a1014;color:#f2d5aa;font-size:.9em}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{padding:15px;border:1px solid var(--line);border-radius:9px;background:#10191f}.card strong{display:block;margin-bottom:5px;color:var(--cyan)}.state{color:var(--ok);font-weight:750}table{width:100%;border-collapse:collapse}th,td{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{color:var(--cyan)}@media(max-width:680px){.grid{grid-template-columns:1fr}main{padding:30px 16px 48px}}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="tag">martian-robots · átadási jegyzet · 2026-11-08</p>
+    <h1>Projektállapot — 3D munkafolyamat</h1>
+    <p class="lede">A martian-robots egy NASA Mars-rover-képekből panorámát építő webalkalmazás és Chrome-bővítmény. A 2D panoráma meglévő, önálló funkció. A fejlesztés alatt álló 3D mód kizárólag bővítményben használ pixelszintű képolvasást, PDS-mesh termékeket és helyi sztereó-rekonstrukciót.</p>
+
+    <section>
+      <h2>Aktuális cél</h2>
+      <p>A rover körüli, ugyanabban a világkoordináta-rendszerben értelmezett 3D környezet megjelenítése: rovermodell, NASA PDS-terepmesh, a Sol képeiből épített 3D panoráma és saját sztereó heightfield. A 2D nézetet ez nem módosíthatja.</p>
+    </section>
+
+    <section>
+      <h2>Hol tartunk</h2>
+      <div class="grid">
+        <div class="card"><strong>3D viewer és vezérlés</strong><span class="state">Működik.</span> Three.js-alapú nézet, egérgörgős dolly, első személyű kamera, gamepad; a rover körüli távolság- és terepszintkorlátok aktívak.</div>
+        <div class="card"><strong>Rovermodellek</strong><span class="state">Működik.</span> Curiosity GLTF/GLB és valódi Perseverance GLB betöltése. Curiosityhez rögzített, auditált GLTF → ROVER_NAV kalibráció tartozik: pozíció <code>(-1.3,-1.25,-0.93)</code> m, forgatás <code>(-90°,53°,0°)</code>, skála <code>5.8</code>. Ez a Perseverance GLB eltérő, saját kalibrációját nem érinti.</div>
+        <div class="card"><strong>NASA PDS mesh</strong><span class="state">Működik.</span> Perseverance Navcam OBJ/MTL/PNG bundle, provenance-ellenőrzéssel és Sol 91 ismert példával. NASA-mesh kalibráció külön tárolt.</div>
+        <div class="card"><strong>3D panoráma</strong><span class="state">Használható referencia.</span> A meglévő 2D vetítési logikából equirectangular textúra épül; külön panorámakalibráció tartozik hozzá.</div>
+        <div class="card"><strong>Saját sztereó mesh</strong><span class="state">Folyamatban.</span> Kiválasztott, kalibrált bal–jobb párból fut Web Workerben. A háromszögelés, a textúra és a 3D referenciafelület kizárólag a képpár kalibrációjából és attitude-jából épül; PDS mesh nélkül is működnie kell. A frame-egyezés vizuális validálása még hátra van.</div>
+        <div class="card"><strong>Helyi adatok</strong><span class="state">Működik.</span> Kalibrációk IndexedDB-ben, export/import infrastruktúra a 3D-adatokhoz. A scene-key: rover + Sol + location index.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Koordináta- és kalibrációs szerződés</h2>
+      <table><thead><tr><th>Réteg</th><th>Szabály</th></tr></thead><tbody>
+        <tr><td>Render-világ</td><td><code>+Y</code> felfelé, <code>+Z</code> előre, talajorigó: <code>(0,0,0)</code>.</td></tr>
+        <tr><td>NASA ROVER_NAV</td><td><code>+X</code> előre, <code>+Z</code> lefelé; origó a középső kerekek közepe, a talaj fölött 0,25 m-rel.</td></tr>
+        <tr><td>Tengelyadapter</td><td><code>(x,y,z) rnav → (-y,-z,x) render</code>, központilag: <code>dist/three-d/scene-frame.js</code>.</td></tr>
+        <tr><td>Dinamikus rover-póz</td><td>A kiválasztott képkori API-attitude adja. A PDS mesh csak opcionális SITE_FRAME-összehasonlítás; a GLB-kalibráció statikus asset-pivot-, tengely- és skálakorrekció.</td></tr>
+        <tr><td>Kalibrációk</td><td>Rover, NASA-mesh, sajátmesh és panoráma szándékosan külön vannak. Ne vond össze őket, és ne módosítsd a 2D panoráma transzformációját.</td></tr>
+      </tbody></table>
+      <p>Részletes háttér: <code>docs/three-d-scene-frame.html</code>.</p>
+    </section>
+
+    <section>
+      <h2>Legutóbbi változás: saját sztereó heightfield</h2>
+      <ul>
+        <li>A Terrain layers panelen a <strong>„Saját mesh felbontása (csúcs / oldal)”</strong> mező 17–161 tartományban állítható és jelenetenként mentődik. Alapérték: 49. Meglévő saját mesh esetén a módosítás 180 ms-os késleltetéssel automatikusan újragenerálja a látható geometriát.</li>
+        <li>A rács a bal kamera tényleges, torzítás-korrigált vízszintes látómezejének közel–távol metszete: a közeli él 0,5 m-re van, ezért a rács nem omlik látszólagos téglalappá akkor sem, ha a sztereó pontok csak távolról érkeznek.</li>
+        <li>A saját mesh és annak áttetsző forráskép-referenciája CAHV, CAHVOR és CAHVORE kameramodellt is kezel. A referenciafelület torzított optikánál adaptív, sűrűbb felbontású. A régi referencia-rotációt tartalmazó panorámakalibrációs rekordok szándékosan nullázódnak.</li>
+        <li>A saját mesh világpóza nem a lokáció összes képéből átlagolt attitude, hanem a kiválasztott bal sztereókamera saját attitude-ja. Így a háromszögelt geometria és ugyanennek a képnek a 3D referenciafelülete azonos <code>ROVER_NAV → SITE</code> transzformációt kap.</li>
+        <li>A rovermodell szintén a képkori abszolút SITE-pózt használja. A PDS mesh betöltése nem forgathatja el sem a modellt, sem a saját mesht: a PDS kizárólag ellenőrző réteg.</li>
+        <li>A <code>camera-projection.js</code> a saját mesh és a 3D forrásreferencia közös kameraigazsága: <code>pixel → CAHV/CAHVOR/CAHVORE sugár</code>, illetve <code>ROVER_NAV pont → torzított képpixel → UV</code>. A két réteg nem örökli egymás UV-ját; ugyanabból a kanonikus pixelkoordináta-konvencióból számítja azt. Curiosity Sol 3456 tényleges CAHVOR Navcam rekordján az öt sarok- és középpont visszavetítési hibája legfeljebb <code>4,9×10⁻13 px</code> volt.</li>
+        <li>A sztereó-correspondencia nem feltételez többé vízszintes, rectifikált diszparitást. A worker a bal képsugár különböző térbeli távolságait a jobb kamera CAHV/CAHVOR/CAHVORE modelljével vetíti vissza, tehát a kalibrált epipoláris görbén keres. Ez szükséges a Curiosity első Hazcam halszem párjaihoz; azonos kamera-családot és valódi bal–jobb oldalt is megkövetel.</li>
+        <li>A rács alapsíkját nem a zajos diszparitás dönti el: a kiválasztott kamera <code>ROVER_NAV → SITE/local-level</code> attitude-jából származik. Ez garantálja, hogy a talaj a SITE-világban vízszintes, a dőlő rover pedig a saját állásával ellentétes raw-RoverNav síkhoz viszonyul. A sztereó csak a korlátozott, 0,18–0,75 m-es helyi reliefet adja hozzá.</li>
+        <li>A saját mesh a rover navigációs frame-jének gyermeke, nem a GLTF-modellek kalibrációs frame-jének. Így egyetlen dinamikus attitude-ot örököl, miközben a Curiosity és Perseverance modell-specifikus pivot-, forgatás- és skálakorrekciói nem érintik.</li>
+        <li>A saját mesh anyaga fehér, megvilágítástól független referenciaanyag. Így a bal oldali mono Hazcam-forrás mono marad a mesh-en is; a korábbi barna szín a <code>MeshStandardMaterial</code> anyagszínéből és fényeléséből eredő színezés volt.</li>
+        <li>A Three.js-textúrához a forráskép külön, <code>ImageBitmap({ imageOrientation: 'flipY' })</code> példányban töltődik. Erre azért van szükség, mert az <code>ImageBitmap</code> esetén a Three.js <code>Texture.flipY</code> kapcsolója nem alkalmazható utólag; a worker viszont változatlan, bal felső origójú pixelekkel dolgozik.</li>
+        <li>A sztereó mélység pontossága: <code>σZ ≈ Z²/(f·B)·σd</code>. A nagy bizonytalanságú pontok kiesnek, a maradékra robusztus talajsík illeszkedik, és csak a megbízható relatív magasság lesz relief.</li>
+        <li>Jelenleg a relief adatbizonytalanságból képzett, 0,18–0,75 m közé korlátozott. Ez a korábbi extrém tüskék ellen szükséges első védelmi lépés.</li>
+      </ul>
+    </section>
+
+    <aside><strong>Legközelebbi ellenőrzés.</strong> Bővítmény-frissítés után PDS mesh nélkül is 49 és 97 csúcs/oldal felbontással saját mesh-t kell generálni. Ezután a NASA-mesh opcionálisan betölthető összehasonlításra; betöltése nem változtathatja meg a rover, a saját mesh vagy a forrásreferencia pózát. Vizsgálandó: a trapézalak, a forráskép helyes állása és halszemkorrekciója, a tüskék eltűnése, a NASA mesh-hez viszonyított domborzati nagyságrend és a státuszsor „max. … m terrain deviation” értéke.</aside>
+
+    <section>
+      <h2>Következő fejlesztési lépések</h2>
+      <ol>
+        <li>A mostani fizikai szűrés vizuális validálása valódi Curiosity és Perseverance sztereópárokkal.</li>
+        <li>Szükség esetén a cellánkénti magasságok térbeli robusztus simítása és konfidencia-megjelenítése; nem általános amplitude-szorzó bevezetése.</li>
+        <li>Több szomszédos lokáció/Sol képeinek photogrammetriai bevonása csak akkor, ha a hozzájuk tartozó rover-pózok és képkamerák megfelelően igazolhatók.</li>
+        <li>Saját mesh export/import és reprodukálható rekonstrukciós metaadatok véglegesítése.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Fő érintett fájlok</h2>
+      <ul>
+        <li><code>dist/three-d/entry.js</code> — 3D UI, munkafolyamat, worker indítása, kalibráció betöltése/mentése.</li>
+        <li><code>dist/three-d/viewer.js</code> — Three.js jelenet, modellek, PDS mesh, kamera és gamepad.</li>
+        <li><code>dist/three-d/camera-projection.js</code> — megosztott CAHV/CAHVOR/CAHVORE pixel-, sugár- és UV-matematika.</li>
+        <li><code>dist/three-d/reconstruction.worker.js</code> — képolvasás, diszparitás, háromszögelés, saját heightfield.</li>
+        <li><code>dist/three-d/scene-frame.js</code> — az egyetlen rögzített NASA → render tengelykonverzió.</li>
+        <li><code>dist/three-d/pds-sources.js</code> — PDS mesh-felderítés és PLACES/pózadatok.</li>
+        <li><code>dist/three-d/store.js</code> — IndexedDB-kalibrációk és sajátmesh-felbontás.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

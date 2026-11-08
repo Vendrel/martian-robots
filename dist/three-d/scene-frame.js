@@ -17,15 +17,6 @@ export function roverNavToRenderQuaternion() {
   return new THREE.Quaternion().setFromRotationMatrix(ROVER_NAV_TO_RENDER_MATRIX);
 }
 
-export function relativeRoverNavigationQuaternion(quaternionWxyz, referenceWxyz) {
-  if (!Array.isArray(quaternionWxyz) || quaternionWxyz.length !== 4 || !quaternionWxyz.every(Number.isFinite)) return new THREE.Quaternion();
-  const current = new THREE.Quaternion(quaternionWxyz[1], quaternionWxyz[2], quaternionWxyz[3], quaternionWxyz[0]).normalize();
-  const reference = Array.isArray(referenceWxyz) && referenceWxyz.length === 4 && referenceWxyz.every(Number.isFinite)
-    ? new THREE.Quaternion(referenceWxyz[1], referenceWxyz[2], referenceWxyz[3], referenceWxyz[0]).normalize()
-    : new THREE.Quaternion();
-  return current.multiply(reference.invert()).normalize();
-}
-
 /** API attitude maps the current ROVER_NAV frame directly into SITE_FRAME. */
 export function roverNavToSiteQuaternion(quaternionWxyz) {
   if (!Array.isArray(quaternionWxyz) || quaternionWxyz.length !== 4 || !quaternionWxyz.every(Number.isFinite)) return new THREE.Quaternion();

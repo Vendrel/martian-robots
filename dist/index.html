@@ -138,6 +138,8 @@
                 <legend>Terrain layers</legend>
                 <label><input type="checkbox" data-three-d-nasa-mesh checked disabled /> <span data-three-d-nasa-mesh-label>NASA PDS mesh</span></label>
                 <label><input type="checkbox" data-three-d-local-mesh checked /> <span data-three-d-local-mesh-label>Local stereo reconstruction mesh</span></label>
+                <label class="three-d-mesh-resolution"><span data-three-d-local-mesh-resolution-label>Own mesh resolution (vertices / side)</span><input type="number" min="17" max="161" step="1" inputmode="numeric" data-three-d-local-mesh-resolution value="49" /></label>
+                <small data-three-d-local-mesh-resolution-note>Changing it rebuilds the displayed local mesh.</small>
               </fieldset>
               <p class="three-d-controls-note" data-three-d-controls-note>Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 rises, L2 descends above terrain, L3 resets, R3 focuses rover, Square toggles fullscreen.</p>
               <details class="rover-calibration">
@@ -492,7 +494,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-    <script type="module" src="./app.js?2026110674"></script>
+<script type="module" src="./app.js?2026110814"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

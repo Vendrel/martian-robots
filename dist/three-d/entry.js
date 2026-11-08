@@ -1,8 +1,8 @@
 import { detectAcceleration } from './acceleration.js';
-import { loadLocalMeshCalibration, loadMeshCalibration, loadPanoramaCalibration, loadRoverCalibration, loadRoverCalibrationRecord, saveLocalMeshCalibration, saveMeshCalibration, savePanoramaCalibration, saveRoverCalibration } from './store.js?2026110660';
-import { defaultRoverCalibrationFor, roverAssetPath } from './rover-calibration.js';
-import { createThreeDViewer } from './viewer.js?2026110674';
-import { findNearestPublishedPerseverancePdsMesh, findPerseverancePdsMesh, probePerseverancePdsSources } from './pds-sources.js?2026110660';
+import { DEFAULT_LOCAL_MESH_VERTICES_PER_SIDE, loadLocalMeshCalibration, loadMeshCalibration, loadPanoramaCalibration, loadRoverCalibration, loadRoverCalibrationRecord, saveLocalMeshCalibration, saveMeshCalibration, savePanoramaCalibration, saveRoverCalibration } from './store.js?2026110810';
+import { defaultRoverCalibrationFor, needsRoverAssetFrameMigration, roverAssetPath } from './rover-calibration.js?2026110810';
+import { createThreeDViewer } from './viewer.js?2026110814';
+import { findNearestPublishedPerseverancePdsMesh, findPerseverancePdsMesh, probePerseverancePdsSources } from './pds-sources.js?2026110809';
 
 function text(key, fallback) {
   return window.localeDictionary?.[key] || fallback;
@@ -33,17 +33,29 @@ function averageRoverOrientation(samples) {
 function dot3(left, right) { return left[0] * right[0] + left[1] * right[1] + left[2] * right[2]; }
 function length3(vector) { return Math.hypot(...vector); }
 function validCamera(camera) { return ['C', 'A', 'H', 'V'].every(key => Array.isArray(camera?.[key]) && camera[key].length === 3 && camera[key].every(Number.isFinite)); }
-function stereoSide(imageId) { const id = String(imageId || '').toUpperCase(); return /^(?:N|NAV)[^A-Z]*L|^NL|LEFT/.test(id) ? 'left' : /^(?:N|NAV)[^A-Z]*R|^NR|RIGHT/.test(id) ? 'right' : null; }
+function stereoSide(candidate) {
+  const text = `${typeof candidate === 'string' ? candidate : candidate?.imageId || ''} ${typeof candidate === 'object' ? candidate?.instrument || '' : ''}`.toUpperCase();
+  return /(?:^|[_\s-])(?:L|LEFT)(?:[_\s-]|$)|^[A-Z]LB_/.test(text) ? 'left' : /(?:^|[_\s-])(?:R|RIGHT)(?:[_\s-]|$)|^[A-Z]RB_/.test(text) ? 'right' : null;
+}
+function stereoFamily(candidate) {
+  const instrument = String(candidate?.instrument || '').toUpperCase();
+  return instrument.replace(/(?:[_-](?:LEFT|RIGHT))?(?:[_-][A-Z])?$/, '') || null;
+}
 
 function selectStereoPair(candidates) {
   let selected = null;
   for (let leftIndex = 0; leftIndex < candidates.length; leftIndex += 1) for (let rightIndex = leftIndex + 1; rightIndex < candidates.length; rightIndex += 1) {
-    const left = candidates[leftIndex], right = candidates[rightIndex];
+    const first = candidates[leftIndex], second = candidates[rightIndex];
+    const firstFamily = stereoFamily(first), secondFamily = stereoFamily(second);
+    if (!firstFamily || firstFamily !== secondFamily) continue;
+    const firstSide = stereoSide(first), secondSide = stereoSide(second);
+    const left = firstSide === 'left' ? first : secondSide === 'left' ? second : first;
+    const right = left === first ? second : first;
     if (!validCamera(left.camera) || !validCamera(right.camera)) continue;
     const axisSimilarity = dot3(left.camera.A, right.camera.A) / (length3(left.camera.A) * length3(right.camera.A));
     const baseline = length3(left.camera.C.map((value, index) => value - right.camera.C[index]));
     if (!Number.isFinite(axisSimilarity) || axisSimilarity < .985 || baseline < .02 || baseline > 2) continue;
-    const oppositeSides = stereoSide(left.imageId) && stereoSide(right.imageId) && stereoSide(left.imageId) !== stereoSide(right.imageId);
+    const oppositeSides = stereoSide(left) && stereoSide(right) && stereoSide(left) !== stereoSide(right);
     const timeDelta = Math.abs(Date.parse(left.capturedAt) - Date.parse(right.capturedAt)) / 1000;
     const temporalWeight = Number.isFinite(timeDelta) ? 1 / (1 + Math.min(timeDelta, 120) / 15) : .5;
     const score = baseline * axisSimilarity * (oppositeSides ? 3 : 1) * temporalWeight;
@@ -58,17 +70,31 @@ async function fetchImageBitmap(sourceUrl) {
   return createImageBitmap(await response.blob());
 }
 
-async function runStereoWorker(pair) {
+// WebGL cannot apply Texture.flipY after an ImageBitmap has been created.
+// The worker needs source-top-left pixels, while Three.js texture UVs use an
+// upward V axis, so construct a separately flipped bitmap for scene textures.
+async function fetchTextureImageBitmap(sourceUrl) {
+  const response = await fetch(sourceUrl, { cache: 'force-cache' });
+  if (!response.ok) throw Error(`stereo-texture-http-${response.status}`);
+  return createImageBitmap(await response.blob(), { imageOrientation: 'flipY' });
+}
+
+function normalizedVerticesPerSide(value) {
+  const vertices = Math.round(Number(value));
+  return Number.isFinite(vertices) ? Math.max(17, Math.min(161, vertices)) : DEFAULT_LOCAL_MESH_VERTICES_PER_SIDE;
+}
+
+async function runStereoWorker(pair, verticesPerSide) {
   let stage = 'image-download';
   const [leftBitmap, rightBitmap] = await Promise.all([fetchImageBitmap(pair.left.sourceUrl), fetchImageBitmap(pair.right.sourceUrl)]);
   stage = 'worker-start';
-  const worker = new Worker(new URL('./reconstruction.worker.js', import.meta.url), { type: 'module' });
+  const worker = new Worker(new URL('./reconstruction.worker.js?2026110813', import.meta.url), { type: 'module' });
   try {
     return await new Promise((resolve, reject) => {
       worker.onmessage = event => event.data?.ok ? resolve(event.data) : reject(Error(`${event.data?.stage || 'worker'}: ${event.data?.error || 'local-stereo-worker-failed'}`));
       worker.onerror = event => reject(event.error || Error(`worker: ${event.message || 'local-stereo-worker-error'}`));
       stage = 'worker-message';
-      worker.postMessage({ leftBitmap, rightBitmap, leftCamera: pair.left.camera, rightCamera: pair.right.camera }, [leftBitmap, rightBitmap]);
+      worker.postMessage({ leftBitmap, rightBitmap, leftCamera: pair.left.camera, rightCamera: pair.right.camera, verticesPerSide }, [leftBitmap, rightBitmap]);
     });
   } catch (error) {
     throw Error(`${stage}: ${error.message || error}`);
@@ -119,6 +145,7 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
   const pdsStatus = workspace.querySelector('[data-three-d-pds-status]');
   const nasaMeshToggle = workspace.querySelector('[data-three-d-nasa-mesh]');
   const localMeshToggle = workspace.querySelector('[data-three-d-local-mesh]');
+  const localMeshResolution = workspace.querySelector('[data-three-d-local-mesh-resolution]');
   const calibrationSave = workspace.querySelector('[data-rover-calibration-save]');
   const meshCalibrationDetails = workspace.querySelector('[data-mesh-calibration]');
   const meshCalibrationSave = workspace.querySelector('[data-mesh-calibration-save]');
@@ -147,6 +174,8 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
   let activeSceneCalibrationKey = null;
   let panoramaBuiltForScene = null;
   let viewer = null;
+  let hasLocalReconstruction = false;
+  let localMeshResolutionTimer = 0;
 
   const setViewerStatus = message => {
     status.textContent = message;
@@ -166,7 +195,7 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     let nextCalibration = calibrationRecord.calibration;
     // A different model asset has a different pivot, unit and axis frame.
     // Never inherit Curiosity calibration into a real Perseverance model.
-    if (!calibrationRecord.exists || nextCalibration.assetPath !== roverAssetPath(rover)) nextCalibration = await saveRoverCalibration(rover, defaultRoverCalibrationFor(rover));
+    if (!calibrationRecord.exists || nextCalibration.assetPath !== roverAssetPath(rover) || needsRoverAssetFrameMigration(rover, nextCalibration)) nextCalibration = await saveRoverCalibration(rover, defaultRoverCalibrationFor(rover));
     calibration = nextCalibration;
     calibrationRover = rover;
     return calibration;
@@ -194,6 +223,7 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     localMeshCalibrationInputs.position.forEach((input, index) => input.value = String(localMeshCalibration.positionMeters[index]));
     localMeshCalibrationInputs.rotation.forEach((input, index) => input.value = String(localMeshCalibration.rotationDegrees[index]));
     localMeshCalibrationInputs.scale.value = String(localMeshCalibration.scale);
+    localMeshResolution.value = String(localMeshCalibration.verticesPerSide);
     viewer?.applyLocalMeshCalibration(localMeshCalibration);
   };
   const syncPanoramaCalibrationFields = () => {
@@ -217,6 +247,8 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     pdsProbe.textContent = text('threeDPdsProbe', 'Check Perseverance PDS 3D sources');
     workspace.querySelector('[data-three-d-nasa-mesh-label]').textContent = text('threeDNasaMeshLayer', 'NASA PDS mesh');
     workspace.querySelector('[data-three-d-local-mesh-label]').textContent = text('threeDLocalMeshLayer', 'Local stereo reconstruction mesh');
+    workspace.querySelector('[data-three-d-local-mesh-resolution-label]').textContent = text('threeDLocalMeshResolutionLabel', 'Own mesh resolution (vertices / side)');
+    workspace.querySelector('[data-three-d-local-mesh-resolution-note]').textContent = text('threeDLocalMeshResolutionNote', 'Changing it rebuilds the displayed local mesh.');
     workspace.querySelector('[data-three-d-calibration-title]').textContent = text('threeDCalibrationTitle', 'Rover model calibration');
     workspace.querySelector('[data-three-d-calibration-note]').textContent = text('threeDCalibrationNote', 'Values are in scene metres and degrees. They remain unverified until the model-frame audit is complete.');
     workspace.querySelector('[data-three-d-scale-label]').textContent = text('threeDScaleLabel', 'Scale');
@@ -251,16 +283,13 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     pdsStatus.hidden = true;
     calibration = await selectRoverCalibration(context.rover);
     const currentOrientation = averageRoverOrientation(context.orientationSamples || []);
-    if (!calibration.orientationReferenceWxyz && currentOrientation) {
-      calibration = await saveRoverCalibration(context.rover, { ...calibration, orientationReferenceWxyz: currentOrientation });
-    }
     syncCalibrationFields();
     status.textContent = `${text('threeDReady', 'Ready for 3D')} · ${acceleration.backend} / ${acceleration.profile} · ${calibration.calibrated ? text('threeDModelCalibrated', 'rover model calibrated') : text('threeDModelPending', 'rover model calibration pending')}`;
     const activeViewer = await getViewer();
     await activeViewer.loadRoverModel(calibration.assetPath, context.rover);
     activeViewer.setLocalReconstructionMeshVisible(localMeshToggle.checked);
     activeViewer.applyRoverCalibration(calibration);
-    activeViewer.applyRoverNavigationOrientation(currentOrientation, calibration.orientationReferenceWxyz);
+    activeViewer.applyRoverNavigationOrientation(currentOrientation);
     syncLocalMeshCalibrationFields();
     syncPanoramaCalibrationFields();
     activeViewer.activate();
@@ -284,15 +313,11 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     if (context.rover !== 'perseverance') pdsStatus.hidden = true;
     if (context.rover !== calibrationRover) {
       calibration = await selectRoverCalibration(context.rover);
-      const initialOrientation = averageRoverOrientation(context.orientationSamples || []);
-      if (!calibration.orientationReferenceWxyz && initialOrientation) {
-        calibration = await saveRoverCalibration(context.rover, { ...calibration, orientationReferenceWxyz: initialOrientation });
-      }
       syncCalibrationFields();
       await viewer.loadRoverModel(calibration.assetPath, context.rover);
     }
     const orientation = averageRoverOrientation(context.orientationSamples || []);
-    viewer.applyRoverNavigationOrientation(orientation, calibration.orientationReferenceWxyz);
+    viewer.applyRoverNavigationOrientation(orientation);
     console.info('3D rover location pose updated', { rover: context.rover, sol: context.sol, locationIndex: context.locationIndex, orientationSamples: context.orientationSamples?.length || 0 });
   };
   document.addEventListener('martianrobots3dlocationchange', refreshLocationPose);
@@ -382,15 +407,20 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
       const context = getSceneContext();
       const pair = selectStereoPair(context.stereoCandidates || []);
       if (!pair) throw Error('no-validated-stereo-pair');
-      const reconstruction = await runStereoWorker(pair);
+      const reconstruction = await runStereoWorker(pair, normalizedVerticesPerSide(localMeshResolution.value));
       const activeViewer = await getViewer();
-      const statistics = activeViewer.applyLocalStereoReconstruction(reconstruction);
-      const textureBitmap = await fetchImageBitmap(pair.left.sourceUrl);
+      // Anchor the complete self-contained reconstruction scene at the same
+      // acquisition pose as its left camera.  This is intentionally
+      // independent of any optional PDS terrain comparison.
+      activeViewer.applyRoverNavigationOrientation(pair.left.camera.orientation);
+      const statistics = activeViewer.applyLocalStereoReconstruction(reconstruction, pair.left.camera.orientation);
+      const textureBitmap = await fetchTextureImageBitmap(pair.left.sourceUrl);
       activeViewer.applyLocalStereoTexture(textureBitmap);
       if (panoramaBuiltForScene !== activeSceneCalibrationKey) activeViewer.applyStereoReferenceImage(textureBitmap, pair.left.camera, pair.left.imageId);
       localMeshToggle.checked = true;
       activeViewer.setLocalReconstructionMeshVisible(true);
-      localReconstructionStatus.textContent = `${text('threeDLocalReconstructed', 'Local stereo mesh: {points} valid points, {triangles} triangles.').replace('{points}', String(statistics.valid)).replace('{triangles}', String(statistics.triangles))} ${pair.left.imageId} ↔ ${pair.right.imageId} · baseline ${pair.baseline.toFixed(3)} m.`;
+      hasLocalReconstruction = true;
+      localReconstructionStatus.textContent = `${text('threeDLocalReconstructed', 'Local stereo mesh: {points} valid points, {triangles} triangles.').replace('{points}', String(statistics.valid)).replace('{triangles}', String(statistics.triangles))} ${reconstruction.gridWidth}×${reconstruction.gridHeight} · max. ${reconstruction.heightLimitMeters.toFixed(2)} m terrain deviation · ${pair.left.imageId} ↔ ${pair.right.imageId} · baseline ${pair.baseline.toFixed(3)} m.`;
     } catch (error) {
       console.error('Local stereo reconstruction failed', error);
       localReconstructionStatus.textContent = error.message === 'no-validated-stereo-pair'
@@ -447,7 +477,6 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
         rotationDegrees: calibrationInputs.rotation.map(input => Number(input.value)),
         scale: Number(calibrationInputs.scale.value),
         cubePositionMeters: calibrationInputs.cube.map(input => Number(input.value)),
-        orientationReferenceWxyz: averageRoverOrientation(context.orientationSamples || []),
       });
       syncCalibrationFields();
       status.textContent = text('threeDCalibrationSaved', 'Rover calibration saved locally. Model-frame verification is still required.');
@@ -505,7 +534,7 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     if (!activeSceneCalibrationKey) return;
     localMeshCalibrationSave.disabled = true;
     try {
-      localMeshCalibration = await saveLocalMeshCalibration(activeSceneCalibrationKey, { positionMeters: localMeshCalibrationInputs.position.map(input => Number(input.value)), rotationDegrees: localMeshCalibrationInputs.rotation.map(input => Number(input.value)), scale: Number(localMeshCalibrationInputs.scale.value) });
+      localMeshCalibration = await saveLocalMeshCalibration(activeSceneCalibrationKey, { positionMeters: localMeshCalibrationInputs.position.map(input => Number(input.value)), rotationDegrees: localMeshCalibrationInputs.rotation.map(input => Number(input.value)), scale: Number(localMeshCalibrationInputs.scale.value), verticesPerSide: normalizedVerticesPerSide(localMeshResolution.value) });
       syncLocalMeshCalibrationFields();
       status.textContent = text('threeDLocalMeshCalibrationSaved', 'Local mesh calibration saved.');
     } catch { status.textContent = text('threeDStorageError', '3D local storage is unavailable in this browser context.'); } finally { localMeshCalibrationSave.disabled = false; }
@@ -514,6 +543,33 @@ export function initializeThreeDMode({ isExtensionContext, getSceneContext }) {
     if (!localMeshCalibration) return;
     viewer?.applyLocalMeshCalibration({ ...localMeshCalibration, positionMeters: localMeshCalibrationInputs.position.map(field => Number(field.value)), rotationDegrees: localMeshCalibrationInputs.rotation.map(field => Number(field.value)), scale: Number(localMeshCalibrationInputs.scale.value) });
   }));
+  const persistLocalMeshResolution = async () => {
+    const verticesPerSide = normalizedVerticesPerSide(localMeshResolution.value);
+    localMeshResolution.value = String(verticesPerSide);
+    if (!activeSceneCalibrationKey) return;
+    try {
+      localMeshCalibration = await saveLocalMeshCalibration(activeSceneCalibrationKey, { ...localMeshCalibration, verticesPerSide });
+    } catch {
+      status.textContent = text('threeDStorageError', '3D local storage is unavailable in this browser context.');
+    }
+  };
+  const rebuildForChangedLocalMeshResolution = () => {
+    window.clearTimeout(localMeshResolutionTimer);
+    localMeshResolutionTimer = window.setTimeout(() => {
+      // A resolution value must describe what is currently visible, not just
+      // the next manual build. Avoid creating a mesh merely by editing a
+      // stored preference before the first successful reconstruction.
+      if (hasLocalReconstruction && !localReconstruct.disabled) localReconstruct.click();
+    }, 180);
+  };
+  localMeshResolution.addEventListener('input', () => {
+    persistLocalMeshResolution();
+    rebuildForChangedLocalMeshResolution();
+  });
+  localMeshResolution.addEventListener('change', () => {
+    persistLocalMeshResolution();
+    rebuildForChangedLocalMeshResolution();
+  });
 
   panoramaCalibrationSave.addEventListener('click', async event => {
     event.stopPropagation();

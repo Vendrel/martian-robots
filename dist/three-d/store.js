@@ -1,4 +1,4 @@
-import { DEFAULT_ROVER_CALIBRATION, normalizeRoverCalibration } from './rover-calibration.js';
+import { DEFAULT_ROVER_CALIBRATION, normalizeRoverCalibration } from './rover-calibration.js?2026110810';
 
 const DATABASE_NAME = 'martian-robots-3d/v1';
 const CALIBRATION_STORE = 'rover-calibrations';
@@ -6,7 +6,10 @@ const MESH_CALIBRATION_STORE = 'mesh-calibrations';
 const SCENE_CALIBRATION_STORE = 'scene-calibrations';
 export const MESH_CALIBRATION_FORMAT = 'martian-robots-pds-mesh-calibration/v7';
 const LOCAL_MESH_CALIBRATION_FORMAT = 'martian-robots-local-mesh-calibration/v4';
-const PANORAMA_CALIBRATION_FORMAT = 'martian-robots-panorama-calibration/v3';
+// v3 was authored for a reference patch that applied an obsolete corrective
+// rotation. Reset it rather than carrying that 180°-class correction into the
+// camera-model projection used from v4 onward.
+const PANORAMA_CALIBRATION_FORMAT = 'martian-robots-panorama-calibration/v4';
 
 export const DEFAULT_MESH_CALIBRATION = Object.freeze({
   // Start every PDS/local comparison in the documented neutral frame. A mesh
@@ -18,6 +21,7 @@ export const DEFAULT_MESH_CALIBRATION = Object.freeze({
   calibrated: false,
 });
 export const DEFAULT_LOCAL_MESH_CALIBRATION = Object.freeze({ format: LOCAL_MESH_CALIBRATION_FORMAT, positionMeters: Object.freeze([0, 0, 0]), rotationDegrees: Object.freeze([0, 0, 0]), scale: 1, calibrated: false });
+export const DEFAULT_LOCAL_MESH_VERTICES_PER_SIDE = 49;
 export const DEFAULT_PANORAMA_CALIBRATION = Object.freeze({ format: PANORAMA_CALIBRATION_FORMAT, rotationDegrees: Object.freeze([0, 0, 0]), calibrated: false });
 
 function finiteVector(value, fallback) {
@@ -38,7 +42,8 @@ export function normalizeMeshCalibration(value = {}) {
 function normalizeLocalMeshCalibration(value = {}) {
   if (value.format !== LOCAL_MESH_CALIBRATION_FORMAT) value = {};
   const scale = Number(value.scale);
-  return { format: LOCAL_MESH_CALIBRATION_FORMAT, positionMeters: finiteVector(value.positionMeters, DEFAULT_LOCAL_MESH_CALIBRATION.positionMeters), rotationDegrees: finiteVector(value.rotationDegrees, DEFAULT_LOCAL_MESH_CALIBRATION.rotationDegrees), scale: Number.isFinite(scale) && scale > 0 ? scale : 1, calibrated: value.calibrated === true };
+  const verticesPerSide = Math.round(Number(value.verticesPerSide));
+  return { format: LOCAL_MESH_CALIBRATION_FORMAT, positionMeters: finiteVector(value.positionMeters, DEFAULT_LOCAL_MESH_CALIBRATION.positionMeters), rotationDegrees: finiteVector(value.rotationDegrees, DEFAULT_LOCAL_MESH_CALIBRATION.rotationDegrees), scale: Number.isFinite(scale) && scale > 0 ? scale : 1, verticesPerSide: Number.isFinite(verticesPerSide) ? Math.max(17, Math.min(161, verticesPerSide)) : DEFAULT_LOCAL_MESH_VERTICES_PER_SIDE, calibrated: value.calibrated === true };
 }
 
 function normalizePanoramaCalibration(value = {}) {

@@ -3,8 +3,9 @@ import { GLTFLoader } from '../vendor/three/addons/loaders/GLTFLoader.js';
 import { MTLLoader } from '../vendor/three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from '../vendor/three/addons/loaders/OBJLoader.js';
 import { OrbitControls } from '../vendor/three/addons/controls/OrbitControls.js';
-import { ROVER_CALIBRATION_CUBE } from './rover-calibration.js';
-import { ROVER_NAV_ORIGIN_HEIGHT_METERS, configureRoverNavWorldFrame, relativeRoverNavigationQuaternion, roverNavToRenderQuaternion, roverNavToSiteQuaternion } from './scene-frame.js';
+import { ROVER_CALIBRATION_CUBE } from './rover-calibration.js?2026110810';
+import { cameraRayForPixel, textureUvForPixel } from './camera-projection.js?2026110808';
+import { ROVER_NAV_ORIGIN_HEIGHT_METERS, configureRoverNavWorldFrame, roverNavToRenderQuaternion, roverNavToSiteQuaternion } from './scene-frame.js?2026110808';
 
 // FileLoader resolves string URLs against the document, not this module. Use
 // import.meta.url so both the extension root and a hosted subdirectory load
@@ -33,18 +34,6 @@ const LOCAL_RECONSTRUCTION_EXTENT_METERS = 20;
 
 function finite(value, fallback) {
   return Number.isFinite(value) ? value : fallback;
-}
-
-function cameraRayFromCahv(camera, pixelX, pixelY) {
-  const axis = new THREE.Vector3().fromArray(camera.A).normalize();
-  // The CAHV inverse also used by the 2D renderer. The old focal-length
-  // approximation changed the camera basis, particularly on wide frames.
-  const horizontal = new THREE.Vector3().fromArray(camera.H).addScaledVector(axis, -pixelX);
-  const vertical = new THREE.Vector3().fromArray(camera.V).addScaledVector(axis, -pixelY);
-  const ray = vertical.cross(horizontal);
-  if (!Number.isFinite(ray.lengthSq()) || ray.lengthSq() < Number.EPSILON) return null;
-  ray.normalize();
-  return ray.dot(axis) < 0 ? ray.negate() : ray;
 }
 
 function rotateWxyz(vector, quaternionWxyz) {
@@ -150,7 +139,9 @@ export function createThreeDViewer(container, setStatus) {
   panoramaCalibrationFrame.add(panoramaReferencePatches);
   const localReconstructionMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(LOCAL_RECONSTRUCTION_EXTENT_METERS, LOCAL_RECONSTRUCTION_EXTENT_METERS, LOCAL_RECONSTRUCTION_GRID_SEGMENTS, LOCAL_RECONSTRUCTION_GRID_SEGMENTS),
-    new THREE.MeshStandardMaterial({ color: '#704b36', roughness: 1, metalness: 0, side: THREE.DoubleSide }),
+    // This is an image-registration aid. White, unlit material preserves a
+    // monochrome source image instead of tinting it with terrain lighting.
+    new THREE.MeshBasicMaterial({ color: '#ffffff', side: THREE.DoubleSide }),
   );
   localReconstructionMesh.name = 'local-stereo-reconstruction-grid';
   // The seed is expressed in raw ROVER_NAV coordinates: its XY plane has a
@@ -187,6 +178,11 @@ export function createThreeDViewer(container, setStatus) {
   const roverNavigationFrame = new THREE.Group();
   roverNavigationFrame.name = 'rover-nav-frame';
   roverNavWorldFrame.add(roverNavigationFrame);
+  // The local terrain is a navigation-frame child, not a child of the GLTF
+  // calibration chain. It therefore inherits exactly the rover's dynamic
+  // API attitude while remaining independent of model-specific offsets,
+  // rotations and scale corrections.
+  roverNavigationFrame.add(localReconstructionNavigationFrame);
   const roverAnchor = new THREE.Group();
   // Calibration translation compensates for the imported model's own origin.
   // It therefore must be a child of the navigation frame: otherwise an API
@@ -432,15 +428,15 @@ export function createThreeDViewer(container, setStatus) {
       const cube = calibration?.cubePositionMeters || [];
       calibrationCube.position.set(finite(cube[0], 1), finite(cube[1], CALIBRATION_CUBE_SIZE_METERS / 2), finite(cube[2], 0));
     },
-    applyRoverNavigationOrientation(quaternionWxyz, referenceWxyz = null) {
-      const relativeOrientation = relativeRoverNavigationQuaternion(quaternionWxyz, referenceWxyz);
-      roverNavigationFrame.quaternion.copy(relativeOrientation);
-      // Local stereo points and the PDS terrain product share the raw rover
-      // frame. Their common mesh-calibration frame supplies the sole static
-      // axis conversion; applying a second conversion rotates the result 90°.
-      // Stereo vertices are in the selected image's ROVER_NAV frame. The
-      // camera attitude maps that frame into the SITE world used by panorama.
-      localReconstructionNavigationFrame.quaternion.copy(roverNavToSiteQuaternion(quaternionWxyz));
+    applyRoverNavigationOrientation(quaternionWxyz) {
+      // The rover model, local reconstruction and camera reference all live
+      // in the image metadata's absolute SITE pose.  A PDS comparison mesh is
+      // optional and must never decide this pose.
+      roverNavigationFrame.quaternion.copy(roverNavToSiteQuaternion(quaternionWxyz));
+      // Mesh vertices are raw ROVER_NAV points under roverNavigationFrame.
+      // Keeping this intermediate frame neutral prevents a second attitude
+      // multiplication and makes the terrain inherit the rover pose.
+      localReconstructionNavigationFrame.quaternion.identity();
       // Patches are converted individually into SITE/world coordinates.
       // Applying rover navigation again here would rotate them a second time.
       panoramaNavigationFrame.quaternion.identity();
@@ -477,11 +473,16 @@ export function createThreeDViewer(container, setStatus) {
     setLocalReconstructionMeshVisible(visible) {
       localReconstructionMesh.visible = Boolean(visible);
     },
-    applyLocalStereoReconstruction(reconstruction) {
+    applyLocalStereoReconstruction(reconstruction, cameraOrientationWxyz = null) {
       const positions = reconstruction?.positions;
       const indices = reconstruction?.indices;
       const uvs = reconstruction?.uvs;
       if (!(positions instanceof Float32Array) || !(indices instanceof Uint32Array) || !positions.length || !indices.length) throw Error('local-stereo-insufficient-triangles');
+      // The vertices originate in this exact stereo camera's ROVER_NAV frame.
+      // Its parent already owns that camera's attitude; do not multiply it
+      // again here. The argument records the selected source camera at the
+      // caller; geometry itself is intentionally neutral.
+      localReconstructionNavigationFrame.quaternion.identity();
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setIndex(new THREE.BufferAttribute(indices, 1));
@@ -531,15 +532,20 @@ export function createThreeDViewer(container, setStatus) {
     },
     addPanoramaReferenceImage(imageBitmap, cameraModel, imageId = '') {
       if (!imageBitmap || !cameraModel?.C || !cameraModel?.A || !cameraModel?.H || !cameraModel?.V) return;
-      const columns = 48, rows = 32, radius = 25;
+      // Match the 2D panorama's adaptive tessellation: a fisheye cannot be
+      // represented faithfully by the small CAHV reference patch grid.
+      const cameraType = String(cameraModel.type || 'CAHV').toUpperCase();
+      const columns = cameraType === 'CAHVORE' ? 48 : cameraType === 'CAHVOR' ? 20 : 12;
+      const rows = columns;
+      const radius = 25;
       const positions = [], uvs = [], indices = [];
       const center = cameraPointInRenderFrame(cameraModel, new THREE.Vector3().fromArray(cameraModel.C));
       for (let row = 0; row <= rows; row += 1) for (let column = 0; column <= columns; column += 1) {
         const u = column / columns * imageBitmap.width, v = row / rows * imageBitmap.height;
-        const ray = cameraRayFromCahv(cameraModel, u, v);
-        const point = ray ? center.clone().addScaledVector(cameraPointInRenderFrame(cameraModel, ray), radius) : center;
+        const ray = cameraRayForPixel(cameraModel, u, v);
+        const point = ray ? center.clone().addScaledVector(cameraPointInRenderFrame(cameraModel, new THREE.Vector3().fromArray(ray)), radius) : center;
         positions.push(point.x, point.y, point.z);
-        uvs.push(column / columns, 1 - row / rows);
+        uvs.push(...textureUvForPixel([u, v], imageBitmap.width, imageBitmap.height));
       }
       for (let row = 0; row < rows; row += 1) for (let column = 0; column < columns; column += 1) {
         const a = row * (columns + 1) + column, b = a + 1, c = a + columns + 1, d = c + 1;
