@@ -14,6 +14,7 @@ const ROVER_ASSET_URLS = Object.freeze({
   './models/curiosity-rover/curiosity-rover.gltf': new URL('../models/curiosity-rover/curiosity-rover.gltf', import.meta.url).href,
   './models/perseverance-rover.glb': new URL('../models/perseverance-rover.glb', import.meta.url).href,
 });
+const PLANETARIUM_ASSET_URL = new URL('../models/planetarium.gltf', import.meta.url).href;
 const MAX_PIXEL_RATIO = 2;
 const CALIBRATION_CUBE_SIZE_METERS = .526;
 export const CAMERA_DOLLY_MIN_DISTANCE_METERS = 1.2;
@@ -31,6 +32,9 @@ const GAMEPAD_TRIGGER_DEAD_ZONE = .08;
 const GAMEPAD_LEFT_STICK_SENSITIVITY = 10;
 const LOCAL_RECONSTRUCTION_GRID_SEGMENTS = 96;
 const LOCAL_RECONSTRUCTION_EXTENT_METERS = 20;
+const EXPERIMENTAL_TERRAIN_INDEX_CELLS = 32;
+const EXPERIMENTAL_TESSELLATION_MAX_DEPTH = 4;
+const EXPERIMENTAL_TESSELLATION_MAX_TRIANGLES = 90000;
 
 function finite(value, fallback) {
   return Number.isFinite(value) ? value : fallback;
@@ -70,6 +74,132 @@ function createEquirectangularReferenceGeometry(radius, columns = 96, rows = 48)
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
   geometry.setIndex(indices);
+  return geometry;
+}
+
+// The stereo worker returns a regular (but trapezoidal) ROVER_NAV grid. This
+// compact index lets the planetarium query that grid in its local ground plane
+// without doing an O(planetarium-triangles × reconstruction-triangles) scan.
+function createExperimentalTerrainSampler(reconstruction) {
+  const positions = reconstruction?.positions;
+  const indices = reconstruction?.indices;
+  if (!(positions instanceof Float32Array) || !(indices instanceof Uint32Array) || indices.length < 3) return null;
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (let index = 0; index < positions.length; index += 3) {
+    minX = Math.min(minX, positions[index]); maxX = Math.max(maxX, positions[index]);
+    minY = Math.min(minY, positions[index + 1]); maxY = Math.max(maxY, positions[index + 1]);
+  }
+  const spanX = maxX - minX, spanY = maxY - minY;
+  if (!(spanX > 1e-6) || !(spanY > 1e-6)) return null;
+  const triangles = [];
+  const cells = Array.from({ length: EXPERIMENTAL_TERRAIN_INDEX_CELLS ** 2 }, () => []);
+  const cellCoordinate = (value, minimum, span) => Math.max(0, Math.min(EXPERIMENTAL_TERRAIN_INDEX_CELLS - 1, Math.floor((value - minimum) / span * EXPERIMENTAL_TERRAIN_INDEX_CELLS)));
+  for (let offset = 0; offset < indices.length; offset += 3) {
+    const ia = indices[offset] * 3, ib = indices[offset + 1] * 3, ic = indices[offset + 2] * 3;
+    if (ic + 2 >= positions.length) continue;
+    const triangle = [
+      positions[ia], positions[ia + 1], positions[ia + 2],
+      positions[ib], positions[ib + 1], positions[ib + 2],
+      positions[ic], positions[ic + 1], positions[ic + 2],
+    ];
+    const minTriangleX = Math.min(triangle[0], triangle[3], triangle[6]), maxTriangleX = Math.max(triangle[0], triangle[3], triangle[6]);
+    const minTriangleY = Math.min(triangle[1], triangle[4], triangle[7]), maxTriangleY = Math.max(triangle[1], triangle[4], triangle[7]);
+    const triangleIndex = triangles.push(triangle) - 1;
+    const firstX = cellCoordinate(minTriangleX, minX, spanX), lastX = cellCoordinate(maxTriangleX, minX, spanX);
+    const firstY = cellCoordinate(minTriangleY, minY, spanY), lastY = cellCoordinate(maxTriangleY, minY, spanY);
+    for (let cellY = firstY; cellY <= lastY; cellY += 1) for (let cellX = firstX; cellX <= lastX; cellX += 1) cells[cellY * EXPERIMENTAL_TERRAIN_INDEX_CELLS + cellX].push(triangleIndex);
+  }
+  const sample = (x, y) => {
+    if (x < minX || x > maxX || y < minY || y > maxY) return null;
+    const cellX = cellCoordinate(x, minX, spanX), cellY = cellCoordinate(y, minY, spanY);
+    for (const triangleIndex of cells[cellY * EXPERIMENTAL_TERRAIN_INDEX_CELLS + cellX]) {
+      const triangle = triangles[triangleIndex];
+      const denominator = (triangle[4] - triangle[7]) * (triangle[0] - triangle[6]) + (triangle[6] - triangle[3]) * (triangle[1] - triangle[7]);
+      if (Math.abs(denominator) < 1e-10) continue;
+      const a = ((triangle[4] - triangle[7]) * (x - triangle[6]) + (triangle[6] - triangle[3]) * (y - triangle[7])) / denominator;
+      const b = ((triangle[7] - triangle[1]) * (x - triangle[6]) + (triangle[0] - triangle[6]) * (y - triangle[7])) / denominator;
+      const c = 1 - a - b;
+      if (a >= -1e-5 && b >= -1e-5 && c >= -1e-5) return a * triangle[2] + b * triangle[5] + c * triangle[8];
+    }
+    return null;
+  };
+  return { sample };
+}
+
+function longestTriangleEdge(triangle) {
+  return Math.max(
+    triangle[0].position.distanceTo(triangle[1].position),
+    triangle[1].position.distanceTo(triangle[2].position),
+    triangle[2].position.distanceTo(triangle[0].position),
+  );
+}
+
+function midpointExperimentalVertex(first, second) {
+  return {
+    position: first.position.clone().lerp(second.position, .5),
+    uv: [(first.uv[0] + second.uv[0]) * .5, (first.uv[1] + second.uv[1]) * .5],
+  };
+}
+
+function createExperimentalPlanetariumGeometry(sourceGeometry, sampler, maxEdgeMeters) {
+  const position = sourceGeometry.getAttribute('position');
+  const uv = sourceGeometry.getAttribute('uv');
+  const index = sourceGeometry.getIndex();
+  if (!position || !uv) throw Error('planetarium-geometry-missing-position-or-uv');
+  const outputPositions = [], outputUvs = [];
+  let outputTriangles = 0, affectedTriangles = 0, tessellatedTriangles = 0;
+  const vertexAt = vertexIndex => ({
+    position: new THREE.Vector3(position.getX(vertexIndex), position.getY(vertexIndex), position.getZ(vertexIndex)),
+    uv: [uv.getX(vertexIndex), uv.getY(vertexIndex)],
+  });
+  const terrainHeightAtVertex = vertex => sampler.sample(vertex.position.z, -vertex.position.x);
+  const appendTriangle = triangle => {
+    for (const vertex of triangle) {
+      // Asset-local (render Y-up) → raw ROVER_NAV: x=z, y=-x,
+      // z=.25-y. The planetarium frame itself contributes that .25 m
+      // origin height, so the sampled raw Z maps back to this local Y.
+      const rawHeight = terrainHeightAtVertex(vertex);
+      const deformedY = rawHeight === null ? vertex.position.y : .25 - rawHeight;
+      outputPositions.push(vertex.position.x, deformedY, vertex.position.z);
+      outputUvs.push(vertex.uv[0], vertex.uv[1]);
+    }
+    outputTriangles += 1;
+  };
+  const appendAffectedTriangle = (triangle, depth = 0) => {
+    if (longestTriangleEdge(triangle) <= maxEdgeMeters || depth >= EXPERIMENTAL_TESSELLATION_MAX_DEPTH || outputTriangles + 4 > EXPERIMENTAL_TESSELLATION_MAX_TRIANGLES) {
+      appendTriangle(triangle);
+      return;
+    }
+    const ab = midpointExperimentalVertex(triangle[0], triangle[1]);
+    const bc = midpointExperimentalVertex(triangle[1], triangle[2]);
+    const ca = midpointExperimentalVertex(triangle[2], triangle[0]);
+    tessellatedTriangles += 4;
+    appendAffectedTriangle([triangle[0], ab, ca], depth + 1);
+    appendAffectedTriangle([ab, triangle[1], bc], depth + 1);
+    appendAffectedTriangle([ca, bc, triangle[2]], depth + 1);
+    appendAffectedTriangle([ab, bc, ca], depth + 1);
+  };
+  const triangleCount = index ? Math.floor(index.count / 3) : Math.floor(position.count / 3);
+  for (let triangleIndex = 0; triangleIndex < triangleCount; triangleIndex += 1) {
+    const first = index ? index.getX(triangleIndex * 3) : triangleIndex * 3;
+    const second = index ? index.getX(triangleIndex * 3 + 1) : triangleIndex * 3 + 1;
+    const third = index ? index.getX(triangleIndex * 3 + 2) : triangleIndex * 3 + 2;
+    const triangle = [vertexAt(first), vertexAt(second), vertexAt(third)];
+    const center = triangle[0].position.clone().add(triangle[1].position).add(triangle[2].position).multiplyScalar(1 / 3);
+    const affected = [triangle[0], triangle[1], triangle[2]].some(vertex => terrainHeightAtVertex(vertex) !== null)
+      || sampler.sample(center.z, -center.x) !== null;
+    if (affected) {
+      affectedTriangles += 1;
+      appendAffectedTriangle(triangle);
+    } else appendTriangle(triangle);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(outputPositions, 3));
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(outputUvs, 2));
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  geometry.userData.experimentalPlanetarium = { affectedTriangles, tessellatedTriangles, outputTriangles };
   return geometry;
 }
 
@@ -137,6 +267,16 @@ export function createThreeDViewer(container, setStatus) {
   const panoramaReferencePatches = new THREE.Group();
   panoramaReferencePatches.name = 'sol-panorama-reference-patches';
   panoramaCalibrationFrame.add(panoramaReferencePatches);
+  // The experimental asset is authored in Three.js-style Y-up coordinates,
+  // whereas its parent is raw ROVER_NAV. This one local adapter is the
+  // documented axis conversion; it does not cancel the rover's attitude.
+  const experimentalPlanetariumNavigationFrame = new THREE.Group();
+  experimentalPlanetariumNavigationFrame.name = 'experimental-planetarium-rover-nav-frame';
+  experimentalPlanetariumNavigationFrame.position.z = ROVER_NAV_ORIGIN_HEIGHT_METERS;
+  const experimentalPlanetariumAxisFrame = new THREE.Group();
+  experimentalPlanetariumAxisFrame.name = 'experimental-planetarium-y-up-adapter';
+  experimentalPlanetariumAxisFrame.quaternion.copy(roverNavToRenderQuaternion().invert());
+  experimentalPlanetariumNavigationFrame.add(experimentalPlanetariumAxisFrame);
   const localReconstructionMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(LOCAL_RECONSTRUCTION_EXTENT_METERS, LOCAL_RECONSTRUCTION_EXTENT_METERS, LOCAL_RECONSTRUCTION_GRID_SEGMENTS, LOCAL_RECONSTRUCTION_GRID_SEGMENTS),
     // This is an image-registration aid. White, unlit material preserves a
@@ -183,6 +323,7 @@ export function createThreeDViewer(container, setStatus) {
   // API attitude while remaining independent of model-specific offsets,
   // rotations and scale corrections.
   roverNavigationFrame.add(localReconstructionNavigationFrame);
+  roverNavigationFrame.add(experimentalPlanetariumNavigationFrame);
   const roverAnchor = new THREE.Group();
   // Calibration translation compensates for the imported model's own origin.
   // It therefore must be a child of the navigation frame: otherwise an API
@@ -202,6 +343,14 @@ export function createThreeDViewer(container, setStatus) {
   let roverLoadEpoch = 0;
   let roverModel = null;
   let pdsMesh = null;
+  let experimentalPlanetarium = null;
+  let experimentalPlanetariumMesh = null;
+  let experimentalPlanetariumSourceGeometry = null;
+  let experimentalPlanetariumMaterial = null;
+  let experimentalPlanetariumTexture = null;
+  let experimentalPlanetariumLoad = null;
+  let experimentalReconstruction = null;
+  let experimentalPlanetariumCalibration = { tessellationMaxEdgeMeters: .75 };
   const siteWorldFrame = new THREE.Group();
   siteWorldFrame.name = 'site-world-frame';
   siteWorldFrame.quaternion.copy(roverNavToRenderQuaternion());
@@ -363,6 +512,52 @@ export function createThreeDViewer(container, setStatus) {
     }));
   };
 
+  const loadExperimentalPlanetarium = async () => {
+    if (experimentalPlanetarium) return experimentalPlanetarium;
+    if (experimentalPlanetariumLoad) return experimentalPlanetariumLoad;
+    experimentalPlanetariumLoad = new Promise((resolve, reject) => new GLTFLoader().load(PLANETARIUM_ASSET_URL, gltf => {
+      const root = gltf.scene || gltf.scenes?.[0];
+      let mesh = null;
+      root?.traverse(object => { if (!mesh && object.isMesh) mesh = object; });
+      if (!root || !mesh || !mesh.geometry.getAttribute('position') || !mesh.geometry.getAttribute('uv')) {
+        reject(Error('planetarium-invalid-gltf'));
+        return;
+      }
+      experimentalPlanetariumSourceGeometry = mesh.geometry.clone();
+      experimentalPlanetariumMaterial = new THREE.MeshBasicMaterial({ color: '#ffffff', side: THREE.BackSide, depthWrite: false });
+      mesh.material = experimentalPlanetariumMaterial;
+      mesh.castShadow = false;
+      mesh.receiveShadow = false;
+      mesh.name = 'experimental-planetarium-surface';
+      root.name = 'experimental-planetarium';
+      experimentalPlanetariumAxisFrame.add(root);
+      experimentalPlanetarium = root;
+      experimentalPlanetariumMesh = mesh;
+      experimentalPlanetariumNavigationFrame.visible = false;
+      resolve(root);
+    }, undefined, error => reject(error || Error('planetarium-load-failed'))));
+    try {
+      return await experimentalPlanetariumLoad;
+    } catch (error) {
+      experimentalPlanetariumLoad = null;
+      throw error;
+    }
+  };
+
+  const rebuildExperimentalPlanetarium = () => {
+    if (!experimentalPlanetariumMesh || !experimentalPlanetariumSourceGeometry || !experimentalReconstruction) return null;
+    const sampler = createExperimentalTerrainSampler(experimentalReconstruction);
+    if (!sampler) throw Error('planetarium-reconstruction-grid-invalid');
+    const nextGeometry = createExperimentalPlanetariumGeometry(
+      experimentalPlanetariumSourceGeometry,
+      sampler,
+      Math.max(.1, Math.min(5, finite(experimentalPlanetariumCalibration.tessellationMaxEdgeMeters, .75))),
+    );
+    experimentalPlanetariumMesh.geometry.dispose();
+    experimentalPlanetariumMesh.geometry = nextGeometry;
+    return nextGeometry.userData.experimentalPlanetarium;
+  };
+
   const loadPdsMesh = async source => {
     if (source.coordinateFrame !== 'SITE_FRAME') throw Error(`unsupported-pds-mesh-frame:${source.coordinateFrame || 'unknown'}`);
     if (!Array.isArray(source.roverSitePositionMeters) || source.roverSitePositionMeters.length !== 3 || !source.roverSitePositionMeters.every(Number.isFinite)) throw Error('pds-rover-localization-missing');
@@ -443,6 +638,29 @@ export function createThreeDViewer(container, setStatus) {
     },
     loadPdsMesh,
     loadRoverModel,
+    loadExperimentalPlanetarium,
+    async setExperimentalPlanetariumEnabled(visible) {
+      if (!visible) {
+        experimentalPlanetariumNavigationFrame.visible = false;
+        return;
+      }
+      await loadExperimentalPlanetarium();
+      experimentalPlanetariumNavigationFrame.visible = true;
+    },
+    applyExperimentalPlanetariumCalibration(calibration) {
+      experimentalPlanetariumCalibration = { ...experimentalPlanetariumCalibration, ...calibration };
+      return rebuildExperimentalPlanetarium();
+    },
+    applyExperimentalPlanetariumReconstruction(reconstruction) {
+      if (!experimentalPlanetariumMesh) throw Error('planetarium-not-loaded');
+      experimentalReconstruction = reconstruction;
+      experimentalPlanetariumNavigationFrame.visible = true;
+      const statistics = rebuildExperimentalPlanetarium();
+      // The planar mesh is merely the input to this branch. Rendering it too
+      // would show two different terrain carriers at the same time.
+      localReconstructionMesh.visible = false;
+      return statistics;
+    },
     applyMeshCalibration(calibration) {
       const position = calibration?.positionMeters || [];
       const rotation = calibration?.rotationDegrees || [];
@@ -472,6 +690,24 @@ export function createThreeDViewer(container, setStatus) {
     },
     setLocalReconstructionMeshVisible(visible) {
       localReconstructionMesh.visible = Boolean(visible);
+    },
+    clearLocalStereoReconstruction() {
+      localReconstructionMesh.visible = false;
+      if (experimentalPlanetariumMesh && experimentalPlanetariumSourceGeometry) {
+        experimentalPlanetariumMesh.geometry.dispose();
+        experimentalPlanetariumMesh.geometry = experimentalPlanetariumSourceGeometry.clone();
+      }
+      experimentalReconstruction = null;
+      experimentalPlanetariumNavigationFrame.visible = false;
+    },
+    clearPanoramaSurface() {
+      this.clearPanoramaReferenceImages();
+      experimentalPlanetariumTexture?.dispose();
+      experimentalPlanetariumTexture = null;
+      if (experimentalPlanetariumMaterial) {
+        experimentalPlanetariumMaterial.map = null;
+        experimentalPlanetariumMaterial.needsUpdate = true;
+      }
     },
     applyLocalStereoReconstruction(reconstruction, cameraOrientationWxyz = null) {
       const positions = reconstruction?.positions;
@@ -530,6 +766,21 @@ export function createThreeDViewer(container, setStatus) {
       panorama.name = 'sol-panorama-equirectangular-reference';
       panoramaReferencePatches.add(panorama);
     },
+    setExperimentalPlanetariumPanorama(canvas) {
+      if (!canvas?.width || !canvas?.height) throw Error('invalid-equirectangular-panorama');
+      if (!experimentalPlanetariumMaterial) throw Error('planetarium-not-loaded');
+      experimentalPlanetariumTexture?.dispose();
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      // glTF UV coordinates are already top-origin for this panoramic canvas.
+      // CanvasTexture's default upload flip would invert the dome vertically.
+      texture.flipY = false;
+      texture.needsUpdate = true;
+      experimentalPlanetariumTexture = texture;
+      experimentalPlanetariumMaterial.map = texture;
+      experimentalPlanetariumMaterial.needsUpdate = true;
+      experimentalPlanetariumNavigationFrame.visible = true;
+    },
     addPanoramaReferenceImage(imageBitmap, cameraModel, imageId = '') {
       if (!imageBitmap || !cameraModel?.C || !cameraModel?.A || !cameraModel?.H || !cameraModel?.V) return;
       // Match the 2D panorama's adaptive tessellation: a fisheye cannot be
@@ -570,6 +821,9 @@ export function createThreeDViewer(container, setStatus) {
       active = false;
       resizeObserver.disconnect();
       window.removeEventListener('martianrobots3dgamepad', onGamepad);
+      experimentalPlanetariumTexture?.dispose();
+      experimentalPlanetariumMaterial?.dispose();
+      experimentalPlanetariumSourceGeometry?.dispose();
       controls.dispose();
       renderer.dispose();
       renderer.domElement.remove();

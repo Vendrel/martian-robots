@@ -79,7 +79,7 @@ Object.assign(window.localeDictionaries.hu, {
   threeDViewerError: 'A 3D viewer indítása sikertelen. A részletekhez nyisd meg a bővítmény konzolját.',
   threeDCubeTitle: '50 cm-es kalibrációs kocka',
   threeDCubeNote: 'A piros kocka középpontja scene-méterben. A kocka a felszínhez igazított, tengelypárhuzamos marad; a cián +Z nyíl a 0° előreirány.',
-  threeDControlsNote: 'Egérgörgő: dolly · Gamepad: exponenciális karok, L1 nyomva + bal kar függőlegesen inspect/dolly, R2 emel, L2 a terep fölé süllyeszt, L3 alaphelyzet, R3 roverfókusz, Négyzet fullscreen.',
+  threeDControlsNote: 'Egérgörgő: dolly · Gamepad: a karok a 3D kamerát vezérlik; D-pad a közös lokáció-/felbontásvezérlőt, Háromszög + D-pad a rétegtávolságot állítja; L3 alaphelyzet, R3 roverfókusz, Négyzet fullscreen.',
   threeDMeshCalibrationTitle: 'NASA-mesh kalibráció', threeDMeshCalibrationNote: 'Az értékek csak az éppen betöltött PDS meshtermékre érvényesek, és a termékkel együtt helyben tárolódnak.', threeDMeshCalibrationSave: 'NASA-mesh kalibráció mentése', threeDMeshCalibrationSaved: 'A NASA-mesh kalibráció ehhez a PDS-termékhez helyben elmentve.',
   threeDPdsProbe: 'Perseverance PDS 3D-források ellenőrzése',
   threeDPdsChecking: 'PDS-hozzáférés kérése és a Navcam mesh bundle ellenőrzése…',

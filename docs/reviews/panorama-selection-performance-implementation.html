@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panoráma-kiválasztás és render optimalizálás — megvalósítás</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0d131b;--panel:#16212e;--line:#304154;--text:#edf4fb;--muted:#a9b9c8;--cyan:#78dbf6;--green:#91e4b4;--amber:#ffd080}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#1a3040,#0d131b 45%);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1080px;margin:auto;padding:42px 22px 76px}h1{margin:0;font-size:clamp(2rem,5vw,3.1rem);line-height:1.1}h2{margin:2.7rem 0 1rem;color:var(--cyan)}p{max-width:85ch}.lead,.muted{color:var(--muted)}.badge{display:inline-block;margin-bottom:16px;padding:.22rem .65rem;border-radius:999px;background:#173d31;color:#baf4d2;font-size:.84rem;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card,table{background:color-mix(in srgb,var(--panel) 93%,black);border:1px solid var(--line);border-radius:12px}.card{padding:17px}.metric{font-size:1.9rem;font-weight:760;color:var(--green)}.label{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden}th,td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}th{background:#101a25;color:var(--cyan)}code{color:#bfeaff;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}.flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.flow span{padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#101a25}.flow b{color:var(--cyan)}.note{border-left:4px solid var(--amber);margin-top:18px;padding:12px 15px;background:#2b261a;color:#ffe5ad;border-radius:0 9px 9px 0}@media(max-width:600px){main{padding:28px 15px}th,td{padding:9px;font-size:.9rem}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="badge">MEGVALÓSÍTVA · 2026-11-09</p>
+    <h1>Panoráma-kiválasztás és render optimalizálás</h1>
+    <p class="lead">A javítás különválasztja a panorámába szánt jelöltek döntését a Canvas-rendereléstől, megőrzi a pár nélküli jobb szemű felvételeket, és kiveszi a navigációs képkockákból a szükségtelen számításokat.</p>
+  </header>
+
+  <section>
+    <h2>Eredmény a két regressziós Sol-on</h2>
+    <div class="grid">
+      <article class="card"><div class="label">Sol 3374 · azonos hely</div><div class="metric">41 / 138</div><p>41 renderelt, teljesen betöltött textúra; korábban 30 nézet. A 359° fedettség megmaradt.</p></article>
+      <article class="card"><div class="label">Sol 4890 · normál felbontás</div><div class="metric">171 / 365</div><p>A három Sol-t összefogó lokáció teljes fedettséggel, 171 betöltött panorámatextúrával működik.</p></article>
+      <article class="card"><div class="label">Sol 4890 · szigorú felbontás</div><div class="metric">8 / 14</div><p>Csak a kért Sol rekordjai maradnak a lokációban; mind a 8 renderelt textúra betöltött.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Változott adatút</h2>
+    <div class="flow"><span>nyers Sol-rekordok</span><b>→</b><span>bal szem preferált<br>jobb fallback</span><b>→</b><span>subframe-et is figyelő<br>deduplikáció</span><b>→</b><span>renderlista</span><b>→</b><span>frustum-culling</span><b>→</b><span>Canvas warp</span></div>
+    <table><thead><tr><th>Terület</th><th>Megvalósítás</th><th>Hatás</th></tr></thead><tbody>
+      <tr><td>Kiválasztás</td><td>Új, tiszta <code>dist/panorama-selection.mjs</code> modul dönt a jelöltekről és döntési okot tárol.</td><td>A sztereó és deduplikáció külön, böngésző nélkül tesztelhető.</td></tr>
+      <tr><td>Sztereó</td><td>Curiosity Navcam/Hazcam pár esetén bal szem marad; csak tényleges bal partner hiányában marad a jobb szem.</td><td>Nem rajzolódik ki két szem ugyanarra a felvételre, de a 3374 jobb oldali Navcam-sora nem vész el.</td></tr>
+      <tr><td>Deduplikáció</td><td>A közel 0,99°-os tengelytolerancia 0,05°; a subframe a nézetazonosság része; azonos nézetnél a jobb terméktípus, majd a frissebb felvétel nyer.</td><td>A különböző cropok és a 0,513°-kal eltérő nézetek nem esnek ki tévesen.</td></tr>
+      <tr><td>Szigorú lokáció</td><td>0-ás tolerancián a vizuális lokáció kizárólag a kért Sol képeit tartalmazza.</td><td>A felhasználó valóban le tudja szűkíteni a renderterhelést.</td></tr>
+      <tr><td>Frame-költség</td><td>A kamera-bázis frame-enként egyszer készül; a képen kívüli mesh nem warpolódik; a coverage csak állapotváltozáskor számolódik újra.</td><td>Kevesebb vektoros munka, ideiglenes objektum és Canvas-háromszög a kamera forgatásakor.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>Ellenőrzések</h2>
+    <table><thead><tr><th>Ellenőrzés</th><th>Eredmény</th></tr></thead><tbody>
+      <tr><td><code>node tools/panorama-selection-regression.mjs</code></td><td>Sikeres: bal/jobb pár, jobb-only fallback, eltérő crop, 0,513°-os eltérés és azonos minőségű ismétlés frissebb tagja.</td></tr>
+      <tr><td><code>node --check dist/app.js</code> és <code>git diff --check</code></td><td>Sikeres.</td></tr>
+      <tr><td>Böngészős regresszió</td><td>Sol 3374 és Sol 4890 a megadott permalinkekkel betöltve, a fenti képszámokkal és fedettséggel.</td></tr>
+    </tbody></table>
+    <p class="note"><b>Határ:</b> a javítás a renderlista méretét és az egy-frame-es munka mennyiségét csökkenti, de még Canvas 2D warp marad. Ha a jövőben egy egyedi Sol így is nagy számú, egymástól különböző nézetet igényel, a következő mérföldkő egy tényleges frame-idő/rajzolt-háromszög HUD és csak annak adatai alapján WebGL mérlegelése.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -6,6 +6,7 @@ const MESH_CALIBRATION_STORE = 'mesh-calibrations';
 const SCENE_CALIBRATION_STORE = 'scene-calibrations';
 export const MESH_CALIBRATION_FORMAT = 'martian-robots-pds-mesh-calibration/v7';
 const LOCAL_MESH_CALIBRATION_FORMAT = 'martian-robots-local-mesh-calibration/v4';
+const EXPERIMENTAL_PLANETARIUM_CALIBRATION_FORMAT = 'martian-robots-experimental-planetarium-calibration/v1';
 // v3 was authored for a reference patch that applied an obsolete corrective
 // rotation. Reset it rather than carrying that 180°-class correction into the
 // camera-model projection used from v4 onward.
@@ -23,6 +24,13 @@ export const DEFAULT_MESH_CALIBRATION = Object.freeze({
 export const DEFAULT_LOCAL_MESH_CALIBRATION = Object.freeze({ format: LOCAL_MESH_CALIBRATION_FORMAT, positionMeters: Object.freeze([0, 0, 0]), rotationDegrees: Object.freeze([0, 0, 0]), scale: 1, calibrated: false });
 export const DEFAULT_LOCAL_MESH_VERTICES_PER_SIDE = 49;
 export const DEFAULT_PANORAMA_CALIBRATION = Object.freeze({ format: PANORAMA_CALIBRATION_FORMAT, rotationDegrees: Object.freeze([0, 0, 0]), calibrated: false });
+export const DEFAULT_EXPERIMENTAL_PLANETARIUM_CALIBRATION = Object.freeze({
+  format: EXPERIMENTAL_PLANETARIUM_CALIBRATION_FORMAT,
+  // The provided GLTF is already a 30 m hemisphere. This caps only the
+  // locally affected triangle edge length, not the global mesh resolution.
+  tessellationMaxEdgeMeters: .75,
+  calibrated: false,
+});
 
 function finiteVector(value, fallback) {
   return Array.isArray(value) && value.length === 3 && value.every(Number.isFinite) ? [...value] : [...fallback];
@@ -49,6 +57,18 @@ function normalizeLocalMeshCalibration(value = {}) {
 function normalizePanoramaCalibration(value = {}) {
   if (value.format !== PANORAMA_CALIBRATION_FORMAT) value = {};
   return { format: PANORAMA_CALIBRATION_FORMAT, rotationDegrees: finiteVector(value.rotationDegrees, DEFAULT_PANORAMA_CALIBRATION.rotationDegrees), calibrated: value.calibrated === true };
+}
+
+function normalizeExperimentalPlanetariumCalibration(value = {}) {
+  if (value.format !== EXPERIMENTAL_PLANETARIUM_CALIBRATION_FORMAT) value = {};
+  const tessellationMaxEdgeMeters = Number(value.tessellationMaxEdgeMeters);
+  return {
+    format: EXPERIMENTAL_PLANETARIUM_CALIBRATION_FORMAT,
+    tessellationMaxEdgeMeters: Number.isFinite(tessellationMaxEdgeMeters)
+      ? Math.max(.1, Math.min(5, tessellationMaxEdgeMeters))
+      : DEFAULT_EXPERIMENTAL_PLANETARIUM_CALIBRATION.tessellationMaxEdgeMeters,
+    calibrated: value.calibrated === true,
+  };
 }
 
 function openDatabase() {
@@ -126,6 +146,17 @@ export async function loadPanoramaCalibration(key) {
 export async function savePanoramaCalibration(key, calibration) {
   const normalized = normalizePanoramaCalibration({ ...calibration, calibrated: true });
   await withStore(SCENE_CALIBRATION_STORE, 'readwrite', store => store.put({ key: `panorama:${key}`, calibration: normalized, updatedAt: new Date().toISOString() }));
+  return normalized;
+}
+
+export async function loadExperimentalPlanetariumCalibration(key) {
+  const record = await withStore(SCENE_CALIBRATION_STORE, 'readonly', store => store.get(`experimental-planetarium:${key}`));
+  return normalizeExperimentalPlanetariumCalibration(record?.calibration || DEFAULT_EXPERIMENTAL_PLANETARIUM_CALIBRATION);
+}
+
+export async function saveExperimentalPlanetariumCalibration(key, calibration) {
+  const normalized = normalizeExperimentalPlanetariumCalibration({ ...calibration, calibrated: true });
+  await withStore(SCENE_CALIBRATION_STORE, 'readwrite', store => store.put({ key: `experimental-planetarium:${key}`, calibration: normalized, updatedAt: new Date().toISOString() }));
   return normalized;
 }
 

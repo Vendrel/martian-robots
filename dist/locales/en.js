@@ -77,7 +77,7 @@ Object.assign(window.localeDictionaries.en, {
   threeDViewerError: '3D viewer initialization failed. Open the extension console for details.',
   threeDCubeTitle: '50 cm calibration cube',
   threeDCubeNote: 'Red cube centre in scene metres. The cube stays axis-aligned on the surface; cyan +Z arrow is 0° forward.',
-  threeDControlsNote: 'Mouse wheel: dolly · Gamepad: exponential sticks, L1 + left stick vertical inspects/dollies, R2 rises, L2 descends above terrain, L3 resets, R3 focuses rover, Square toggles fullscreen.',
+  threeDControlsNote: 'Mouse wheel: dolly · Gamepad: sticks control the 3D camera; D-pad controls the shared location/resolution deck, Triangle + D-pad adjusts layer spacing; L3 resets, R3 focuses rover, Square toggles fullscreen.',
   threeDMeshCalibrationTitle: 'NASA mesh calibration', threeDMeshCalibrationNote: 'Values apply only to the currently loaded PDS mesh product and are stored locally with that product.', threeDMeshCalibrationSave: 'Save NASA mesh calibration', threeDMeshCalibrationSaved: 'NASA mesh calibration saved locally for this PDS product.',
   threeDPdsProbe: 'Check Perseverance PDS 3D sources',
   threeDPdsChecking: 'Requesting PDS access and checking the Navcam mesh bundle…',

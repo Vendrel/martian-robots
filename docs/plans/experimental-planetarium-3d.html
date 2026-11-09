@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kísérleti planetárium-alapú 3D terv</title>
+  <style>
+    :root { color-scheme: dark; --bg:#17191d; --panel:#20242a; --line:#3d4651; --text:#edf2f7; --muted:#b6c0cb; --accent:#73d6ff; --warn:#ffc66d; }
+    body { max-width: 980px; margin: 0 auto; padding: 3rem 1.25rem 5rem; background:var(--bg); color:var(--text); font:16px/1.58 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    h1,h2 { line-height:1.2; } h1 { font-size:clamp(2rem,5vw,3rem); margin-bottom:.25rem; } h2 { margin-top:2.5rem; }
+    .lead,.muted { color:var(--muted); } .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.15rem 1.25rem; margin:1rem 0; }
+    .tag { display:inline-block; padding:.18rem .55rem; border-radius:999px; color:#14171b; background:var(--warn); font-weight:700; font-size:.82rem; }
+    code { background:#101216; padding:.1rem .3rem; border-radius:4px; color:var(--accent); } ol,ul { padding-left:1.35rem; } li+li { margin-top:.45rem; }
+    table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding:.65rem; vertical-align:top; border-bottom:1px solid var(--line); } th { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="tag">EXPERIMENTAL3D · aktív tesztág</span>
+    <h1>Planetárium-alapú közös 3D réteg</h1>
+    <p class="lead">A meglévő, sík saját-mesh útvonal változatlan marad. Ez a terv egy párhuzamos, ellenőrizhető kísérletet ír le, amely a panorámát és a sztereó domborzatot ugyanazon <code>planetarium.gltf</code> hálón kezeli.</p>
+  </header>
+
+  <section>
+    <h2>Kiinduló tények</h2>
+    <div class="card">
+      <ul>
+        <li>A saját rekonstrukció bemenete az aktív lokáció kalibrált <em>left/right</em> sztereó képpárja; a klasszikus saját-mesh textúrája a kiválasztott bal szem képe.</li>
+        <li>A 3D panoráma ettől külön, a Sol panorámaképeiből épített equirectangular vászon. Nincs UV-lánc a panorámagömbből a klasszikus meshbe.</li>
+        <li>A <code>planetarium.gltf</code> 29&nbsp;400 pozíciót, normált és UV-t tartalmazó, mintegy 30 méteres, alul sík félgömb. A fájlnak nincs beágyazott textúrája.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Védett adatforrási szerződés</h2>
+    <table>
+      <thead><tr><th>Fogyasztó</th><th>Rögzített bemenet</th><th>Érvényességi védelem</th></tr></thead>
+      <tbody>
+        <tr><td>Sztereó worker</td><td>Az aktív <code>rover / sol / location / loadEpoch</code> pillanatfelvételének bal–jobb képpárja és teljes CAHV(O)(RE) modellje.</td><td>A worker és a textúraletöltés után ismét ellenőrizzük ugyanazt a kontextusazonosítót. Eltéréskor az eredmény nem kerül a jelenetbe.</td></tr>
+        <tr><td>Panorámaépítő</td><td>A pillanatfelvételkor kiválasztott panorámaképek listája.</td><td>Nem olvassa vissza a megváltozható globális állapotot egy aszinkron képletöltés közben.</td></tr>
+        <tr><td>Planetárium-kísérlet</td><td>Ugyanez a rögzített panorámavászon, valamint a jóváhagyott sztereó-worker eredménye.</td><td>Csak <code>EXPERIMENTAL3D === true</code> esetén fut.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Megvalósított kísérleti útvonal</h2>
+    <ol>
+      <li>A planetárium a rover navigációs keretének gyermeke. Így a rover már validált dinamikus pozícióját és attitűdjét örökli, a GLTF rover-modell egyedi kalibrációját viszont nem.</li>
+      <li>A modell saját, render-Y-up tengelyét egy dokumentált lokális tengelyadapter fordítja vissza ROVER_NAV-ba. Ez nem „korrekciómaradvány”: az asset és a NASA ROVER_NAV koordinátarendszer eltérő tengelyrendjének egyszeri, szükséges konverziója.</li>
+      <li>A panoráma equirectangular vászna a planetárium eredeti UV-jára kerül. A textúra V-tengelye ehhez a glTF UV-szerződéshez igazodik, nem a régi <code>ImageBitmap</code>-es saját-mesh textúrához.</li>
+      <li>A worker ROVER_NAV pontjai a planetárium lokális síkjába visszaalakíthatók. Egy gyors, a saját grid háromszögeiből készített 2D térbeli index csak a lefedett félgömb-háromszögekhez szolgáltat magasságot.</li>
+      <li>Csak ezek a háromszögek osztódnak tovább; a távoli félgömb változatlan marad. Az új, helyben tárolt <em>maximum élhossz</em> kalibráció szabályozza a részletességet és felső korlátot ad a költségnek.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Nem állítjuk még</h2>
+    <div class="card">
+      <p>Ez nem a klasszikus rekonstrukció lecserélése, és nem tekinti bizonyítottnak a planetárium abszolút asset-kalibrációját. A cél az összehasonlítható, közös hordozófelület. A tényleges geometriai pontosságot Curiosity és Perseverance tesztesettel kell ellenőrizni, mielőtt az <code>EXPERIMENTAL3D</code> alapértelmezése megváltozhatna.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Elfogadási kritériumok</h2>
+    <ul>
+      <li>A korábbi 3D útvonal megmaradt kapcsolható baseline-ként; a jelenlegi tesztkonfigurációban <code>EXPERIMENTAL3D = true</code> fut.</li>
+      <li>Kontextusváltás alatt befejeződő worker soha nem rajzol régi rover/sol/lokáció képpárt az új jelenetbe.</li>
+      <li>Kísérleti módban a planetárium a roverrel együtt dől, a panoráma ugyanazon objektum UV-ján jelenik meg, és a sztereó-rekonstrukció csak lefedett poligonokat módosít.</li>
+      <li>A tesszelláció vezérlőértéke jelenetenként perzisztens, és változtatásakor az utolsó jóváhagyott rekonstrukcióból újraépül a kísérleti felület.</li>
+    </ul>
+  </section>
+</body>
+</html>

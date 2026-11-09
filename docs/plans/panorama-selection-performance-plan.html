@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panorámaképkiválasztás és render teljesítményterv</title>
+  <style>
+    :root{color-scheme:dark;--bg:#10151d;--panel:#18212d;--line:#2d3b4d;--text:#eaf1f8;--muted:#aebdca;--cyan:#6fe1ff;--amber:#ffcf70;--red:#ff8d98;--green:#84e2af}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0d1219,#151d29);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1120px;margin:auto;padding:42px 24px 72px}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.08;margin:0 0 .5rem}h2{margin-top:2.6rem;color:var(--cyan)}h3{margin:0 0 .5rem}.lead{font-size:1.12rem;color:var(--muted);max-width:80ch}.meta,.grid{display:grid;gap:16px}.meta{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:25px 0}.grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.card,details,table{background:color-mix(in srgb,var(--panel) 92%,black);border:1px solid var(--line);border-radius:12px}.card{padding:18px}.badge{display:inline-block;border-radius:999px;padding:.2rem .6rem;font-size:.85rem;font-weight:650}.risk{background:#4a252c;color:#ffd7db}.ok{background:#183c31;color:#b7f5d3}.warn{background:#4c3919;color:#ffe0a3}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.flow span{padding:10px 13px;border:1px solid var(--line);border-radius:8px;background:#111923}.flow b{color:var(--cyan)}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden}th,td{padding:11px 13px;vertical-align:top;border-bottom:1px solid var(--line);text-align:left}tr:last-child td{border-bottom:0}th{color:var(--cyan);background:#111923}code{font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c6efff}details{padding:0 16px;margin:10px 0}summary{padding:14px 0;cursor:pointer;font-weight:650}details p,details ul{color:var(--muted)}li{margin:.35rem 0}.callout{border-left:4px solid var(--amber);padding:12px 16px;background:#2b251b;color:#ffe3b1;border-radius:0 9px 9px 0}.small{color:var(--muted);font-size:.92rem}@media (max-width:600px){main{padding:28px 16px}th,td{padding:9px;font-size:.9rem}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="badge warn">TERV · 2026-11-09</p>
+    <h1>Panorámaképkiválasztás és render teljesítményterv</h1>
+    <p class="lead">Cél: a ténylegesen különböző, panorámához hasznos nézetek megőrzése, ugyanazon sztereópár két szemének elkerülése, és kiszámíthatóan folyamatos navigáció nagy képszámnál is.</p>
+    <div class="meta"><div class="card"><b>Kiinduló teszt</b><br>Curiosity · Sol 3374</div><div class="card"><b>Teljesítmény-teszt</b><br>Curiosity · Sol 4890</div><div class="card"><b>Változtatási elv</b><br>Kis, mérhető lépések; export API változatlan</div></div>
+  </header>
+
+  <section>
+    <h2>Megállapítások</h2>
+    <div class="grid">
+      <article class="card"><h3>Sol 3374: nem adathiány</h3><p>A csomagolt metadata 138 rekordot tartalmaz: 37 (3373), 78 (3374), 23 (3375). Mindegyikhez van rover-attitűd, tehát a jelenlegi modellkapu nem ezért ejti ki őket.</p></article>
+      <article class="card"><h3>Sol 3374: 30 renderelt nézet</h3><p>A jelenlegi <code>panoramaProducts()</code> 136, jobb Hazcam nélküli jelöltből 30-at hagy meg. 106 rekord azonos instrumentum és közel azonos optikai tengely miatt esik ki.</p></article>
+      <article class="card"><h3>Valódi veszély: túl széles deduplikáció</h3><p>A tolerancia közel 0,99°. A 3374-es jobb Navcam sorozatban legalább egy 0,513°-kal eltérő F-képet egy korábbi csoportba von, noha külön nézet és érvényes pixelsáv lehet.</p></article>
+      <article class="card"><h3>Sol 4890: túl sok réteg</h3><p>A teszt URL 222 textúrát rajzol. A lokáció Sol 4889–4891 képeit együtt tartalmazza, ezért a „szigorú” távolságcsúszka sem csökkenti az azonos állomás-koordinátájú szomszéd Sol-ok halmazát.</p></article>
+    </div>
+    <p class="callout"><b>Fontos pontosítás:</b> „mindig csak bal szem” nem alkalmazható vak szabályként. A Sol 3374 fő Navcam készletében 61 <code>NAV_RIGHT_B</code> és nincs megfelelő bal oldali készlet. A helyes szerződés: valódi pár esetén bal szem, bal szem hiányában jobb szem mint szükséges fallback.</p>
+  </section>
+
+  <section>
+    <h2>Jelenlegi adatút és hibapontok</h2>
+    <div class="flow"><span><b>sol−1, sol, sol+1</b> betöltése</span><b>→</b><span>pozíció szerinti <b>location</b></span><b>→</b><span><code>panoramaProducts</code></span><b>→</b><span>222 / 30 kép</span><b>→</b><span>Canvas warp minden renderben</span></div>
+    <table><thead><tr><th>Hely</th><th>Probléma</th><th>Következmény</th></tr></thead><tbody>
+      <tr><td><code>dist/app.js:204–210</code></td><td>A deduplikáció kulcsa instrumentum + modell + tengely. Nem része a pixelszubrégió, a tényleges fedettség, terméktípus vagy sztereó-pár-kapcsolat.</td><td>Elveszhet eltérő nézet; ezzel szemben a bal/jobb szemek együtt maradhatnak.</td></tr>
+      <tr><td><code>dist/app.js:565–576</code></td><td>A szigorú lokáció is megtartja az ugyanarra a pozíciókulcsra eső szomszéd Sol-ok képeit.</td><td>A felhasználó nem tud képszámot csökkenteni akkor sem, ha erre számít.</td></tr>
+      <tr><td><code>dist/app.js:242–269</code></td><td>CAHVOR-képek mind átjutnak az előszűrésen; minden pointer-mozgás teljes mesh-warpot futtat.</td><td>Sol 4890-en nagyságrendileg 16 ezer kép-háromszög rajzolódik képkockánként.</td></tr>
+      <tr><td><code>dist/app.js:249–258, 378–387</code></td><td>A sugár-cache hasznos, de a vetített mesh, a bázis, a coverage és sok ideiglenes objektum minden frame-ben újra létrejön.</td><td>Felesleges CPU-, GC- és Canvas 2D állapotváltási költség.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>Javasolt célarchitektúra</h2>
+    <div class="flow"><span>Nyers rekordok</span><b>→</b><span><b>validációs diagnosztika</b></span><b>→</b><span><b>sztereó párválasztás</b></span><b>→</b><span><b>fedettségtudatos deduplikáció</b></span><b>→</b><span>render-jelöltek</span><b>→</b><span><b>frame-culling</b></span><b>→</b><span>warp</span></div>
+    <ul>
+      <li>A nyers, exportálható és renderelhető lista maradjon külön: <code>s.images</code> nem veszít rekordot; csak a vizuális lista szűkül.</li>
+      <li>Minden nem renderelt rekord kapjon gépi okkódot: <code>invalid-geometry</code>, <code>stereo-right-suppressed</code>, <code>duplicate-view</code>, <code>disabled-instrument</code> vagy <code>outside-location-scope</code>.</li>
+      <li>A kiválasztás ne csak tengelyt, hanem a kamera pixelsíkját és a tényleges látókúpot is használja.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Megvalósítási terv</h2>
+    <details open><summary>1. Mérhető diagnosztika és regressziós fixture</summary><ul><li>Külön, tiszta modulba kerüljön a jelöltkiválasztás; bemenet: normalizált rekordok, kimenet: renderlista és döntési napló.</li><li>Készüljön fixture Sol 3374-re és 4890-re a már verziózott gzip manifestekből.</li><li>A teszt exportáljon összesítést instrumentum, Sol, terméktípus, szubrégió, döntési ok és végső képazonosító szerint.</li><li>A régi videó egyetlen képkockájából vagy képazonosító-listájából egy célzott „expected coverage” fixture készülhet; enélkül a videóval való teljes azonosság nem bizonyítható, de minden kihagyás oka ellenőrizhető lesz.</li></ul></details>
+    <details open><summary>2. Sztereópár-választás: bal preferált, jobb fallback</summary><ul><li>Curiosity Navcam/Hazcam rekordokhoz explicit szem- és családfelismerés.</li><li>A párképzés stabil capture-kulcs alapján történjen: azonos kamera-család, site/drive, Sol és NASA termékazonosítóból kinyert felvételazonosító; csak auditált fallback lehet idő- és látókúp-közelség.</li><li>Pár esetén a bal jelölt marad. Ha nincs párba tehető bal, a jobb marad, így a 3374 jobb-oldali Navcam panorámája nem tűnik el.</li><li>A jobb képet ne csak azért ejtsük el, mert létezik tetszőleges bal kép ugyanazon a Sol-on.</li></ul></details>
+    <details open><summary>3. Fedettségtudatos deduplikáció</summary><ul><li>A jelenlegi 0,99° globális tengelytolerancia helyett hasonlítsuk össze a kép négy határsugarát / látókúpját, és a subframe-et is vegyük figyelembe.</li><li>Csak akkor vonható össze két kép, ha ugyanaz a szem, lényegében azonos pixelszubrégió és közel teljes látókúp-átfedés igazolható.</li><li>Azonos nézet több expozíciója közül dokumentált minőségi sorrend válasszon (ép geometria, nagyobb tényleges pixelterület, ismert teljes-frame preferencia, végül frissebb időbélyeg). A sorrendet fixture teszt rögzíti.</li><li>A 0,513°-os 3374-es eltérést külön regressziós esetté kell tenni: a döntés fedettség alapján legyen bizonyítható, ne a mostani konstans mellékhatása.</li></ul></details>
+    <details open><summary>4. Lokációs szemantika tisztázása</summary><ul><li>A „szigorú” mód szerződése legyen explicit: <em>csak a kért Sol</em>, vagy <em>azonos fizikai állomás minden Sol-ja</em>. A jelenlegi UI-szöveg az előbbit sugallja, a kód az utóbbit valósítja meg.</li><li>Ajánlott: 0-nál kért-Sol-only; a nem nulla értékeknél fokozatos pozíciós összevonás és opcionális szomszéd-Sol bevonás.</li><li>A lokációválasztó mutasson renderelt és nyers képszámot is; ez azonnal láthatóvá teszi a 4890-eshez hasonló túl nagy csoportokat.</li></ul></details>
+    <details open><summary>5. Renderút optimalizálása</summary><ul><li>A frame elején egyszer számolódjon a kamera-bázis és a frustum; minden <code>project()</code> ezt kapja paraméterként.</li><li>A cache tartalmazza az optikai sugármesh-t és az előző frame vetített meshét. Csak yaw/pitch/fov/kameraoffset változáskor frissüljön.</li><li>Valódi mesh/frustum culling: a CAHVOR képek se kerüljenek automatikusan warpra. Konzervatív, a négy saroksugárral működő teszt megelőzi a látómező peremének levágását.</li><li>A coverage csak jelöltlista-, szűrő- vagy helyváltáskor számolódjon; navigációs frame-ben ne.</li><li>Azonos renderkérés továbbra is egy <code>requestAnimationFrame</code>-be legyen összevonva, de a frame végén mérjük a CPU-időt, rajzolt képek és háromszögek számát.</li><li>Ha a Canvas 2D-vel elérhető plafon alacsony, csak ezt követően mérlegelendő WebGL. Ez nem első lépés.</li></ul></details>
+  </section>
+
+  <section>
+    <h2>Elfogadási kritériumok</h2>
+    <table><thead><tr><th>Terület</th><th>Ellenőrizhető eredmény</th></tr></thead><tbody>
+      <tr><td>Sol 3374 fedettség</td><td>A diagnosztika minden rekordhoz okot ad; pár nélküli jobb Navcam képek szerepelnek; valódi bal/jobb párból csak a bal szerepel.</td></tr>
+      <tr><td>Sol 4890 teljesítmény</td><td>Szigorú módban a renderlista bizonyíthatóan kisebb; navigáció közben a frame-idő és a warp-háromszögek száma a diagnosztikában látszik.</td></tr>
+      <tr><td>Kompatibilitás</td><td>Megmarad a permalink, képválasztás, export és a teljes nyers képállomány elérhetősége.</td></tr>
+      <tr><td>Vizuális regresszió</td><td>Rögzített yaw/pitch/fov screenshotok Sol 3374 és 4890 esetén; nem jelenik meg sztereó-szellemkép, és nem keletkezik új fedettségi rés.</td></tr>
+    </tbody></table>
+    <p class="small">Ajánlott sorrend: 1 → 2 → 3 → 4 → 5. Így a gyorsítás nem rejti el a képkiválasztási hibákat, és a végső renderlista már a helyes funkcionális viselkedést optimalizálja.</p>
+  </section>
+</main>
+</body>
+</html>

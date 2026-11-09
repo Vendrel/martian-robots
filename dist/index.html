@@ -186,6 +186,13 @@
                   <label class="rover-calibration-scale"><span>Scale</span><input type="number" min="0.000001" step="any" inputmode="decimal" data-local-mesh-calibration-scale value="1" /></label>
                 </div><button type="button" data-local-mesh-calibration-save>Save local mesh calibration</button>
               </details>
+              <details class="rover-calibration" data-three-d-experimental-planetarium hidden>
+                <summary>Experimental planetarium calibration</summary>
+                <p>This disabled-by-default 3D path maps the Sol panorama and locally deforms the same planetarium mesh. Only polygons reached by the local stereo grid are tessellated.</p>
+                <div class="rover-calibration-grid">
+                  <label class="rover-calibration-scale"><span>Maximum tessellated edge (m)</span><input type="number" min="0.1" max="5" step="0.05" inputmode="decimal" data-experimental-planetarium-tessellation-max-edge value="0.75" /></label>
+                </div><button type="button" data-experimental-planetarium-save>Save experimental calibration</button>
+              </details>
               <details class="rover-calibration" data-panorama-calibration>
                 <summary data-three-d-panorama-calibration-title>Panorama calibration</summary>
                 <p data-three-d-panorama-calibration-note>Only the stereo source-image reference is affected.</p>
@@ -486,15 +493,15 @@
       <div class="layer layer-3"><div class="arc" style="--start: 160deg; --arc: 39deg; --thickness: 4px"></div></div>
       <div class="layer layer-4 reverse"><div class="arc" style="--start: 250deg; --arc: 105deg; --thickness: 2px"></div></div>
     </div>
-    <script src="./locales/en.js?2026110660"></script>
-    <script src="./locales/hu.js?2026110660"></script>
+    <script src="./locales/en.js?2026110816"></script>
+    <script src="./locales/hu.js?2026110816"></script>
     <script src="./invalid-sols/curiosity.js"></script>
     <script src="./invalid-sols/perseverance.js"></script>
     <script src="./invalid-sols/spirit.js"></script>
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-<script type="module" src="./app.js?2026110814"></script>
+<script type="module" src="./app.js?2026110901"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

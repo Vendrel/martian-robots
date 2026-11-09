@@ -59,6 +59,9 @@
         <li>A Three.js-textúrához a forráskép külön, <code>ImageBitmap({ imageOrientation: 'flipY' })</code> példányban töltődik. Erre azért van szükség, mert az <code>ImageBitmap</code> esetén a Three.js <code>Texture.flipY</code> kapcsolója nem alkalmazható utólag; a worker viszont változatlan, bal felső origójú pixelekkel dolgozik.</li>
         <li>A sztereó mélység pontossága: <code>σZ ≈ Z²/(f·B)·σd</code>. A nagy bizonytalanságú pontok kiesnek, a maradékra robusztus talajsík illeszkedik, és csak a megbízható relatív magasság lesz relief.</li>
         <li>Jelenleg a relief adatbizonytalanságból képzett, 0,18–0,75 m közé korlátozott. Ez a korábbi extrém tüskék ellen szükséges első védelmi lépés.</li>
+        <li>A saját mesh indítása immár teljes <code>rover / Sol / location / loadEpoch / képpár</code> pillanatfelvételt rögzít. A lokáció szomszédos Solokat is csoportosíthat a 2D nézethez, de a sztereójelöltek ebből szigorúan csak a kért Sol képei. Worker- és textúraletöltés után újraellenőrzi az azonosítót; közben történt kontextusváltásnál a régi eredmény nem kerül a jelenetbe.</li>
+        <li>A planetárium-útvonal teszteléshez aktív: <code>EXPERIMENTAL3D = true</code>. A <code>planetarium.gltf</code> a rover navigációs frame-jének gyermeke, a Sol-panoráma eredeti glTF-UV-ját használja, és csak a sztereóval lefedett poligonokat tesszellálja/deformálja. A régi sík útvonal megmaradt visszakapcsolható baseline-ként. Részletes terv: <code>docs/plans/experimental-planetarium-3d.html</code>.</li>
+        <li>A 3D mód a közös <code>.control-deck</code> aktuális rover/Sol/lokáció/felbontás állapotát követi. Gamepadon a karok a 3D kamerát mozgatják, a D-pad viszont ugyanúgy a közös lokáció- és felbontásvezérlőt működteti; Háromszög + D-pad a rétegtávolságot állítja. Forrásváltáskor a régi 3D rétegek elrejtődnek, majd a korábban aktív panoráma és saját mesh az új kontextusból újraépül.</li>
       </ul>
     </section>
 
