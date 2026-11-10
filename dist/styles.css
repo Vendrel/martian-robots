@@ -131,6 +131,10 @@
 	background: color-mix(in srgb, var(--accent) 11%, transparent);
 	color: var(--accent)
 }
+
+#debugLog { margin:18px 0 28px; padding:0 12px 12px; max-height:220px; overflow:auto; white-space:normal; border:1px solid var(--line); border-radius:10px; background:var(--surface); color:var(--muted); font:12px/1.45 ui-monospace,SFMono-Regular,monospace; user-select:text; cursor:copy }
+#debugLog .debug-log-controls { position:sticky; z-index:2; top:0; display:flex; justify-content:flex-start; width:calc(100% + 24px); margin:0 -12px 10px; padding:10px 12px 8px; background:color-mix(in srgb,var(--surface) 96%,var(--bg)); box-shadow:0 1px 0 var(--line); cursor:default }
+#debugLog .debug-log-text { display:block; white-space:pre-wrap; overflow-wrap:anywhere }
 .location-download-filters label { position: relative; cursor: pointer }
 .location-download-filters input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none }
 .location-download-filters span { display: inline-flex; align-items: center; min-height: 30px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--surface2) 78%, transparent); color: var(--muted); font: 700 .74rem/1 system-ui; letter-spacing: .04em; text-transform: uppercase; transition: border-color .15s ease, background .15s ease, color .15s ease }
