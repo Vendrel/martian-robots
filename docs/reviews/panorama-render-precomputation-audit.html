@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panoráma renderelési előszámítási audit</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c121a;--panel:#162230;--line:#314357;--text:#edf5fc;--muted:#afc0cf;--cyan:#7bdef6;--green:#94e7b8;--amber:#ffd17b;--red:#ff9ca5}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0,#183344 0,#0c121a 47%);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1160px;margin:auto;padding:42px 24px 76px}h1{font-size:clamp(2rem,5vw,3.25rem);line-height:1.08;margin:0 0 .6rem}h2{margin:2.7rem 0 1rem;color:var(--cyan)}h3{margin:.1rem 0 .5rem}.lead,.muted{color:var(--muted);max-width:84ch}.badge{display:inline-block;padding:.24rem .68rem;border-radius:999px;background:#183e31;color:#baf5d2;font-size:.84rem;font-weight:750}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:15px}.card,table,details{background:color-mix(in srgb,var(--panel) 93%,black);border:1px solid var(--line);border-radius:12px}.card{padding:17px}.metric{font-size:1.55rem;font-weight:760;color:var(--green)}.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.flow span{background:#111b27;border:1px solid var(--line);padding:9px 12px;border-radius:8px}.flow b{color:var(--cyan)}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden}th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}tr:last-child td{border-bottom:0}th{background:#101a25;color:var(--cyan)}code{font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c5efff}.p1,.p2,.p3{font-weight:750;white-space:nowrap}.p1{color:var(--red)}.p2{color:var(--amber)}.p3{color:var(--green)}details{padding:0 16px;margin:11px 0}summary{padding:14px 0;cursor:pointer;font-weight:700}.note{border-left:4px solid var(--amber);padding:13px 16px;background:#2c271b;color:#ffe5b2;border-radius:0 9px 9px 0}@media(max-width:620px){main{padding:28px 15px}th,td{padding:9px;font-size:.9rem}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="badge">STATIKUS TELJESÍTMÉNYAUDIT · 2026-11-10</p>
+    <h1>„Carmack-trükk” audit: mit érdemes előre kiszámolni?</h1>
+    <p class="lead">A modern böngésző trigonometrikus függvényei önmagukban nem jelentik a szűk keresztmetszetet. A 2D Canvas panorámában az számít, hogy ugyanazokat a sugár-, vetítési, rendezési és háttérgeometriai műveleteket hányszor ismétli meg egyetlen navigációs frame alatt.</p>
+  </header>
+
+  <section>
+    <h2>Rövid ítélet</h2>
+    <div class="grid">
+      <article class="card"><h3>Van már jó előszámítás</h3><p>A drága CAHVOR/CAHVORE inverz kameramodell sugármesh-e képenként cache-elve van. A Mars-háttér textúrája és a flatfield-textúrák is cache-eltek.</p></article>
+      <article class="card"><h3>A fő ismétlődés</h3><p>A cache-elt sugármesh minden renderben új objektumhálóvá, majd többször vetített háromszöggé alakul. Ez különösen sok kép vagy széles látószögű kamera esetén jelentős.</p></article>
+      <article class="card"><h3>Ajánlott irány</h3><p>Ne globális szög-szinusz táblát vezessünk be. A kamera- és nézetfüggő adatok életciklusához kötött, precíz cache-ek kevesebb kockázattal és nagyobb nyereséggel járnak.</p></article>
+    </div>
+    <p class="note"><b>Miért nem LUT?</b> A folyamatos yaw/pitch/fov vezérlésnél a szögkvantálás látható ugrást vagy cache-robbanást okozna. A helyes megfelelője itt a változatlan képgeometria, háttérháló és renderlista egyszeri előkészítése; a tényleges képernyő-vetítés továbbra is frame-függő marad.</p>
+  </section>
+
+  <section>
+    <h2>Bizonyított ismétlődések</h2>
+    <table>
+      <thead><tr><th>Prioritás</th><th>Jelenlegi ismétlés</th><th>Egyszeri / ritka előkészítés</th><th>Mi marad frame-függő?</th></tr></thead>
+      <tbody>
+        <tr><td class="p1">P1</td><td><code>drawMarsAtmosphere()</code> 16×32 cellát rajzol: 1&nbsp;024 háromszög és 2&nbsp;048 <code>atmospherePoint()</code> hívás frame-enként. Ugyanazt a belső sarokpontot a szomszéd cellák újra kiszámolják.</td><td>Egyszer készülő, 33×17-es (561 csúcsos) gömbháló: UV + egységirány előre számítva.</td><td>561 csúcs vetítése az aktuális nézetbe és a szükséges 1&nbsp;024 Canvas-háromszög. A trigonometria és a négyszeres csúcspontmunka eltűnik.</td></tr>
+        <tr><td class="p1">P1</td><td><code>project()</code> minden híváskor újraszámolja <code>tan(fov/4)</code>-et. Ez a mesh-csúcsoknál, a clippingnél, a háttérnél és a rácsnál nagyon sokszor fut.</td><td>A <code>basis()</code> adjon vissza előre számított projekciós skálát és fél vászonméretet is.</td><td>A három skalárszorzat és a képernyőkoordináta továbbra is szükséges, de a trigonometrikus FOV-művelet frame-enként egyszer történik.</td></tr>
+        <tr><td class="p1">P1</td><td><code>projectedImageMesh()</code> a cache-elt sugárforrásból minden frame-ben új, egymásba ágyazott <code>c</code> objektumhálót épít; minden csúcsnál új tömb, normalizálás és vetítés keletkezik.</td><td>Képenként újrahasznált „frame mesh” puffer; layer-távolságkor előre szorzott sugárhossz; nullás kameraoffsethez közvetlenül a már egységnyi sugár használata.</td><td>Yaw/pitch/fov vagy kameraoffset változásakor a projektált koordinátákat frissíteni kell, de objektumallokáció nélkül. Nullás offsetnél a <code>normalize(depth·ray)</code> teljesen elhagyható, mert eredménye maga a <code>ray</code>.</td></tr>
+        <tr><td class="p1">P1</td><td><code>activeImages()</code> minden frame-ben szűr, az <code>renderOrder()</code> pedig új tömböt rendez. A rendezési komparátor <code>Date.parse()</code>-t is hív.</td><td>Állapotverzióhoz kötött, már szűrt és rendezett renderlista; a capture timestamp képenként egyszer kerül tárolásra.</td><td>Csak lokáció-, szűrő-, kiválasztás-, rejtés- vagy layer-spacing-változáskor épül újra. Forgatáskor nem.</td></tr>
+        <tr><td class="p2">P2</td><td>A <code>drawWorldGrid()</code> frame-enként 947 statikus gömbirányhoz számol <code>sin/cos</code>-t és hoz létre vektorokat.</td><td>A meridián- és szélességi körök egységvektorai induláskor készült, immutable tömbök.</td><td>A 947 irány vetítése és a Canvas path-rajzolás szükséges marad.</td></tr>
+        <tr><td class="p2">P2</td><td>Teljesen előtérben lévő mesh-háromszögnél a kód még poligont klippel és ugyanazokat a csúcsokat ismét vetíti a <code>drawClippedImageTriangle()</code>-ben.</td><td>A frame mesh csúcsai tárolják a már kiszámított mélységet és a képernyőpontot.</td><td>Ha mindhárom mélység pozitív, közvetlen <code>tri()</code> hívás történhet. Csak horizontot metsző háromszögnél kell a meglévő pontos clipping út.</td></tr>
+        <tr><td class="p2">P2</td><td>Alt-hover esetén a <code>hit()</code> kiszámítja a mesh-eket, majd a <code>warp()</code> ugyanabban a frame-ben megismétli őket. A hit-test clipping útja több helyen alapértelmezett <code>basis()</code>-t hív.</td><td>Frame-lokális <code>Map&lt;image, mesh&gt;</code>, és a meglévő <code>view</code> explicit továbbadása a hit-testhez.</td><td>A hit-teszt maga továbbra is csak Alt-hover alatt fut; a második mesh-projekció és a sok felesleges bázisszámítás megszűnik.</td></tr>
+        <tr><td class="p2">P2</td><td>Kiterjesztésben, aktív flatfieldnél egy háromszögönkénti út újra lekéri a konfigurációt és <code>JSON.stringify</code>-val ellenőrzi a texture cache kulcsát.</td><td>Képenként egyszer feloldott flatfield renderállapot/texture a <code>warp()</code> elején.</td><td>Az overlay megrajzolása a klippelt háromszögek miatt megmarad. Normál blendnél később opcionális előkompozitált kép-cache is bevezethető; <code>screen</code> módnál ez nem viselkedésazonos.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Apró, de tiszta nyereségek</h2>
+    <div class="grid">
+      <article class="card"><h3>Világtengely cache</h3><p><code>imageMayBeVisible()</code> frame-enként transzformálja újra az image axis-t. A modell-attitűd változatlan, ezért az <code>imageAxis()</code> eredménye képenként cache-elhető; a location-layer kiosztásnak is hasznára válik.</p></article>
+      <article class="card"><h3>Statikus képhatárok</h3><p><code>bounds()</code> ismételten parse-olja a subframe-adatot. A dekódolt méret megérkezése után a bounds csak képdimenzió- vagy geometria-változáskor érvényteleníthető.</p></article>
+      <article class="card"><h3>Kijelölési gyűrű</h3><p>Aktív Shift-kijelölésnél 97 pont ugyanabból a gömbsapkából származik. A sapka bázisa, a konstans <code>cos(radius)</code>/<code>sin(radius)</code> és a 96 szögpár újrahasznosítható.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Javasolt megvalósítási sorrend</h2>
+    <details open><summary>1. Alacsony kockázatú frame-konstansok és renderlista</summary><ol><li>Bővítsük a view objektumot <code>projectionScale</code>, <code>halfWidth</code>, <code>halfHeight</code> mezőkkel; <code>project()</code> csak ezeket használja.</li><li>Vezessünk be <code>renderListDirty</code>-t és egyetlen invalidáló függvényt. A releváns UI-változók (lokáció, szűrők, selection, flatfield-hide, layer spacing) állítsák be.</li><li>Normalizáláskor rögzítsük a timestampet és a világkoordinátás képtengelyt.</li><li>Mérés: 4890-en frame-enkénti szűrés/rendezés hívásszáma legyen 0, amíg csak yaw/pitch/fov változik.</li></ol></details>
+    <details open><summary>2. Statikus háttér- és rácshálók</summary><ol><li>Készítsünk modul-szintű immutable atmosphere- és grid-geometriát; az atmosphere cellák indexet használjanak a közös csúcsokhoz.</li><li>Frame-ben egyszer vetítsük az atmosphere 561 csúcsát; a cellák csak az eredményt indexeljék.</li><li>Az adaptív minőségi szintekhez külön háttérfelbontás tartozzon, például 32×16 → 24×12 → 16×8. Így a jelenlegi adaptív minőség a Canvas-állapotváltásokat is csökkenti.</li><li>Mérés: számlálóval igazoljuk a háttérprojektálások 2&nbsp;048 → 561 csökkenését az első szinten.</li></ol></details>
+    <details open><summary>3. Reuse-olható frame mesh és gyors háromszögút</summary><ol><li>A meglévő optikai sugár-cache maradjon érintetlen; mellé kerül a módosítható frame puffer.</li><li>Offset nélküli úton a sugár közvetlenül projektálódik; offsetes úton az előre skálázott sugárból íródik a puffer.</li><li>A csúcs mélysége legyen része a puffernek. A teljesen látható háromszög közvetlenül használja a három projektált pontot; a jelenlegi clipping csak vegyes előjelű háromszögnél fusson.</li><li>Mérés: frame-idő mellett rögzítsük a frissített csúcsok, gyorsutas és klippelt háromszögek számát.</li></ol></details>
+    <details open><summary>4. Hover és flatfield specializálás</summary><ol><li>A render context tartson frame-lokális mesh-mapet; <code>hit()</code>, <code>warp()</code> és a flatfield gomb ugyanazt a mesht kapja.</li><li>Az explicit <code>view</code> minden clipping/hit segédfüggvénybe kerüljön át; ne legyen rejtett <code>basis()</code> fallback egy belső háromszögciklusban.</li><li>Aktív flatfieldnél texture és compositing mód képenként egyszer dőljön el.</li></ol></details>
+  </section>
+
+  <section>
+    <h2>Amit nem ajánlok első körben</h2>
+    <p><b>Ne kvantáljuk a kamera szögeit</b> és ne cache-eljünk teljes képernyőképet yaw/pitch/fov szerint: navigáláskor gyakorlatilag minden kulcs új lenne, vagy vizuális lépcsőzést okozna. <b>Ne cseréljük le most WebGL-re sem</b>: a fenti P1 lépések megőrzik a geometriai viselkedést, kis diffekkel mérhetők, és a Canvas 2D szűk keresztmetszetének jelentős részét célozzák.</p>
+    <p class="muted">Az audit forráskódolvasáson és a jelenlegi renderút hívásszámain alapul; nem állít konkrét milliszekundumos nyereséget profiler-minta nélkül. A terv minden lépése ezért előbb számlálókkal és a Sol 4890 / 3374 regressziókkal validálandó.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panoráma renderelési előszámítás — megvalósítás</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c121a;--panel:#162230;--line:#304357;--text:#eef6fd;--muted:#afc1d0;--cyan:#79ddf6;--green:#93e5b7;--amber:#ffd17d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 86% 0,#183446,#0c121a 50%);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1060px;margin:auto;padding:42px 24px 76px}h1{margin:0;font-size:clamp(2rem,5vw,3.2rem);line-height:1.1}h2{margin:2.7rem 0 1rem;color:var(--cyan)}.lead,.muted{color:var(--muted);max-width:82ch}.badge{display:inline-block;padding:.24rem .66rem;border-radius:999px;background:#173d31;color:#b9f4d1;font-size:.84rem;font-weight:750}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}.card,table{background:color-mix(in srgb,var(--panel) 93%,black);border:1px solid var(--line);border-radius:12px}.card{padding:17px}.metric{font-size:1.55rem;font-weight:760;color:var(--green)}table{border-collapse:separate;border-spacing:0;width:100%;overflow:hidden}th,td{padding:12px 14px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}th{background:#101a25;color:var(--cyan)}code{font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c7efff}.note{border-left:4px solid var(--amber);background:#2b261a;color:#ffe4ae;padding:13px 16px;border-radius:0 9px 9px 0}.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.flow span{padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#101a25}.flow b{color:var(--cyan)}@media(max-width:620px){main{padding:28px 15px}th,td{padding:9px;font-size:.9rem}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="badge">MEGVALÓSÍTVA · 2026-11-10</p>
+    <h1>Panoráma renderelési előszámítás</h1>
+    <p class="lead">A változtatás a kamera forgatásakor megismétlődő, de a bemenettől független munkát cache-eli. Nem kvantál yaw/pitch/fov értékeket, ezért a navigáció geometriája és a képminőség változatlan marad.</p>
+  </header>
+
+  <section>
+    <h2>A FOV-megjegyzés szakmai feldolgozása</h2>
+    <p class="note"><b>Helyes és megvalósított ötlet:</b> a <code>tan(fov / 4)</code>-ből képzett projekciós skála immár cache-elt nézetparaméter. Csak akkor számolódik újra, ha a FOV, a Canvas szélessége vagy magassága megváltozik. Pusztán yaw/pitch-kameraforgatáskor az előző egzakt érték használódik — nincs közelítés, nincs vizuális lépcsőzés.</p>
+  </section>
+
+  <section>
+    <h2>Megvalósított optimalizálások</h2>
+    <div class="flow"><span>statikus sugár / gömbgeometria</span><b>→</b><span>cache-elt nézetparaméter</span><b>→</b><span>újrahasznált frame mesh</span><b>→</b><span>Canvas warp</span></div>
+    <table><thead><tr><th>Terület</th><th>Változás</th><th>Érvénytelenítés</th></tr></thead><tbody>
+      <tr><td>FOV-projekció</td><td><code>projectionParameters()</code> tárolja a projekciós skálát és a fél vászonméretet; <code>project()</code> már nem trigonometrikus.</td><td>FOV vagy Canvas-méret.</td></tr>
+      <tr><td>Képmetaadat</td><td>A világtengely, a felvételi idő, a vertical offset és a képhatárok képenként cache-eltek.</td><td>Képgeometria- vagy dekódolt méret-változás.</td></tr>
+      <tr><td>Frame mesh</td><td>A drága optikai sugár-cache mellé újrahasznált projektált mesh-puffer került. Nullás kameraoffsetnél a már egységnyi sugár közvetlenül projektálódik.</td><td>Képsugár-cache/crop/meshfelbontás változása; a képernyőpontok viszont minden nézetváltozáskor frissülnek.</td></tr>
+      <tr><td>Clipping</td><td>Teljesen látható háromszögek a már projektált csúcsokat adják át közvetlenül a Canvasnak. A pontos clipping csak horizontot metsző háromszögnél marad.</td><td>Frame-függő, de a felesleges ismételt projektálás megszűnt.</td></tr>
+      <tr><td>Renderlista</td><td>Az aktív, rendezett képlista cache-elt; nem fut új szűrés, sort és <code>Date.parse()</code> pusztán kameraforgatáskor.</td><td>Lokáció, szűrő, kijelölés, rejtés, layer spacing vagy hibás geometriájú kép.</td></tr>
+      <tr><td>Háttér és rács</td><td>A Mars-háttér közös csúcsú gömbháló; a világrács irányvektorai előre számítottak. Az adaptív minőség 32×16 → 24×12 → 16×8 háttérhálót használ.</td><td>Csak minőségi szint váltáskor készül másik statikus háló.</td></tr>
+      <tr><td>Alt-hover / flatfield</td><td>Az egy frame-ben használt mesh megosztott a hit-test, warp és flatfield-gomb között. Flatfield texture/config feloldás képenként egyszer történik.</td><td>Frame, illetve flatfield-szerkesztés.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>Regressziós ellenőrzés</h2>
+    <div class="grid">
+      <article class="card"><div class="metric">171 / 171</div><p>Sol 4890: minden renderelt textúra betöltött, 360° fedettség; a teljes aktív halmaz 171 / 365.</p></article>
+      <article class="card"><div class="metric">41 / 41</div><p>Sol 3374: minden renderelt textúra betöltött, 359° fedettség; a kiválasztás 41 / 138.</p></article>
+      <article class="card"><div class="metric">0 hiba</div><p>A böngésző konzolja hibamentes volt. Lefutott a JavaScript-szintaxis- és panoráma-kiválasztási regresszióteszt is.</p></article>
+    </div>
+    <p class="muted">A számok funkcionális regressziós jelek, nem mesterséges FPS-ígéretek. A tényleges gyorsulás eszköz- és képhalmazfüggő, de a megvalósítás közvetlenül csökkenti az egy frame-re jutó trigonometriai, allokációs, szűrési, rendezési és ismételt vetítési munkát.</p>
+  </section>
+</main>
+</body>
+</html>

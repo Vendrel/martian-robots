@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sol 3373 – CAHVOR renderterhelés javítása</title>
+<style>
+:root{color-scheme:dark;--bg:#08131d;--panel:#0d1d2a;--line:#234258;--text:#e7f3fa;--muted:#a8c0d0;--cyan:#5de0ff;--good:#77e3a1;--warn:#ffd277}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#123047,#08131d 48rem);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1000px;margin:auto;padding:48px 24px 80px}h1{line-height:1.15;margin:0 0 12px}h2{margin-top:38px;color:var(--cyan)}p,.muted{color:var(--muted)}.tag{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:99px;color:var(--cyan);font-size:.85rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{padding:18px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:12px}.card strong{display:block;font-size:1.35rem;color:var(--good)}code{padding:.13em .35em;background:#07111a;border-radius:4px;color:#bcefff}table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line)}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line)}th{color:var(--cyan)}.flow{padding:17px;border-left:3px solid var(--cyan);background:var(--panel)}.ok{color:var(--good)}@media(max-width:600px){main{padding:30px 16px}th,td{padding:9px;font-size:.9rem}}
+</style>
+</head>
+<body><main>
+<span class="tag">Megvalósítva · 2026-11-10</span>
+<h1>Sol 3373: a CAHVOR képek rejtett frame-terhelése</h1>
+<p>Vizsgált állapot: Curiosity, Sol 3373, 1. helyszín, 100-as lokációtolerancia, Navcam + Mastcam + ChemCam RMI, 0,1-es rétegtávolság. A felület által jelzett <strong>64</strong> textúra nem jelenti azt, hogy egy adott nézetben mind a 64-et vetíteni kell.</p>
+<section><h2>Megállapított ok</h2>
+<div class="flow">A korábbi biztonsági szabály minden <code>CAHVOR</code>/<code>CAHVORE</code> képet átengedett a korai nézetkizáráson. Ez eredetileg képi hibát akadályozott meg: a széles látószögű kép szélső sugara akkor is látszódhat, amikor az optikai tengely már hátrafelé mutat. Következményként azonban a Sol 3373 Navcam-domináns halmazában a kamera minden elfordulásánál a hátul levő képek rácsát is újra kellett vetíteni és félgömbhöz klippelni.</div>
+<div class="grid" style="margin-top:14px"><div class="card"><strong>64 / 162</strong><span class="muted">betöltendő / feltérképezett felületi képek</span></div><div class="card"><strong>CAHVOR-domináns</strong><span class="muted">a széles Navcam geometria miatt nem működött az egyszerű tengelyteszt</span></div><div class="card"><strong>minden kamera-frame</strong><span class="muted">a ténylegesen láthatatlan képek is rácsprojekciót kaptak</span></div></div>
+</section>
+<section><h2>Alkalmazott javítás</h2>
+<table><thead><tr><th>Réteg</th><th>Változás</th><th>Miért biztonságos</th></tr></thead><tbody>
+<tr><td>Sugárkúp-cache</td><td>A képrács első felépítésekor eltároljuk a képtengelyhez viszonyított legszélesebb mintasugárból képzett látósugarat.</td><td>Nem becslés az optikai tengelyből: a tényleges, már meglévő kameramodell-sugarakat használja.</td></tr>
+<tr><td>Korai kizárás</td><td>Nulla parallax-kameraeltolásnál a teljes, bizonyíthatóan hátralevő sugárkúp kihagyja a frame-rácsprojekciót.</td><td>0,025-ös tartalékot hagy a mintarács szélein. 90°-nál szélesebb kúpot egyáltalán nem zár ki.</td></tr>
+<tr><td>Parallaxis</td><td>Nem nulla kameraeltolásnál megmarad a korábbi teljes geometriai út.</td><td>A parallaxismélység nem tehet hamisan láthatatlanná egy képet.</td></tr>
+<tr><td>Adaptív rács</td><td>A CAHVOR rács a meglévő minőségi szintekkel együtt 6×6, 5×5, majd 4×4 cellás.</td><td>Csak CAHVOR-ra vonatkozik; CAHVORE felbontása változatlan marad.</td></tr>
+</tbody></table>
+<p>A 6×6-os rács képenként 72 háromszög; a lassú minőségi szinteken ez 50, illetve 32. A nagyobb nyereséget azonban az adja, hogy a biztosan hátsó képekhez már egyetlen háromszög sem készül.</p>
+</section>
+<section><h2>Érintett kód és ellenőrzés</h2>
+<p><code>dist/app.js</code>: <code>cacheImageVisibilityCone()</code>, <code>imageMayBeVisible()</code>, <code>projectedImageMesh()</code>. A cache-kulcs tartalmazza a kép geometriáját, felbontását, rácsfelbontását és flatfield-vágását, ezért bármelyik változás új sugárkúpot készít.</p>
+<ul><li class="ok">JavaScript szintaxisellenőrzés sikeres.</li><li class="ok">A panoráma-kiválasztási regressziós teszt sikeres.</li><li class="ok">Böngészőben a megadott Sol 3373 állapot: 64 / 64 textúra, 360° / 360° lefedettség, konzolhiba nélkül.</li></ul>
+<p class="muted">A tényleges FPS gép- és canvasfüggő; ezért az ellenőrzés nem ígér konkrét FPS-értéket. A javítás megszünteti a felesleges, teljes CAHVOR-képrácsok frame-enkénti vetítését, miközben a tartalom és a sztereó bal-kép szabály változatlan.</p>
+</section>
+</main></body></html>
