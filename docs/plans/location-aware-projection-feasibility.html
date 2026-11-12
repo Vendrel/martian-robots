@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lokációtudatos panoráma-projekció – megvalósíthatósági terv</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1017; --panel:#131c27; --line:#2b3a4c; --text:#e8eef6; --muted:#a8b8c9; --cyan:#65d7ff; --good:#7ce0a8; --warn:#ffc96b; --risk:#ff8d8d; --code:#091018; }
+    * { box-sizing:border-box; } body { margin:0; background:linear-gradient(135deg,#0b1017,#111923 62%,#0a131d); color:var(--text); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1160px,calc(100% - 32px)); margin:0 auto; padding:48px 0 72px; } header { border:1px solid var(--line); border-radius:18px; padding:32px; background:linear-gradient(120deg,#152536,#101923); box-shadow:0 18px 65px #0005; }
+    h1 { margin:0 0 10px; font-size:clamp(1.9rem,5vw,3rem); line-height:1.12; } h2 { margin:42px 0 14px; font-size:1.45rem; } h3 { margin:0 0 8px; font-size:1rem; } p { margin:9px 0; } a { color:var(--cyan); } code { color:#ccecff; background:var(--code); border:1px solid #25364b; padding:.1em .32em; border-radius:5px; overflow-wrap:anywhere; } pre { padding:16px; overflow:auto; background:var(--code); border:1px solid var(--line); border-radius:10px; color:#d8efff; line-height:1.45; }
+    .eyebrow { color:var(--cyan); letter-spacing:.1em; text-transform:uppercase; font-weight:700; font-size:.78rem; } .sub { color:var(--muted); max-width:76ch; } .meta, .cards { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin-top:22px; } .card { background:var(--panel); border:1px solid var(--line); padding:18px; border-radius:12px; } .card.good { border-left:4px solid var(--good); } .card.warn { border-left:4px solid var(--warn); } .card.risk { border-left:4px solid var(--risk); } .value { color:var(--cyan); font-size:1.15rem; font-weight:750; overflow-wrap:anywhere; } .small { color:var(--muted); font-size:.9rem; }
+    table { width:100%; border-collapse:collapse; overflow:hidden; border:1px solid var(--line); border-radius:12px; background:var(--panel); } th,td { text-align:left; vertical-align:top; padding:12px; border-bottom:1px solid var(--line); } th { color:#bfe9ff; background:#152131; } tr:last-child td { border-bottom:0; } ul,ol { padding-left:1.3rem; } li { margin:7px 0; } .flow { display:flex; align-items:stretch; flex-wrap:wrap; gap:8px; margin:18px 0; } .flow span { flex:1 1 170px; padding:11px; border-radius:9px; text-align:center; background:#172535; border:1px solid #33506c; } .flow b { align-self:center; color:var(--cyan); font-size:1.4rem; } .tag { display:inline-block; border-radius:99px; padding:3px 9px; font-size:.78rem; font-weight:700; background:#1a3140; color:#bcecff; } .yes { color:var(--good); font-weight:700; } .no { color:var(--risk); font-weight:700; } .caution { color:var(--warn); font-weight:700; } details { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin:12px 0; } summary { cursor:pointer; font-weight:700; } @media (max-width:650px) { main { width:min(100% - 20px,1160px); padding-top:18px; } header { padding:22px; } th,td { padding:9px; font-size:.9rem; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Feltárás és döntési terv · 2026-11-12</div>
+    <h1>Lokációtudatos panoráma-projekció</h1>
+    <p class="sub">Annak vizsgálata, hogy a lokációfelbontás által összefogott, de eltérő roverpozícióból készült képek hogyan kaphatnak biztonságos transzlációs warp-kompenzációt.</p>
+    <div class="meta">
+      <div class="card"><h3>Vész-visszaállítási commit</h3><div class="value"><code>e39754c2aa8c710dc29fc5a07a2b98369a2486a8</code></div><p class="small">Kiinduló <code>main</code>; a feltárás előtt tiszta worktree.</p></div>
+      <div class="card"><h3>Javasolt első cél</h3><div class="value">Curiosity + Perseverance</div><p class="small">Csak kanonikus, közös méter-frame-re feloldott pózzal.</p></div>
+      <div class="card"><h3>Jelen döntés</h3><div class="value">Nincs kódmódosítás</div><p class="small">Előbb pose-index és regressziós bizonyíték szükséges.</p></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Rövid következtetés</h2>
+    <div class="cards">
+      <article class="card good"><h3>Megvalósítható</h3><p>Mind a négy küldetéshez van archivált útvonal-/pozícióforrás. Curiosity és Perseverance esetén a jelenlegi böngészős képmetaadat is gyakran hordoz <code>xyz</code>, <code>site</code>, <code>drive</code>, attitűd- és kamerageometriát.</p></article>
+      <article class="card risk"><h3>Nem közvetlenül az API-<code>xyz</code>-ből</h3><p>A nyers mezők site-kerethez kötődhetnek; más site-ok között nem bizonyított közös világkoordináták. A jelenlegi 2D panoráma irány-frame-je sem azonos automatikusan a transzlációhoz szükséges scene frame-mel.</p></article>
+      <article class="card warn"><h3>A warp csak mélységgel fizikai</h3><p>Egyetlen képpont sugara nem ad távolságot. Mélységtérkép nélkül a transzláció csak választott gömbhéjra érvényes közelítés; nem nevezhető teljes parallaxiskorrekciónak.</p></article>
+    </div>
+    <p><strong>Ajánlás:</strong> az új út első iterációjában kizárólag Curiosity és Perseverance kapjon kísérleti, alapértelmezetten kikapcsolt „location-aware shell” warp-ot. Spirit és Opportunity csak az egységes pose-index és a frame-validáció után következzen.</p>
+  </section>
+
+  <section>
+    <h2>Mit csinál ma az alkalmazás?</h2>
+    <p>A <code>dist/app.js</code> a <code>ray()</code>-ban CAHV/CAHVOR/CAHVORE inverz vetítéssel képsugarat készít, majd Curiosity és Mars 2020 esetén a per-kép kvaternióval <code>ROVER_NAV_FRAME → SITE_FRAME</code> irányba forgatja. Ez a tájoláshoz helyes.</p>
+    <p>A <code>buildLocations()</code> a <code>xyz</code> alapján azonos állomásokat képez, a <code>locationTolerance</code> pedig nemlineárisan <code>0…25 m</code> összefogási sugárra képeződik. A jelenlegi warp viszont nem ezt a méterértéket használja: <code>projectedImageMesh()</code> a sugárra szintetikus <code>parallaxDepth</code>-ot és a felhasználó által mozgatott <code>cameraOffset</code>-et alkalmaz. Ez nézeti 3D-hatás, nem roverpozíció-kompenzáció.</p>
+    <div class="flow"><span>pixel</span><b>→</b><span>CAHV(O)(RE) inverz sugár<br><code>rᵢ</code></span><b>→</b><span>attitűd szerinti irány<br><code>Rᵢ</code></span><b>→</b><span>jelenleg: mesterséges<br>gömbhéj-warp</span></div>
+    <p class="small">Érintett kód: <code>dist/app.js:168–173</code>, <code>236–271</code>, <code>610–625</code>. A jelenlegi helycsoportosítás és a parallaxis-render út két külön adatszerződés.</p>
+  </section>
+
+  <section>
+    <h2>A szükséges matematika</h2>
+    <p>Legyen <code>Pᵢ</code> az i. kép kameraorigója, <code>P₀</code> az aktív lokáció referenciaorigója, <code>Rᵢ(u,v)</code> pedig az adott pixelnek a közös, bizonyított scene frame-be forgatott egységsugara. Egy választott <code>ρ</code> mélységű gömbhéjon a renderelendő irány:</p>
+    <pre>Qᵢ(u,v) = (Pᵢ − P₀) + ρ · Rᵢ(u,v) − Cᵥ
+screen = project(normalize(Qᵢ), view)
+
+Pᵢ = P_rover,i + rotate(q_rover→scene,i, C_camera,i)</pre>
+    <p>Az utolsó tagban <code>C_camera</code> a CAHV-kamera-középpont, <code>Cᵥ</code> a jelenlegi interaktív nézőkamerának megfelelő eltolás. A képlet szerkezetileg ugyanazt a transzlációs perspektívát használja, amelyet a mai vezérlés imitál, de a képhez kötött, méteregységű bázisvonallal.</p>
+    <div class="cards">
+      <article class="card good"><h3>Távoli táj</h3><p><code>ρ → ∞</code> esetén a transzláció hatása eltűnik, ami helyes: végtelen távolságú objektumokra nincs parallaxis.</p></article>
+      <article class="card warn"><h3>Ismeretlen mélység</h3><p>Egy 2 méteres szikla és egy 100 méteres hegy ugyanazon képpontján eltérő <code>ρ</code> kell. Egységes héj csak ellenőrizhető közelítés.</p></article>
+      <article class="card risk"><h3>Frame-keverés tiltott</h3><p><code>Pᵢ−P₀</code> és <code>Rᵢ</code> csak azonos, méteregységű, jobbkezes scene frame-ben összeadható. Nyers, site-lokális <code>xyz</code> és másik site <code>SITE_FRAME</code>-sugara nem adható össze.</p></article>
+    </div>
+    <p>A lokációfelbontásnak ezért nem a warp-erősséget, hanem a befogadható fizikai bázisvonal felső korlátját kell kijelölnie: <code>‖Pᵢ−P₀‖ ≤ locationToleranceMeters</code>. A héjmélység ettől külön, explicit kísérleti paraméter lesz; nem szabad a mai <code>layerSeparation</code> vagy a capture-időből létrejövő rétegindex helyére becsúsztatni.</p>
+  </section>
+
+  <section>
+    <h2>Adatforrás- és roverértékelés</h2>
+    <table>
+      <thead><tr><th>Rover</th><th>Mai futásidejű adat</th><th>Kanonikus pozícióforrás</th><th>Első bevezetés</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Curiosity</strong></td><td><span class="yes">Erős</span>: API/dump <code>xyz</code>, site/drive, CAHVOR, attitude. A vizsgált 4 616 helyi manifestben 1 037 898 / 1 066 425 kép (97,32%) hordoz <code>xyz</code>; minden manifestben volt ilyen rekord.</td><td>MSL PLACES <code>localized_pos</code>/<code>localized_interp</code>, vagy <code>msl_surf_rover_loc</code> SPK. A PLACES több méter-rendszert és lokalizációs finomítást közöl.</td><td><span class="yes">Igen</span>, a pose-index után. A raw <code>xyz</code> önmagában csak ugyanazon bizonyított site-on belüli ideiglenes jelölt.</td></tr>
+        <tr><td><strong>Perseverance</strong></td><td><span class="yes">Erős</span>: tipikusan <code>extended.xyz</code>, site/drive, attitude és CAHV(O)(RE). A 1 075 helyi manifestben 303 518 / 341 796 kép (88,80%) hordoz <code>xyz</code>; 1 036 Solban volt ilyen rekord.</td><td>Mars 2020 PLACES / lokalizált <code>m2020_surf_rover_loc</code> SPK. A NAIF a lokalizált pályát a globális kontextusban pontosabbként jelöli, de mozgási időszakra interpolációt is jelez.</td><td><span class="yes">Igen</span>, a pose-index után; hiányzó pozíció vagy frame esetén marad a régi projekció.</td></tr>
+        <tr><td><strong>Spirit</strong></td><td><span class="caution">Korlátozott</span>: a jelenlegi MER-adapter PDS címkéből site/drive RMC-t és kameramodellt olvas, világpozíciót és igazolt per-kép attitűdöt nem.</td><td>MER SPICE felületi rover-kernel, illetve korrigált Spirit-traverz CSV: site, drive, Sol-tartomány, nyers XYZ és korrigált easting/northing.</td><td><span class="caution">Később</span>. A pozícióindex elkészíthető, de a panoráma irány- és kamera-frame-jét előbb termékcímkékkel kell bizonyítani.</td></tr>
+        <tr><td><strong>Opportunity</strong></td><td><span class="caution">Korlátozott</span>: ugyanaz a MER-adapter-korlát, mint Spiritnél.</td><td>MER SPICE, illetve korrigált Opportunity-traverz CSV, amely a teljes útvonalra RMC-hez kapcsolható térképi koordinátákat ad.</td><td><span class="caution">Később</span>. Nem adható ki „fizikai kompenzáció” a frame-validáció nélkül.</td></tr>
+      </tbody>
+    </table>
+    <details><summary>Mintavétel módszere</summary><p>A projektbe csomagolt, gzipelt research-manifesteeket Node.js-szel végigolvastam; a pozíciómezőhöz <code>xyz | rover_position | extended.xyz</code>, a teljes képi geometriához <code>camera_model_component_list</code> és <code>attitude</code> szerepelt. Ez lefedettségi mérés, nem pontossági kalibráció. MER-hez jelenleg nincs helyi manifest-dump; a futásidejű adapter <code>decodeMerImage()</code> visszatérési objektuma csak RMC site/drive helyazonosítót hoz létre.</p></details>
+  </section>
+
+  <section>
+    <h2>Kritikus korlátok és javítandó előfeltételek</h2>
+    <ol>
+      <li><strong>Site-átmenet:</strong> a jelenlegi Curiosity-kód nem teszi a site-ot az <code>xyz</code>-kulcs részévé, Perseverance igen. Ez nem bizonyítja, hogy a Curiosity raw <code>xyz</code> globális. Az új fizikai útban egyik rover raw <code>xyz</code>-e sem kap cross-site összehasonlítási jogot.</li>
+      <li><strong>Az anchor nem átlag:</strong> a lokáció referenciaorigója a kért Sol bizonyított állomása legyen, nem több elmozduló kép számtani átlaga. Így a tolerancia jelentése stabil és exportálható.</li>
+      <li><strong>Kameraextrinsic:</strong> a roverpozíció önmagában nem kameraorigó. A <code>model.C</code>-t a hitelesített forgatással kell a scene frame-be emelni; ha annak frame-je vagy egysége kétes, a kép kizárandó az új módból.</li>
+      <li><strong>Rejtett felület nem keletkezhet:</strong> a gömbhéjas warp nem oldja meg az előtér/háttér-okklúziót. Nagy bázisvonalra, közelre fókuszáló RMI-re vagy túl szűk látószögre automatikus tiltás kell.</li>
+      <li><strong>Nemlineáris kamera:</strong> a fordított CAHVOR/CAHVORE sugárképzés marad az egyetlen pixelforrás. A transzláció csak utána, a mesh-csúcsokra kerülhet; sík affine transzformáció nem helyettesítheti.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Javasolt, fokozatos megvalósítás</h2>
+    <ol>
+      <li><strong>Offline pose-index:</strong> roverenként, verziózott JSON/GZip index <code>(site, drive, sclk/UTC) → { positionMeters, frame, sigmaMeters, source, sourceVersion }</code>. Curiosity/Perseverance: lokalizált PLACES/SPK. Spirit/Opportunity: korrigált traverse, és csak ahol a frame-kapcsolat bizonyított.</li>
+      <li><strong>Normalizált pose-szerződés:</strong> a képhez egyetlen <code>cameraPoseInScene(image)</code> szolgáltatás adjon <code>Pᵢ</code>-t vagy explicit elutasítást. A location builder, a warp, export és diagnosztika ezt használja; ne legyen több, eltérő <code>xyz</code>-parser.</li>
+      <li><strong>Tolerancia pontosítása:</strong> a UI továbbra is métert mutat, de kizárólag a pose-index közös frame-jében számol. <code>0 m</code> megtartja a jelenlegi „kért Sol képei” szigorú viselkedést; minden más érték ugyanazt a küszöböt adja a csoportosításnak és a warp-alkalmasságnak.</li>
+      <li><strong>Kísérleti warp:</strong> a meglévő mesh-csúcs <code>R</code> útján külön, nem romboló <code>locationAwareRayVector(image, R, referencePose)</code> alkalmazza a fenti <code>Q</code>-t. Kezdetben konzervatív <code>ρ</code>, maximális bázisvonal, és csak Curiosity/Perseverance.</li>
+      <li><strong>Validációs eszköz:</strong> képenként exportálja <code>Pᵢ</code>, <code>P₀</code>, baseline, forrásverzió, frame, warp-mód és kizárási ok adatait. Referencia-földi pontokkal vagy PDS mesh-sel mérendő reprojekciós maradvány kell; vizuális „jobbnak tűnik” nem elfogadási kritérium.</li>
+      <li><strong>Csak ezután MER:</strong> Spirit/Opportunity akkor engedhető, ha az RMC→pose leképezés és a képsugár scene-frame-je termékszinten verifikált.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Visszavonhatóság: két szint</h2>
+    <table><thead><tr><th>Szint</th><th>Mechanizmus</th><th>Elvárt viselkedés</th></tr></thead><tbody>
+      <tr><td>Gyors futásidejű fallback</td><td><code>LOCATION_AWARE_PROJECTION_ENABLED = false</code> globális vészkapcsoló mellett külön rover-kapcsolók: <code>LOCATION_AWARE_PROJECTION_BY_ROVER = { curiosity:false, perseverance:false, spirit:false, opportunity:false }</code>. Opcionálisan csak fejlesztői URL-paraméterrel kapcsolhatók be.</td><td>Egy kép csak akkor használhatja az új utat, ha a globális és az adott rover kapcsolója is <code>true</code>. Bármelyik <code>false</code> esetén bitről bitre a mai <code>R * parallaxDepth − cameraOffset</code> út fut; így egy sikertelen rover azonnal izolálható.</td></tr>
+      <tr><td>Teljes rollback</td><td><code>git revert</code> az implementációs commitra, vagy szükség esetén a most rögzített <code>e39754c2aa8c710dc29fc5a07a2b98369a2486a8</code> visszaállítási pontra.</td><td>A mai lokációfelbontás és a szintetikus parallaxis változatlanul visszakapcsolható. A teljes reset előtt előbb a Boolean-kapcsoló használandó.</td></tr>
+    </tbody></table>
+    <p>A kapcsolók nem lehetnek UI-tolerancia vagy layer-spacing mellékhatásai: a funkciók külön jelentésűek. A globális és rover-szintű effektív érték, valamint az alkalmazott pose-forrás bekerül a letöltött manifestbe és a diagnosztikába.</p>
+  </section>
+
+  <section>
+    <h2>Elfogadási kapuk</h2>
+    <ul>
+      <li>Hiányzó, nem közös frame-ű vagy a tolerancián kívüli póz esetén az érintett kép a régi projekciót kapja; nem kap becsült transzlációt.</li>
+      <li>Kikapcsolt kapcsolóval a meglévő render-regressziók, képválasztás és helycsoportosítás változatlan.</li>
+      <li>Bekapcsolt módban a normál <code>Q</code>-vektor véges; horizontátlépésnél ugyanaz a clipping marad érvényben.</li>
+      <li>Azonos kameraállomásból készült két kép baseline-ja a kameraextrinsic után is a várt közel nulla; a warp nem vezet be mérhető eltolást.</li>
+      <li>Ismert, több solon átnyúló Curiosity és Perseverance helyszínen a közeli kontrollpontok reprojekciós hibája nem romlik a régi irányalapú módszerhez képest; romlás esetén default-off marad.</li>
+      <li>MER-re nincs automatikus engedélyezés pusztán site/drive egyezés vagy traverse-interpoláció alapján.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Elsődleges források</h2>
+    <ul>
+      <li><a href="https://pds.nasa.gov/ds-view/pds/viewProfile.jsp?dsid=MSL-M-ROVER-6-RDR-PLACES-V1.0">NASA PDS – MSL PLACES RDR</a>: roverpozíció/orientáció, méter-alapú nézetek, lokalizált finomítás.</li>
+      <li><a href="https://naif.jpl.nasa.gov/pub/naif/pds/pds4/mars2020/mars2020_spice/document/spiceds_v001.html">NAIF – Mars 2020 SPICE archive</a>: lokalizált és telemetria-alapú roverpályák minőségi különbségei és korlátai.</li>
+      <li><a href="https://naif.jpl.nasa.gov/pub/naif/MSL/kernels/spk/">NAIF – MSL SPK index</a> és <a href="https://naif.jpl.nasa.gov/pub/naif/MARS2020/kernels/spk/">NAIF – Mars 2020 SPK index</a>: küldetésenkénti lokalizált roverpálya-kernel elérhetősége.</li>
+      <li><a href="https://an.rsl.wustl.edu/mera/AN/pages/mer/mer_traverse.htm">PDS Geosciences – MER corrected traverse</a>: Spirit/Opportunity site-drive, Sol-tartomány, nyers XYZ és korrigált kelet/észak koordináták.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

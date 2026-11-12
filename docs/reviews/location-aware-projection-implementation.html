@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lokációtudatos panoráma-projekció – implementáció</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1017;--card:#131d29;--line:#2d4055;--txt:#eaf1f8;--muted:#aebdcd;--cyan:#70dfff;--ok:#7ae0a6;--warn:#ffcc72}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0a1018,#111c28);color:var(--txt);font:16px/1.55 system-ui,sans-serif}main{max-width:1050px;margin:auto;padding:48px 20px 70px}header,section{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:25px;margin:18px 0}h1{margin:0 0 9px;font-size:clamp(1.9rem,5vw,2.8rem)}h2{margin-top:0}p{margin:9px 0}.eyebrow{color:var(--cyan);text-transform:uppercase;font-size:.78rem;font-weight:700;letter-spacing:.09em}.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.card{padding:15px;border:1px solid var(--line);border-radius:10px;background:#101923}.ok{border-left:4px solid var(--ok)}.warn{border-left:4px solid var(--warn)}code{color:#c7efff;background:#09121b;border:1px solid #294054;border-radius:5px;padding:.1em .3em;overflow-wrap:anywhere}pre{padding:14px;overflow:auto;border-radius:9px;background:#09121b;border:1px solid var(--line);color:#d7f0ff}table{border-collapse:collapse;width:100%}th,td{padding:11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{color:#c4ecff}.muted{color:var(--muted)}a{color:var(--cyan)}li{margin:7px 0}
+  </style>
+</head>
+<body><main>
+  <header><div class="eyebrow">Implementációs jelentés · 2026-11-12</div><h1>Lokációtudatos panoráma-projekció</h1><p>A kísérleti transzlációs warp bekerült úgy, hogy az aktuális panoráma-algoritmus alapértelmezésben változatlan maradjon.</p></header>
+  <section><h2>Eredmény</h2><div class="grid"><article class="card ok"><strong>Megvalósítva</strong><p>A CAHV(O)(RE) sugárhoz az aktív lokáció és az adott kép kameraorigója közötti, méter-alapú transzláció adódik.</p></article><article class="card ok"><strong>Összekötve</strong><p>A csoportosítás és a warp ugyanazt a <code>locationResolutionMeters()</code> küszöböt használja.</p></article><article class="card warn"><strong>Biztonságos alapérték</strong><p>A globális és mind a négy rover-kapcsoló <code>false</code>; nincs csendes viselkedésváltozás.</p></article></div></section>
+  <section><h2>Adatút és matematika</h2><pre>ΔP = (P_rover,image − P_rover,reference)
++ (C_camera,image − C_camera,reference)
+Q  = ρ · R_pixel + ΔP − ρ · viewerOffset
+screen = project(normalize(Q), view)</pre><p><code>R_pixel</code> továbbra is a meglévő CAHV/CAHVOR/CAHVORE inverz sugár, <code>C_camera</code> a per-kép CAHV-kameraorigó, melyet a meglévő rover→site kvaternió forgat a helyi frame-be. A <code>ρ = 40 m</code> gömbhéj explicit, korlátozott mélységközelítés; nem mélységtérkép.</p><p>A modul csak akkor ad <code>ΔP</code>-t, ha minden szükséges vektor véges, a kép ugyanabban a site-ban van, mint a referencia, és a rover-eltérés nem nagyobb a lokációfelbontás méterértékénél. Bármely más esetben az eredeti warp marad.</p></section>
+  <section><h2>Kapcsolók és rollout</h2><pre>LOCATION_AWARE_PROJECTION_ENABLED = false
+LOCATION_AWARE_PROJECTION_BY_ROVER = {
+  curiosity: false, perseverance: false,
+  spirit: false, opportunity: false
+}</pre><p>Az effektív engedélyhez mindkét értéknek <code>true</code>-nak kell lennie. Így egy rover célzott próbája vagy visszavonása nem érinti a másik hármat. A funkció állapota, a méteres tolerancia és a referencia kamera-póz bekerül az exportált manifestbe.</p></section>
+  <section><h2>Érintett fájlok</h2><table><thead><tr><th>Fájl</th><th>Felelősség</th></tr></thead><tbody><tr><td><code>dist/location-aware-projection.mjs</code></td><td>Tiszta, böngészőtől független tolerancia-, engedély- és vektormatematika.</td></tr><tr><td><code>dist/app.js</code></td><td>Site-local referencia kiválasztása, biztonsági kapu, mesh-projekció, konzervatív culling és export-provenance.</td></tr><tr><td><code>tools/location-aware-projection-regression.mjs</code></td><td>Toleranciagörbe, globális/rover-szintű kapu, bázisvonal-korlát és vetítővektor regressziója.</td></tr></tbody></table></section>
+  <section><h2>Ellenőrzések és ismert határ</h2><ul><li><code>node --check dist/app.js</code> és <code>node --check dist/location-aware-projection.mjs</code> sikeres.</li><li><code>node tools/location-aware-projection-regression.mjs</code> sikeres.</li><li><code>node tools/panorama-selection-regression.mjs</code> sikeres.</li><li><code>git diff --check</code> sikeres.</li></ul><p class="muted">A Curiosity/Perseverance raw API-pozíciókat a kód kizárólag egyazon site-on belül használja. Site-ok közti transzlációhoz továbbra is PLACES/SPICE-alapú, közös scene-frame pose-index kell. Spirit és Opportunity kapcsolója ezért a frame-validációig kikapcsolva marad.</p></section>
+</main></body></html>
