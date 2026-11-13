@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flatfield vágás – akadozás diagnózisa</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08131c;--panel:#0e202d;--line:#264458;--text:#e5f2f8;--muted:#a9c2d0;--cyan:#62d8f4;--warn:#ffca6a;--bad:#ff919c;--good:#8ee4ae}*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#08131c,#0c1720);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(960px,calc(100% - 32px));margin:40px auto 72px}h1{line-height:1.15;margin:.15em 0}h2{margin:2rem 0 .6rem;color:var(--cyan)}p,li{max-width:80ch}.lede{color:var(--muted);font-size:1.1rem}.card{background:rgba(14,32,45,.9);border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}.finding{border-left:4px solid var(--bad)}.secondary{border-left:4px solid var(--warn)}.ok{color:var(--good)}code{color:#b8efff;background:#071018;padding:.08em .3em;border-radius:4px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid var(--line);padding:.7rem;text-align:left;vertical-align:top}th{color:var(--cyan)}a{color:#8de6ff}strong{color:#fff}small{color:var(--muted)}
+  </style>
+</head>
+<body>
+<main>
+  <p class="lede">Forráskód-alapú lokalizálás · 2026-11-13 · csak bővítményben aktív funkció</p>
+  <h1>Flatfield szélvágás utáni akadozás</h1>
+  <p>A jelenség elsődleges oka nem a Sol, nem az RMI-culling és nem a böngésző-képbetöltés. A flatfield rekord puszta létrejötte is bekapcsol egy költséges, képenkénti <em>második textúra-rajzolást</em> minden panorama-frame-ben — akkor is, ha a felhasználó kizárólag 3–4 pixeles szélvágást állított be, tehát a fényesség-korrekció továbbra is pontosan nulla.</p>
+
+  <section class="card finding">
+    <h2>Elsődleges, bizonyított hiba</h2>
+  <p>A képre lépés <code>selectedFlatfieldConfig()</code>-on keresztül rögtön létrehozott egy teljes, nullás flatfield-konfigurációt. A nullás konfiguráció ettől kezdve nem „nincs flatfield”, hanem létező konfiguráció volt.</p>
+    <p>A korábbi renderút <code>flatfieldRenderState()</code>-e ezért teljesen átlátszó flatfield-vásznat kért, majd a <code>tri()</code> minden egyes hálóháromszögéhez előbb a valódi kameraképet, utána ezt az átlátszó vásznat is kirajzolta. A második <code>drawImage</code>, a kompozit mód beállítása és a mentés/visszaállítás sem ingyenes attól, hogy a bemenet vizuálisan átlátszó.</p>
+    <p>Ez lineárisan nő a paraméterezett képek számával, és Curiosity sokszög-hálóin különösen látható. Az ürítőfunkció azért állítja vissza azonnal a folytonosságot, mert ismét <code>null</code> konfigurációt ad: a második rajzolási út teljesen kimarad.</p>
+  </section>
+
+  <section class="card secondary">
+    <h2>Másodlagos, kumulatív probléma</h2>
+    <p>A vágás a <code>projectedImageMesh()</code> optikai sugár-rácsának cache-kulcsának része. Minden új crop-érték új rácsot épít, a régi pedig az adott kép <code>projectedRayMeshCache</code> Map-jében korlátlanul megmarad. Egy képen sok visszaállításnál ez fölösleges memóriát és GC-nyomást okoz; az első új nézetnél az új rács felépítése hitch-et okozhat.</p>
+    <p>Ez önmagában nem magyarázza jól, hogy néhány különböző képnél a teljes forgatás tartósan lassú marad. Arra az elsődleges, frame-enkénti flatfield-kompozit a közvetlen magyarázat.</p>
+  </section>
+
+  <h2>Az eseménylánc</h2>
+  <table>
+    <thead><tr><th>Lépés</th><th>Kódhatás</th><th>Következmény</th></tr></thead>
+    <tbody>
+      <tr><td>Képre lépés / crop módosítás</td><td><code>selectedFlatfieldConfig()</code> nullás rekordot is eltárol; <code>updateImageFlatfield()</code> újrarenderel.</td><td>A crop és a fényesség-korrekció ugyanabban a rekordban él.</td></tr>
+      <tr><td>Következő kamera-frame</td><td><code>warp()</code> → <code>flatfieldRenderState()</code>.</td><td>Minden konfigurált kép flatfield-textúrát kap, akkor is, ha csak cropja van.</td></tr>
+      <tr><td>Háromszögrajzolás</td><td><code>tri()</code> a kamerakép után <code>drawFlatfield()</code>-et hív.</td><td>Minden érintett háromszögre második Canvas draw/composite történik.</td></tr>
+      <tr><td>9 vagy több konfigurált kép</td><td>A flatfield LRU cache mérete 8, miközben egy textúra 1024² pixeles.</td><td>A renderlista sorrendje képes frame-enként kiszorítani és újragenerálni minden textúrát: milliónyi pixel és nagy átmeneti allokáció frame-enként.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Miért látható rövid villanás?</h2>
+  <p>A <code>render()</code> először kitölti a teljes canvást a háttérrel, és csak ezután rajzolja a képhálókat. Amikor a framen belül az új sugárrács vagy a flatfield-textúrák előállítása és a többletkompozit túllépi a képkocka-időkeretet, a háttérrajzolás és a képek elkészülte szemmel külön lépésnek látszik. Ez render-sorozati késés, nem adatvesztés vagy culling-döntés.</p>
+
+  <h2>Javítás állapota</h2>
+  <p>A javaslat megvalósult: a crop-only konfigurációhoz nincs megjelenési map; a tényleges korrekció képszintű, késleltetett bake-ként készül, és a perspektivikus render csak egyetlen előkompozitált forrást rajzol. A bake-sor interakció alatt szünetel, lokációváltáskor epoch-alapon eldobható. A részleteket a <a href="flatfield-reuse-architecture.html">flatfield újrahasznosítási architektúra</a> jegyzet tartalmazza.</p>
+  <h2>Eredeti javítási sorrend</h2>
+  <ol>
+    <li><strong>Nullás megjelenési flatfield kihagyása:</strong> a crop legyen önálló geometriai beállítás; <code>flatfieldRenderState()</code> csak akkor adjon textúrát, ha a surface vagy gradient ténylegesen nem nulla. Ez a crop funkcióját megőrzi, a felesleges második rajzolást megszünteti.</li>
+    <li><strong>Cache helyes érvénytelenítése:</strong> crop-változáskor az érintett kép régi sugár-rácsát cserélje/ürítse a rendszer, ne új kulccsal gyűjtse tovább. A frame-mesh és visibility-cone cache is ehhez az egy képhez legyen kötve.</li>
+    <li><strong>Védőkorlát:</strong> a 8 elemű LRU miatti körbejáró cache-thrashingot akadályozza meg a renderhez ténylegesen használt textúrák stabil cache-elése, vagy — az első pont után — a crop-only képek teljes kizárása ebből a cache-ből.</li>
+    <li><strong>Regressziós mérés a bővítményben:</strong> 0, 4, 8 és 9 crop-only beállítás mellett frame-idő, flatfield-textúra-cache miss és extra rajzolások száma. A 0 és crop-only esetnek közel azonos renderköltséget kell adnia.</li>
+  </ol>
+  <p class="ok"><strong>Következtetés:</strong> a hiba szűken a flatfield állapot és renderút összekapcsolásában lokalizált. A legkisebb helyes javítás a crop-only rekordok vizuális flatfield-rétegének kihagyása; a sugár-rács cache korlátozása ezt kiegészítő stabilitási javítás.</p>
+  <p><small>Az elemzés statikus forrásvizsgálaton alapul. A bővítmény-protokoll miatt a lokális webszerveres oldal nem tudja ezt a funkciót futtatni, ezért extension-beli futásprofil még szükséges a javítás számszerű igazolásához.</small></p>
+</main>
+</body>
+</html>

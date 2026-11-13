@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flatfield: újrahasznosítási architektúra</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07121b;--p:#0d202d;--l:#28485d;--t:#e7f2f7;--m:#abc3d0;--a:#67daf4;--g:#92e4ad;--w:#ffcd70}*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#07121b,#0c1720);color:var(--t);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(980px,calc(100% - 32px));margin:38px auto 72px}h1{line-height:1.16;margin:.1em 0}h2{color:var(--a);margin:2rem 0 .55rem}.lede{font-size:1.1rem;color:var(--m)}.card{background:rgba(13,32,45,.91);border:1px solid var(--l);border-radius:12px;padding:18px 20px;margin:16px 0}.answer{border-left:4px solid var(--g)}.risk{border-left:4px solid var(--w)}code{background:#061018;color:#c1effb;padding:.08em .3em;border-radius:4px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.7rem;border:1px solid var(--l);vertical-align:top;text-align:left}th{color:var(--a)}ol{padding-left:1.4rem}li+li{margin-top:.55rem}.flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;margin:1rem 0}.flow div{background:#102a3a;border:1px solid var(--l);padding:.65rem;border-radius:8px;flex:1 1 180px}.flow b{display:block;color:var(--a)}small{color:var(--m)}
+  </style>
+</head>
+<body><main>
+  <p class="lede">Architekturális döntési jegyzet · 2026-11-13</p>
+  <h1>Flatfield: generálás helyett előkompozitálás</h1>
+  <section class="card answer">
+    <h2>Rövid válasz</h2>
+    <p><strong>Nem kell elengedni a funkciót.</strong> Száz képen is lehet egyedi flatfield, ha a korrekció nem minden kamera-frame minden háromszögénél történik. A map létrehozása csak módosításkor drága; a jelenlegi akadozás főként abból ered, hogy a már elkészült mapet a perspektivikus rajzolás közben ismételten rákompozitáljuk a fotóra.</p>
+    <p>A crop és a flatfield két külön felelősség: a crop a geometriai rács mintavételi tartománya, a flatfield pedig egy képponttérbeli megjelenési korrekció. A crop-only rekordnak sem mapet generálnia, sem plusz rajzolási műveletet indítania nem szabad.</p>
+  </section>
+
+  <h2>Mi volt más a korábbi uniform megoldásban?</h2>
+  <table><thead><tr><th></th><th>Korábbi uniform út</th><th>Mai képenkénti út</th></tr></thead><tbody>
+    <tr><td>Paraméterállapot</td><td>Egy globális korrekció.</td><td>Minden képnek lehet saját surface, gradient és kompozit módja.</td></tr>
+    <tr><td>Korrekciós erőforrás</td><td>A Canvas radiális gradientje közvetlenül, egyenletes paraméterekből készült.</td><td>Képenként 1024×1024-es canvas-textúra készül.</td></tr>
+    <tr><td>Újrahasználás</td><td>A paraméter közös volt, de a kompozit akkor is minden háromszögben futott.</td><td>A textúra képenként cache-elhető, de jelenleg a kompozit is minden háromszögben fut.</td></tr>
+    <tr><td>Következtetés</td><td>A korábbi folytonosság jó jel: maga a látványfunkció életképes.</td><td>Az egyediség önmagában nem hiba, viszont a frame-en belüli dupla rajzolás nem skálázódik.</td></tr>
+  </tbody></table>
+  <p>Tehát száz külön map nem egyenlő százszoros <em>generálással</em>, ha a cache korrekt. Viszont a jelenlegi rajzolási stratégiával száz külön map továbbra is közel kétszeres képtextúra-rasterizálást jelent minden látható háromszögnél. Ezért a két eset nem azonos.</p>
+
+  <h2>Ajánlott adat- és renderút</h2>
+  <div class="flow"><div><b>1. Paraméter</b>Crop és appearance külön értelmezése.</div><div><b>2. Canonical map</b>Csak nem-nullás appearance alapján, deduplikált signature-gel.</div><div><b>3. Korrigált forrás</b>Egyszeri <code>image + map</code> előkompozit, csak érintett képnél.</div><div><b>4. Kamera-frame</b>Egyetlen perspektivikus <code>drawImage</code> háromszögönként.</div></div>
+  <ol>
+    <li><strong>Neutral fast path.</strong> Legyen <code>hasVisibleFlatfield(config)</code>. Nullás surface és gradient esetén <code>false</code>; crop-only esetben a renderer az eredeti képet használja.</li>
+    <li><strong>Canonical appearance signature.</strong> A cache kulcsa csak a tényleges vizuális paraméterekből álljon: kompozit mód, surface-értékek, radius, gradient. A crop, <code>hidden</code>, image ID és editor-állapot ne kerüljön bele. Egyforma beállítású képek így ugyanazt a kis mapet osztják.</li>
+    <li><strong>Egyszeri képszintű bake.</strong> Nem-nullás korrekciónál egy offscreen canvasra / <code>ImageBitmap</code>-re egyszer kerüljön rá a kép és a map, natív forráskoordinátában. A panoráma <code>tri()</code> ezután kizárólag ezt az előkompozitált forrást torzítja perspektívába. A crop ettől függetlenül csak a mesh mintatartományát módosítja.</li>
+    <li><strong>Memóriakeretes bake-cache.</strong> A bake-cache ne „nyolc darab” szerint, hanem becsült pixeltömeg/bájt szerint legyen LRU. Csak látható vagy nemrég látható korrigált képek maradjanak benne. A 100 konfiguráció maradhat localStorage-ban; nem kell 100 natív felbontású bitmapet memóriában tartani.</li>
+    <li><strong>Változáskor érvénytelenítés.</strong> Appearance-változáskor csak az érintett kép baked forrása érvénytelen; crop-változáskor csak az érintett kép geometriai rácsa. A két cache nem üríti egymást.</li>
+  </ol>
+
+  <section class="card risk"><h2>Mi marad elkerülhetetlen?</h2><p>A perspektivikus mesh-t a kamera minden frame-jében újra kell vetíteni, és minden látható kép forrását egyszer ki kell rajzolni. Egy egyedi flatfield sem tehető teljesen „ingyenessé”. Viszont az előkompozitált forrás pontosan ugyanannyi háromszögrajzolást jelent, mint flatfield nélkül: <strong>egy</strong> <code>drawImage</code> háromszögenként, nem kettőt.</p><p>Az első bake okozhat rövid, egyszeri költséget. Ezt szerkesztéskor kell elkészíteni, nem az első kamera-mozdításkor; nagy képnél pedig ütemezhető láthatatlan/idle időre. A render közben sem textúragenerálás, sem canvas-allocáció nem maradhat.</p></section>
+
+  <h2>Döntés</h2>
+  <p>A feature megtartása indokolt. A helyes cél nem a 8-as cache-limit növelése, mert az csak késlelteti a thrashingot; hanem a „per-triangle overlay” megszüntetése és a crop-only rekordok nullaköltségűvé tétele. Ezután a száz konfigurált kép egy tárolási kérdés lesz, nem frame-időbeli büntetés.</p>
+  <h2>Megvalósított prioritási szabály</h2>
+  <p>A renderer kész flatfield-forrás hiányában mindig az eredeti képet használja. A korrekció a kamera-frame-en kívül, lemondható sorban készül el, és csak kész vászonként válthat be. Pointer-, kerék- és aktív gamepad-interakció egy rövid nyugalmi időablakot indít; ezen belül a sor nem dolgozhat. Lokációváltás egy új epoch: a régi lokáció még várakozó és már elkészült bake-jei eldobódnak.</p>
+  <p>A sor előbb a render által ténylegesen látott képeket emeli ki, majd a háttérben lévő, konfigurált képeket dolgozza fel. A baked források helyszínhez kötöttek és 48 MiB-os LRU memóriakeretet használnak; a kis, paraméter-alapú 256×256-os flatfield-mapek külön, Sol-független cache-ben maradnak. Így egy visszatérés azonnal no-flatfield panorámát ad, a korrekció pedig fokozatosan tér vissza, anélkül hogy a kamera animációját blokkolná.</p>
+  <p><small>Forrásalap: a jelenlegi <code>dist/app.js</code>, valamint a korábbi uniform implementáció a <code>757f09f</code> commitban. Ez tervezési elemzés; extension-beli profilozás szükséges a cache-büdzsé végső méretezéséhez.</small></p>
+</main></body></html>
