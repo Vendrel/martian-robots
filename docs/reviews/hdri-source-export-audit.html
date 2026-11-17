@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HDRI-forráscsomag audit</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08111d;--card:#101d2b;--line:#284259;--ink:#e6f1f8;--muted:#9db2c2;--accent:#68d8ff;--good:#8de0ae;--warn:#ffd070}*{box-sizing:border-box}body{max-width:1040px;margin:auto;padding:42px 22px 64px;background:radial-gradient(circle at top,#173349,#08111d 42%);color:var(--ink);font:16px/1.58 system-ui,sans-serif}h1{margin:0;font-size:clamp(1.9rem,5vw,3rem)}h2{margin:2.5rem 0 .75rem;color:var(--accent)}p,li{color:var(--muted)}.eyebrow{margin:0;color:var(--accent);font-weight:800;letter-spacing:.1em;font-size:.75rem}.lead{max-width:77ch;font-size:1.1rem}section,.note{padding:20px 22px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 92%,transparent);margin-top:18px}.note{border-color:#5f562d}.note strong{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line)}th{color:var(--accent)}code{color:#b6eaff}a{color:var(--accent)}.yes{color:var(--good);font-weight:750}.no{color:var(--warn);font-weight:750}@media(max-width:680px){table,tbody,tr,td{display:block}thead{display:none}td{padding:9px 0}td::before{content:attr(data-label);display:block;color:var(--accent);font-weight:700}}
+  </style>
+</head>
+<body>
+  <p class="eyebrow">MARS ROVERS 360 · 2026-11-17</p>
+  <h1>HDRI-forráscsomag audit</h1>
+  <p class="lead">A meglévő „Összes letöltése” jó reprodukálható néző-export, de nem teljes szakértői forráscsomag. Ezért a képinformációs panel új, lokációhoz kötött HDRI-forráscsomag exportot kapott.</p>
+
+  <section>
+    <h2>Mit csinált eddig az „Összes letöltése”?</h2>
+    <table>
+      <thead><tr><th>Terület</th><th>Van benne</th><th>Hiányzik / szűrés</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Terület">Hatókör</td><td data-label="Van benne"><span class="yes">Igen</span> — az aktív, kiválasztott lokáció aktuális <code>panoramaImages</code>-készlete.</td><td data-label="Hiányzik / szűrés"><span class="no">Nem</span> — nem az egész Sol; szándékosan nem kever lokációkat. Kijelölési módban csak a kijelöltekre szűkül.</td></tr>
+        <tr><td data-label="Terület">Képfájlok</td><td data-label="Van benne"><span class="yes">Igen</span> — az app által kirajzolható, engedélyezett instrumentű, geometriaérvényes, nem rejtett képek ZIP-ben vagy külön fájlként.</td><td data-label="Hiányzik / szűrés"><span class="no">Nem</span> — a panorámaválasztó által elhagyott párok, nem kirajzolható és rejtett termékek, illetve harmadik fél jogi jelzésű képek nem kerülnek bele.</td></tr>
+        <tr><td data-label="Terület">Geometria</td><td data-label="Van benne"><span class="yes">Igen</span> — az eredeti API-rekord és, ha van, CAHV/CAHVOR <code>C/A/H/V</code>, orientáció, pixel-domain és kivágás.</td><td data-label="Hiányzik / szűrés"><span class="no">Nem teljes</span> — nem PDS-label, nem EDR/RDR bináris adat és nem radiometriai kalibráció.</td></tr>
+        <tr><td data-label="Terület">Crossview</td><td data-label="Van benne"><span class="yes">Más célra jó</span> — több Sol közti, célpontra irányított összehasonlítás.</td><td data-label="Hiányzik / szűrés"><span class="no">Nem HDRI-input</span> — változó nézőpontokat gyűjt, ezért nem egyetlen stabil panorámakamera-sorozat.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Új: HDRI-forráscsomag exportálása</h2>
+    <p>A Crossview- és a régi letöltésgomb alatti teljes szélességű gomb a kiválasztott lokációból készít csomagot. Ez nem teljes-Sol export: a lokáció-felbontás miatt az adott lokáció szükség esetén szomszédos Sol rekordjait is magába foglalhatja; a manifest <code>locationSols</code> mezője ezt mindig rögzíti. A ZIP (ha a böngésző engedi) és a külön fájlok egyaránt tartalmazzák a következőket:</p>
+    <ul>
+      <li>az elérhető eredeti böngészőképeket, instrument-szűrőtől és appon belüli rejtéstől függetlenül;</li>
+      <li><code>hdri-source-manifest.json</code>: teljes API-forrásrekord, letöltési név/URL, exportjog-állapot, a jelenlegi néző panorámájában való szerep, valamint CAHV/CAHVOR geometria;</li>
+      <li><code>README.txt</code>: szakértői kiválasztási és korlátozási jegyzet;</li>
+      <li><code>SOURCE-URLS.txt</code> és forrásmegjelölés.</li>
+    </ul>
+    <p>Az alternatív felbontások, stereo társak, Bayer-források, RMI-k és panorámán kívüli kamerák szándékosan leltárban maradnak. A manifest <code>viewerPanorama</code> jelzője megmutatja a jelenlegi nézet választását, de nem állítja, hogy minden felsorolt fájlt egyetlen mosaikba kell illeszteni.</p>
+  </section>
+
+  <section>
+    <h2>Mitől lesz seamless — és miért nem „HDR” a raw webkép?</h2>
+    <p>Az eredményes roverpanoráma először egy pozícióból, egyező kamera-szemből és közel azonos képalkotási sorozatból választ átfedő képeket; utána kontrollpontokkal finomítja a geometriát, korrigálja a parallaxist és a varratokat, végül projekciót és tónuskezelést választ. A NASA is így írja le a földi összefűzést, és hivatalos mosaikjainál is a képszám, a parallax és a sky-blending a kritikus munka.</p>
+    <p>A böngészős raw galéria gyors és gyakran látványos kiindulópont, de nem kalibrált fénysűrűség-adat: a PDS a raw/EDR, részben feldolgozott, kalibrált és derived szinteket külön kezeli. Valódi radiometriai HDR-hez a szakértőnek az azonosított PDS EDR/RDR terméket, labelt, kamerakalibrációt és saját exposure/demosaic folyamatot kell használnia. A csomag ezért a PDS-ben való visszakereshetőséghez tartja meg az image ID-t, eredeti rekordot és geometriát.</p>
+    <p class="note"><strong>Rejtett flatfield-panel:</strong> az egyképes és összes JSON export/import csak app-specifikus kivágás/rejtés/beállítást visz át, ezért nem hordoz hasznos radiometriai korrekciót. Az „Összes elrejtett kép megjelenítése” a néző állapotát állítja vissza; nem új forrásadat. A „Rétegezett panoráma exportálása” equirectangular PNG-ket ad: kiváló ellenőrző/előnézeti rétegek, de veszteséges köztes projekciók, tehát nem jó alapjai egy külső, hibátlan mester-mosaiknak. Emiatt egyik funkciót sem emeltem át HDRI-gombnak.</p>
+  </section>
+
+  <section>
+    <h2>UI-döntés</h2>
+    <p>Most nem került külön HDRI-panel vagy SVG-ikon a <code>.viewer-topline</code> sorba. Az export a kijelölt lokáció kontextusától függ, ezért az Infópanelben felfedezhető és egyértelmű. Egy globális felső ikonnál könnyű lenne észrevétlenül rossz lokációt vagy instrument-szűrést feltételezni. Külön panel akkor indokolt, ha később szakértői választófelületet kérünk: kamera-szem, termékszint (browse/PDS), sorozat-időablak, és külső Hugin/PTGui/Metashape konfigurációs export.</p>
+  </section>
+
+  <section>
+    <h2>Források</h2>
+    <ul>
+      <li><a href="https://science.nasa.gov/wp-content/uploads/2024/03/30914_CoM20130613.pdf">NASA: Curiosity panorámák földi összefűzése</a></li>
+      <li><a href="https://science.nasa.gov/photojournal/mastcam-zs-first-360-degree-panorama/">NASA: Mastcam-Z 360° — 142 egyedi felvétel</a></li>
+      <li><a href="https://science.nasa.gov/photojournal/summit-panorama-with-rover-deck/">NASA: a felbontás- és parallaxiskülönbség nehézségei</a></li>
+      <li><a href="https://pds-imaging.jpl.nasa.gov/documentation/Mars2020_Camera_Bundle_SIS.pdf">PDS: Mars 2020 raw, partially processed és calibrated termékszintek</a></li>
+      <li><a href="https://pds-imaging.jpl.nasa.gov/data/msl/MSLHAZ_0XXX/DOCUMENT/MSL_EDR_VOLSIS.PDF">PDS: MSL EDR/RDR archívum és címkék</a></li>
+      <li><a href="https://www.360cities.net/zh/image/seminole-pan-360?pano_detail=true&amp;portfolio_view=false">Neville Thompson: 405 képes, több szűrős Pancam-panoráma és sky seam eltávolítás</a></li>
+    </ul>
+  </section>
+</body>
+</html>

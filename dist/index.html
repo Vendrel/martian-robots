@@ -31,7 +31,7 @@
         "description": "Explore NASA Mars rover imagery as interactive 360° panoramas from Curiosity, Perseverance, Spirit, and Opportunity."
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?2026111301" />
+    <link rel="stylesheet" href="./styles.css?2026111712" />
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true"><symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".12"/><path d="M8.5 8.5l7 7m0-7-7 7"/></symbol></svg>
@@ -111,6 +111,7 @@
             <fieldset class="perseverance-image-filters" id="roverImageFilters" hidden>
               <legend>Image layers</legend>
             </fieldset>
+            <button class="panorama-workbench-button" id="openPanoramaWorkbench" type="button" aria-controls="panoramaWorkbenchModal" aria-expanded="false" data-i18n-aria-label="workbenchOpen" data-i18n-tooltip="workbenchTooltip" aria-label="Open Panorama Workbench" data-tooltip="Prepare a rover-aware panorama stitching handoff."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h5v5H4zM15 5h5v5h-5zM9 7.5h6M6.5 10v4M17.5 10v4M4 14h5v5H4zM15 14h5v5h-5zM9 16.5h6"/></svg></button>
             <button class="flatfield-panel-button" id="flatfieldPanelButton" type="button" aria-controls="flatfieldPanel" aria-expanded="false" data-i18n-aria-label="flatfieldOpen" data-i18n-tooltip="flatfieldPanelTooltip" aria-label="Open flatfield correction" data-tooltip="Per-image flatfield correction and layered panorama export are available in the Chrome extension."><span aria-hidden="true"></span></button>
             <label class="parallax-layer-control"><span data-i18n="parallaxLayerLabel">Layer spacing</span><input id="parallaxLayerSeparation" type="range" min="0.1" max="1.5" step="0.01" value="0.5" data-i18n-aria-label="parallaxLayerLabel" aria-label="Layer spacing"><output id="parallaxLayerSeparationValue">0.5</output></label>
             <div class="coverage"><span data-i18n="coverageLabel">Coverage</span><strong id="coverageValue">0° / 360°</strong></div>
@@ -247,6 +248,7 @@
           <div class="selection-actions">
             <button id="collectCrossviewButton" class="download-all-button" type="button" data-i18n="collectCrossview">Collect Crossview Slideshow</button>
             <button id="downloadAllButton" class="download-all-button" type="button" data-i18n="downloadAll">Download all</button>
+            <button id="downloadHdriSourcesButton" class="download-all-button hdri-export-button" type="button" data-i18n="downloadHdriSources">Export HDRI source package</button>
           </div>
         </aside>
         <aside class="image-panel flatfield-panel" id="flatfieldPanel" hidden aria-live="polite">
@@ -306,6 +308,24 @@
             </div>
             <p id="panoramaExportStatus" class="export-modal-status" aria-live="polite"></p>
             <div class="export-modal-actions"><a id="panoramaExtensionLink" class="panorama-extension-link" href="https://github.com/Vendrel/martian-robots#chrome-extension" target="_blank" rel="noreferrer" data-i18n="panoramaExportInstall">Install Chrome extension</a><button id="cancelPanoramaExportModal" type="button" data-i18n="exportModalCancel">Cancel</button><button id="startPanoramaExport" class="load-button" type="button"><span>↓</span><span data-i18n="panoramaExportStart">Export PNG layers</span></button></div>
+          </div>
+        </section>
+      </div>
+
+      <div id="panoramaWorkbenchModal" class="export-modal panorama-workbench-modal" hidden role="dialog" aria-modal="true" aria-labelledby="panoramaWorkbenchTitle" aria-describedby="panoramaWorkbenchDescription">
+        <section class="export-modal-card panorama-workbench-modal-card">
+          <header class="export-modal-header">
+            <div><p class="eyebrow" data-i18n="workbenchEyebrow">PANORAMA WORKBENCH</p><h2 id="panoramaWorkbenchTitle" data-i18n="workbenchTitle">Rover-aware stitching prep</h2></div>
+            <button id="closePanoramaWorkbench" class="export-modal-close" type="button" data-i18n-aria-label="workbenchClose" aria-label="Close Panorama Workbench"><svg class="icon-close" aria-hidden="true"><use href="#icon-close"/></svg></button>
+          </header>
+          <div class="export-modal-body panorama-workbench-body">
+            <p id="panoramaWorkbenchDescription" data-i18n="workbenchDescription">Groups geometry-compatible image takes and estimates overlap without reading image pixels.</p>
+            <p id="workbenchCapabilityNotice" class="workbench-capability" aria-live="polite"></p>
+            <section class="workbench-section"><div class="workbench-section-heading"><div><h3 data-i18n="workbenchSequences">Candidate takes</h3><p data-i18n="workbenchSequencesHint">Choose one camera eye and acquisition take before creating a stitch project.</p></div><label><span data-i18n="workbenchActiveTake">Active take</span><select id="workbenchSequenceSelect"></select></label></div><div id="workbenchSequenceSummary" class="workbench-summary"></div></section>
+            <section class="workbench-section"><div class="workbench-section-heading"><div><h3 data-i18n="workbenchOverlap">Overlap graph</h3><p data-i18n="workbenchOverlapHint">Edges are camera-geometry estimates, not pixel matched control points.</p></div></div><div id="workbenchOverlapGraph" class="workbench-overlap-graph"></div></section>
+            <section class="workbench-section"><div class="workbench-section-heading"><div><h3 data-i18n="workbenchCoverage">Coverage QA</h3><p data-i18n="workbenchCoverageHint">Spherical-cap estimate; inspect all reported gaps in the stitcher.</p></div></div><div id="workbenchCoverageSummary" class="workbench-summary"></div></section>
+            <section class="workbench-section workbench-pixel-section"><div class="workbench-section-heading"><div><h3 data-i18n="workbenchPixelAudit">Pixel-readiness audit</h3><p id="workbenchPixelAuditHint"></p></div><button id="runWorkbenchPixelAudit" type="button" class="download-all-button"><span data-i18n="workbenchPixelAuditRun">Audit image pixel access</span></button></div><p id="workbenchPixelAuditStatus" class="export-modal-status" aria-live="polite"></p></section>
+            <div class="export-modal-actions"><button id="exportWorkbenchAnalysis" type="button" data-i18n="workbenchExportAnalysis">Export analysis JSON</button><button id="exportWorkbenchHuginStarter" class="load-button" type="button"><span>↓</span><span data-i18n="workbenchExportStarter">Export stitcher starter kit</span></button></div>
           </div>
         </section>
       </div>
@@ -432,7 +452,7 @@
             </div>
             <label class="research-deep-toggle"><input id="researchDeepMetadata" name="deepMetadata" type="checkbox"><span class="research-deep-toggle-control" aria-hidden="true"></span><span><strong data-i18n="researchDeepMetadataLabel">Teljes Curiosity raw metadata</strong><small data-i18n="researchDeepMetadataDescription">Közvetlen NASA API-lekérés minden nyers rekordhoz és Mastcam nagyfelbontású párkapcsolatokkal. Lassabb, és több adatot exportál.</small></span></label>
             <p id="researchFormError" class="research-form-error" role="alert" hidden></p>
-            <div class="research-modal-actions"><button id="openInvalidSolsModal" type="button" data-i18n="invalidSolsOpen">Invalid Sols</button><button id="cancelResearchModal" type="button">Mégse</button><button class="load-button" type="submit"><span>↻</span><span>Research indítása</span></button></div>
+            <div class="research-modal-actions"><button id="openInvalidSolsModal" type="button" data-i18n="invalidSolsOpen">Invalid Sols</button><button id="cancelResearchModal" type="button">Mégse</button><button id="startAutomaticResearch" type="button" data-i18n="researchAutomatic">Automatikus</button><button class="load-button" type="submit"><span>↻</span><span>Research indítása</span></button></div>
           </form>
         </section>
       </div>
@@ -501,7 +521,7 @@
     <script src="./invalid-sols/opportunity.js"></script>
     <script src="./static-metadata-cache.js"></script>
     <script src="./presentation-mouse-config.js"></script>
-<script type="module" src="./app.js?2026111306"></script>
+<script type="module" src="./app.js?2026111713"></script>
     <script type="module" src="./presentation-mouse.js?2026091401"></script>
   </body>
 </html>

@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+# A script a megadott munkamappából gyűjti a research-manifesteket, de mindig
+# a saját (dist) mappájának metadata-katalógusába helyezi az eredményt.
+set -euo pipefail
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+readonly filename_pattern='^mars-rover-360-([a-z0-9-]+)-sol-([0-9]+)-research-manifest\.json$'
+
+usage() {
+    printf 'Használat: %s MUNKAMAPPA\n' "${0##*/}" >&2
+    printf 'Példa: %s /útvonal/a/letöltött-manifesztekhez\n' "${0##*/}" >&2
+}
+
+if (( $# != 1 )); then
+    usage
+    exit 2
+fi
+
+if [[ ! -d $1 ]]; then
+    printf 'A munkamappa nem létezik vagy nem könyvtár: %s\n' "$1" >&2
+    exit 2
+fi
+
+source_dir=$(CDPATH= cd -- "$1" && pwd)
+processed=0
+skipped=0
+unmatched=0
+
+while IFS= read -r -d '' source_file; do
+    filename=${source_file##*/}
+    if [[ ! $filename =~ $filename_pattern ]]; then
+        continue
+    fi
+
+    rover=${BASH_REMATCH[1]}
+    sol=${BASH_REMATCH[2]}
+    sol_number=$((10#$sol))
+    metadata_dir="$script_dir/${rover}-metadata"
+
+    if [[ ! -d $metadata_dir ]]; then
+        printf 'Nincs metadata-katalógus ehhez a roverhez: %s\n' "$rover" >&2
+        ((unmatched += 1))
+        continue
+    fi
+
+    target_dir=''
+    for range_dir in "$metadata_dir"/*/; do
+        [[ -d $range_dir ]] || continue
+
+        range_name=${range_dir%/}
+        range_name=${range_name##*/}
+        if [[ ! $range_name =~ ^([0-9]+)-([0-9]+)$ ]]; then
+            continue
+        fi
+
+        range_start=$((10#${BASH_REMATCH[1]}))
+        range_end=$((10#${BASH_REMATCH[2]}))
+        if (( range_start <= sol_number && sol_number <= range_end )); then
+            target_dir=${range_dir%/}
+            break
+        fi
+    done
+
+    if [[ -z $target_dir ]]; then
+        printf 'Nincs célkatalógus %s Sol %s számára.\n' "$rover" "$sol" >&2
+        ((unmatched += 1))
+        continue
+    fi
+
+    target_file="$target_dir/$filename.gz"
+    if [[ -e $target_file ]]; then
+        printf 'KIMARAD (már létezik): %s\n' "${target_file#$script_dir/}"
+        ((skipped += 1))
+        continue
+    fi
+
+    temporary_file="$target_file.tmp.$$"
+    if ! gzip -9 -c -- "$source_file" > "$temporary_file"; then
+        rm -f -- "$temporary_file"
+        exit 1
+    fi
+    mv -- "$temporary_file" "$target_file"
+
+    printf 'GZIP: %s -> %s\n' "${source_file#$source_dir/}" "${target_file#$script_dir/}"
+    ((processed += 1))
+done < <(find "$source_dir" -type f -name '*.json' -print0)
+
+printf '\nKész. Feldolgozott: %d, kihagyott: %d, célmappa nélkül: %d\n' \
+    "$processed" "$skipped" "$unmatched"
+
+if (( unmatched > 0 )); then
+    exit 1
+fi

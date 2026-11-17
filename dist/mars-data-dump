@@ -82,23 +82,26 @@ process_downloads() {
 }
 
 refresh_metadata_indexes() {
-  local rover root file filename sol latest temporary
+  local rover root file filename sol latest temporary sols_json
   for rover in "${ROVERS[@]}"; do
     root="$DIST_DIR/${rover}-metadata"
     [ -d "$root" ] || continue
     latest=''
+    local -a sols=()
     while IFS= read -r -d '' file; do
       filename=$(basename "$file")
       if [[ $filename =~ ^mars-rover-360-${rover}-sol-([1-9][0-9]*)-research-manifest\.json\.gz$ ]]; then
         sol=${BASH_REMATCH[1]}
+        sols+=("$sol")
         if [[ -z $latest || $((10#$sol)) -gt $((10#$latest)) ]]; then
           latest=$sol
         fi
       fi
     done < <(find "$root" -type f -name "mars-rover-360-${rover}-sol-*-research-manifest.json.gz" -print0)
     [ -n "$latest" ] || continue
+    sols_json=$(printf '%s\n' "${sols[@]}" | sort -n -u | paste -sd, -)
     temporary="$root/.latest.json.$$"
-    printf '{\n  "format": "mars360-local-metadata-index/v1",\n  "rover": "%s",\n  "latestSol": %s\n}\n' "$rover" "$latest" > "$temporary"
+    printf '{\n  "format": "mars360-local-metadata-index/v2",\n  "rover": "%s",\n  "latestSol": %s,\n  "sols": [%s]\n}\n' "$rover" "$latest" "$sols_json" > "$temporary"
     mv -f -- "$temporary" "$root/latest.json"
   done
 }
@@ -111,13 +114,18 @@ run_once() {
   refresh_metadata_indexes
 }
 
+if [[ ${1:-} == '--refresh-indexes' ]]; then
+  refresh_metadata_indexes
+  exit $?
+fi
+
 if [[ ${1:-} == '--once' ]]; then
   run_once
   exit $?
 fi
 
 if [[ $# -gt 0 ]]; then
-  printf 'Usage: %s [--once]\n' "$0" >&2
+  printf 'Usage: %s [--once|--refresh-indexes]\n' "$0" >&2
   exit 64
 fi
 
